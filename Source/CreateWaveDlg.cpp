@@ -153,17 +153,12 @@ void CCreateWaveDlg::OnBnClickedBegin()
 		}
 
 		// Show the render progress dialog, this will also start rendering
-		CWavProgressDlg ProgressDlg;
 		ProgressDlg.BeginRender(outPathC, EndType, EndParam, Track);
-		// TODO if cancelled early, abort further rendering.
 	}
 
-	// Show the render progress dialog, this will also start rendering
-	//ProgressDlg.BeginRender(SaveDialog.GetPathName(), EndType, EndParam, Track);
 	if (IsDlgButtonChecked(IDC_SEPERATE_CHANNEL_EXPORT)) {
 		for (int i = 0; i < nchan; ++i) {
-			// if cancelled early, abort further rendering.
-			if (ProgressDlg.CancelRender == true)
+			if (ProgressDlg.CancelRender)
 				break;
 			if (m_ctlChannelList.GetCheck(i) == BST_CHECKED) {
 				pView->MuteAllChannels();
@@ -184,7 +179,6 @@ void CCreateWaveDlg::OnBnClickedBegin()
 
 				CString chanOutPathC = conv::to_t(chanOutPath.string()).c_str();
 
-				CWavProgressDlg ProgressDlg;
 				ProgressDlg.BeginRender(chanOutPathC, EndType, EndParam, Track);
 			}
 		}

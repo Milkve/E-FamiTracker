@@ -18,6 +18,7 @@
 ** must bear this legend.
 */
 
+#include <Source\CreateWaveDlg.h>
 #pragma once
 
 
@@ -52,4 +53,5 @@ public:
 	afx_msg void OnBnClickedCancel();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	bool CancelRender;
 };

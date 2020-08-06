@@ -54,6 +54,8 @@ END_MESSAGE_MAP()
 
 // CWavProgressDlg message handlers
 
+
+
 void CWavProgressDlg::OnBnClickedCancel()
 {
 	CSoundGen *pSoundGen = theApp.GetSoundGenerator();
@@ -62,7 +64,7 @@ void CWavProgressDlg::OnBnClickedCancel()
 		//pSoundGen->StopRendering();
 		pSoundGen->PostThreadMessage(WM_USER_STOP_RENDER, 0, 0);
 	}
-
+	CancelRender = true;
 	EndDialog(0);
 }
 
@@ -154,6 +156,7 @@ void CWavProgressDlg::OnTimer(UINT_PTR nIDEvent)
 	pProgressBar->SetPos(PercentDone);
 
 	if (!Rendering) {
+		EndDialog(0);
 		SetDlgItemText(IDC_CANCEL, CString(MAKEINTRESOURCE(IDS_WAVE_EXPORT_DONE)));
 		CString title;
 		GetWindowText(title);

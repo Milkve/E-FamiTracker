@@ -48,6 +48,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedBegin();
+	afx_msg void OnBnClickedSeperateChannelExport();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDeltaposSpinLoop(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnDeltaposSpinTime(NMHDR *pNMHDR, LRESULT *pResult);

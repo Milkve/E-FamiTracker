@@ -174,7 +174,7 @@ bool CSeqInstHandler::ProcessSequence(int Index, unsigned Setting, int Value)
 				switch (scheme) {
 				case 0: break;
 				case 1: lim += Param >> 4;   break;
-				case 2: lim += Param & 0x0F; break;
+				case 2: lim += Param & 0x1F; break;
 				case 3: lim -= Param & 0x0F; break;
 				}
 			}

@@ -6,12 +6,12 @@
 
 namespace xgm
 {
-  const UINT32 NES_DMC::wavlen_table[2][16] = {
+  const UINT32 NES_DMC::wavlen_table[2][32] = {
   { // NTSC
-    4, 8, 16, 32, 64, 96, 128, 160, 202, 254, 380, 508, 762, 1016, 2034, 4068
+    4,5,6,7,9,12,15,19,23,29,37,46,58,72,91,114,142,178,222,278,348,435,544,681,851,1064,1331,1664,2081,2602,3253,4068
   },
   { // PAL
-    4, 8, 14, 30, 60, 88, 118, 148, 188, 236, 354, 472, 708,  944, 1890, 3778
+    3,4,6,7,9,12,15,18,23,29,36,45,56,70,88,110,137,171,213,266,332,414,517,644,804,1003,1251,1560,1946,2428,3028,3778
   }};
 
   const UINT32 NES_DMC::freq_table[2][16] = {
@@ -102,8 +102,8 @@ namespace xgm
       trkinfo[1].volume = noise_volume+(envelope_disable?0:0x10)+(envelope_loop?0x20:0);
       trkinfo[1].key = length_counter[1]>0 && enable[1] &&
                        (envelope_disable ? (noise_volume>0) : (envelope_counter>0));
-      trkinfo[1]._freq = reg[0x400e - 0x4008]&0xF;
-      trkinfo[1].freq = clock/double(wavlen_table[pal][trkinfo[1]._freq] * ((noise_tap&(1<<6)) ? 93 : 1));
+      trkinfo[1]._freq = reg[0x400e - 0x4008]&0x1F;
+      trkinfo[1].freq = clock / double(wavlen_table[1][trkinfo[1]._freq]);// * ((noise_tap & (1 << 6)) ? 93 : 1));
       trkinfo[1].tone = noise_tap & (1<<6);
       trkinfo[1].output = out[1];
       break;
@@ -132,7 +132,7 @@ namespace xgm
 
   double NES_DMC::GetFrequencyNoise() const     // // !!
   {
-      return clock / double(wavlen_table[pal][reg[0x400e - 0x4008] & 0xF] * ((noise_tap & (1 << 6)) ? 93 : 1));
+    return clock / double(wavlen_table[pal][reg[0x400e - 0x4008] & 0x1F]);// * ((noise_tap & (1 << 6)) ? 93 : 1));
   }
 
   double NES_DMC::GetFrequencyDPCM() const      // // !!
@@ -800,13 +800,13 @@ namespace xgm
         noise_tap = (val & 0x80) ? (1<<6) : (1<<1);
       else
         noise_tap = (1<<1);
-      nfreq = wavlen_table[pal][val&15];
+      nfreq = wavlen_table[pal][val&31];
       break;
 
     case 0x400f:
       if (enable[1])
       {
-        length_counter[1] = length_table[(val >> 3) & 0x1f];
+        length_counter[1] = length_table[(val >> 3) & 0xf];
       }
       envelope_write = true;
       break;

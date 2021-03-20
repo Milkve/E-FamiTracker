@@ -302,7 +302,8 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 			else if (ChanID == CHANID_NOISE) {
 				// 2A03 Noise
 				NESNote = (Note - 1) + (Octave * NOTE_RANGE);
-				NESNote = (NESNote & 0x0F) | 0x10;
+			  // TOFIX
+				NESNote = (NESNote & 0x1F) | 0x10;
 			}
 			else
 				// All other channels

@@ -569,8 +569,8 @@ const CString& CTextExport::ExportCellText(const stChanNote& stCell, unsigned in
 	{
 		if (bNoise)
 		{
-			char nNoiseFreq = (stCell.Note - 1 + stCell.Octave * NOTE_RANGE) & 0x0F;
-			s.Format(_T("%01X-#"), nNoiseFreq);
+			char nNoiseFreq = (stCell.Note - 1 + stCell.Octave * NOTE_RANGE) & 0x1F;
+			s.Format(_T("%02X#"), nNoiseFreq);
 		}
 		else
 		{

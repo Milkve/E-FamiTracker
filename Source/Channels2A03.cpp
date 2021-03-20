@@ -386,7 +386,7 @@ void CNoiseChan::HandleNote(int Note, int Octave)
 {
 	CChannelHandler2A03::HandleNote(Note, Octave);		// // //
 
-	int NewNote = (MIDI_NOTE(Octave, Note) & 0x0F) | 0x100;
+	int NewNote = (MIDI_NOTE(Octave, Note) & 0x1F) | 0x100;
 	int NesFreq = TriggerNote(NewNote);
 
 	// // // NesFreq = (NesFreq & 0x0F) | 0x10;
@@ -452,8 +452,8 @@ void CNoiseChan::RefreshChannel()
 	int Volume = CalculateVolume();
 	char NoiseMode = (m_iDutyPeriod & MAX_DUTY) << 7;
 
-	Period = Period & 0x0F;
-	Period ^= 0x0F;
+	Period = Period & 0x1F;
+	Period ^= 0x1F;
 	
 	if (m_bGate)		// // //
 		WriteRegister(0x400C, (m_bEnvelopeLoop << 5) | (!m_bHardwareEnvelope << 4) | Volume);		// // //

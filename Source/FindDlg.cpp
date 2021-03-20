@@ -261,7 +261,8 @@ void CFindResultsBox::AddResult(const stChanNote *pNote, const CFindCursor *pCur
 		m_cListResults->SetItemText(Pos, NOTE, str); break;
 	default:
 		if (Noise) {
-			str.Format(_T("%X-#"), MIDI_NOTE(pNote->Octave, pNote->Note) & 0x0F);
+			//str.Format(_T("%X-#"), MIDI_NOTE(pNote->Octave, pNote->Note) & 0x0F);
+			str.Format(_T("%02X#"), MIDI_NOTE(pNote->Octave, pNote->Note) & 0x1F);
 			m_cListResults->SetItemText(Pos, NOTE, str);
 		}
 		else
@@ -790,7 +791,7 @@ void CFindDlg::ParseNote(searchTerm &Term, CString str, bool Half)
 		return;
 	}
 
-	if (str.Mid(1, 2) != _T("-#")) for (int i = 0; i < 7; i++) {
+	if (str.Right(1) != _T("#")) for (int i = 0; i < 7; i++) {
 		if (str.Left(1).MakeUpper() == m_pNoteName[i]) {
 			Term.Definite[WC_NOTE] = true;
 			int Note = m_iNoteOffset[i];
@@ -817,7 +818,7 @@ void CFindDlg::ParseNote(searchTerm &Term, CString str, bool Half)
 		}
 	}
 
-	if (str.Right(2) == _T("-#") && str.GetLength() == 3) {
+	if (str.Right(1) == _T("#") && str.GetLength() == 3) {
 		int NoteValue = static_cast<unsigned char>(strtol(str.Left(1), NULL, 16));
 		Term.Definite[WC_NOTE] = true;
 		Term.Definite[WC_OCT] = true;

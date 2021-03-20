@@ -2052,7 +2052,7 @@ void CFamiTrackerView::InsertNote(int Note, int Octave, int Channel, int Velocit
 		}
 		if (Note != NONE && Note != ECHO) {		// // //
 			if (GetDocument()->GetChannelType(Channel) == CHANID_NOISE) {		// // //
-				unsigned int MidiNote = (MIDI_NOTE(Octave, Note) % 16) + 16;
+				unsigned int MidiNote = (MIDI_NOTE(Octave, Note) % 32) + 32;
 				Cell.Octave = Octave = GET_OCTAVE(MidiNote);
 				Cell.Note = Note = GET_NOTE(MidiNote);
 			}

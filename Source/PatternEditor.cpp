@@ -1420,7 +1420,7 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 							for (unsigned int i = 0; i <= m_pDocument->GetEffColumns(GetSelectedTrack(), Channel); i++) {
 								if (pNoteData->EffNumber[i] != EF_NONE) {
 									DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, EFF_CHAR[pNoteData->EffNumber[i]], DimEff);
-									DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[pNoteData->EffParam[i] >> 4], DimEff);
+									DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[pNoteData->EffParam[i] & 0x10], DimEff);
 									DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, HEX[pNoteData->EffParam[i] & 0x0F], DimEff);
 									Found = true;
 									break;
@@ -1455,9 +1455,9 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 				default:
 					if (pTrackerChannel->GetID() == CHANID_NOISE) {
 						// Noise
-						char NoiseFreq = (pNoteData->Note - 1 + pNoteData->Octave * 12) & 0x0F;
-						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[NoiseFreq], pColorInfo->Note);		// // //
-						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, '-', pColorInfo->Note);
+						char NoiseFreq = (pNoteData->Note - 1 + pNoteData->Octave * 12) & 0x1F;
+						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[(NoiseFreq & 0x10) >> 4], pColorInfo->Note);		// // //
+						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[NoiseFreq & 0x0F], pColorInfo->Note);
 						DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, '#', pColorInfo->Note);
 					}
 					else {
@@ -1854,11 +1854,11 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 			vol = reg[0] ? 15 : 0;
 			text.Format(_T("%s, shape = %i (%s)"), GetPitchTextFunc(3, period, freq), reg[1], waveNames[reg[1]]); break;
 		case 3:
-			period = reg[2] & 0x0F;
+			period = reg[2] & 0x1F;
 			vol = reg[0] & 0x0F;
-			text.Format(_T("pitch = $%01X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
+			text.Format(_T("pitch = $%02X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
 			period = (period << 4) | ((reg[2] & 0x80) >> 4);
-			freq /= 16; break; // for display
+			freq /= 32; break; // for display
 		case 4:
 			period = reg[0] & 0x0F;
 			vol = 15 * !pSoundGen->PreviewDone();

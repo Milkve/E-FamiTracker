@@ -11,7 +11,7 @@
 // Used to handle channels in a future version. Not finished.
 
 const TCHAR *ROOT_ITEMS[] = {
-	_T("2A03/2A07"), 
+	_T("5E01"), 
 	_T("Konami VRC6"), 
 	_T("Konami VRC7"), 
 	_T("Nintendo FDS"), 

@@ -1501,7 +1501,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Dn-FamiTracker.rc">
+    <ResourceCompile Include="E-FamiTracker.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -1612,11 +1612,11 @@
     <None Include="Source\resampler\resample.inl">
       <Filter>Header Files\Dialog Boxes Headers\Instrument Headers\Related Headers\Resampler Headers</Filter>
     </None>
-    <None Include="Dn-FamiTracker.reg" />
+    <None Include="E-FamiTracker.reg" />
     <None Include="res\export_report.htm" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="res\Dn-FamiTracker.manifest">
+    <Manifest Include="res\E-FamiTracker.manifest">
       <Filter>Source Files</Filter>
     </Manifest>
   </ItemGroup>

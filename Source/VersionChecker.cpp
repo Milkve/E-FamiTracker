@@ -98,7 +98,7 @@ namespace {
 			ft_version_t ver = { };
 			auto& [api, maj, min, rev] = ver;
 			const std::string& tag = i["tag_name"];
-			::sscanf_s(tag.data(), "Dn%u.%u.%u%*1[.r]%u", &api, &maj, &min, &rev);
+			::sscanf_s(tag.data(), "E%u.%u.%u%*1[.r]%u", &api, &maj, &min, &rev);
 			if (ver > current) {
 				current = ver;
 				jPtr = &i;

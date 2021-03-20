@@ -23,7 +23,7 @@
     <RootNamespace>Dn-FamiTracker</RootNamespace>
     <Keyword>MFCProj</Keyword>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
-    <ProjectName>Dn-FamiTracker</ProjectName>
+    <ProjectName>E-FamiTracker</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -756,7 +756,7 @@ makehm /h /a afxhh.h IDW_,HIDW_,0x50000 "%(FullPath)" &gt;&gt; "hlp\HTMLDefines.
     <ClInclude Include="Source\WaveFile.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Dn-FamiTracker.rc">
+    <ResourceCompile Include="E-FamiTracker.rc">
       <DeploymentContent>true</DeploymentContent>
     </ResourceCompile>
   </ItemGroup>
@@ -765,7 +765,7 @@ makehm /h /a afxhh.h IDW_,HIDW_,0x50000 "%(FullPath)" &gt;&gt; "hlp\HTMLDefines.
     <None Include="..\nsf driver\nsf_wrap.s" />
     <None Include="..\nsf driver\periods.s" />
     <None Include="..\nsf driver\s5b.s" />
-    <None Include="Dn-FamiTracker.reg" />
+    <None Include="E-FamiTracker.reg" />
     <None Include="0CC-readme.txt" />
     <None Include="res\Document.ico" />
     <None Include="res\export_report.htm">
@@ -805,7 +805,7 @@ makehm /h /a afxhh.h IDW_,HIDW_,0x50000 "%(FullPath)" &gt;&gt; "hlp\HTMLDefines.
     <None Include="specs.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="res\Dn-FamiTracker.manifest">
+    <Manifest Include="res\E-FamiTracker.manifest">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </Manifest>

@@ -1,2 +1,2 @@
 #pragma once
-#define APP_NAME	"Dn-FamiTracker"
+#define APP_NAME	"E-FamiTracker"

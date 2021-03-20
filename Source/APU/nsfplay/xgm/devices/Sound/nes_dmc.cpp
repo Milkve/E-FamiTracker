@@ -94,7 +94,7 @@ namespace xgm
         trkinfo[0].freq = clock/32/(trkinfo[0]._freq + 1);
       else
         trkinfo[0].freq = 0;
-      trkinfo[0].tone = -1;
+      trkinfo[0].tone = tduty;
       trkinfo[0].output = out[0];
       break;
     case 1:
@@ -234,12 +234,32 @@ namespace xgm
   // 三角波チャンネルの計算 戻り値は0-15
   UINT32 NES_DMC::calc_tri (UINT32 clocks)
   {
-    static UINT32 tritbl[32] = 
+    static UINT32 wavtbl[4][32] =
     {
-     15,14,13,12,11,10, 9, 8,
-      7, 6, 5, 4, 3, 2, 1, 0,
-      0, 1, 2, 3, 4, 5, 6, 7,
-      8, 9,10,11,12,13,14,15,
+      {
+       15,14,13,12,11,10, 9, 8,
+        7, 6, 5, 4, 3, 2, 1, 0,
+        0, 1, 2, 3, 4, 5, 6, 7,
+        8, 9,10,11,12,13,14,15,
+      },
+      {
+       15,15,14,14,13,13,12,12,
+       11,11,10,10, 9, 9, 8, 8,
+        7, 7, 6, 6, 5, 5, 4, 4,
+        3, 3, 2, 2, 1, 1, 0, 0,
+      },
+      {
+       15,15,15,15,15,15,15,15,
+       15,15,15,15,15,15,15,15,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+      },
+      {
+        8, 9,10,12,13,14,14,15,
+       15,15,14,14,13,12,10, 9,
+        8, 6, 5, 3, 2, 1, 1, 0,
+        0, 0, 1, 1, 2, 3, 5, 6,
+      },
     };
 
     if (linear_counter > 0 && length_counter[0] > 0
@@ -252,8 +272,8 @@ namespace xgm
         counter[0] += (tri_freq + 1);
       }
     }
-
-    UINT32 ret = tritbl[tphase];
+    
+    UINT32 ret = wavtbl[tduty][tphase];
     return ret;
   }
 
@@ -573,6 +593,7 @@ namespace xgm
     counter[1] = 0;
     counter[2] = 0;
     tphase = 0;
+    tduty = 0;
     nfreq = wavlen_table[0][0];
     dfreq = freq_table[0][0];
     tri_freq = 0;
@@ -746,6 +767,7 @@ namespace xgm
       break;
 
     case 0x4009:
+      tduty = val & 3;
       break;
 
     case 0x400a:

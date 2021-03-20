@@ -31,7 +31,7 @@
 
 // 2A03 instruments
 
-LPCTSTR CInstrument2A03::SEQUENCE_NAME[] = {_T("Volume"), _T("Arpeggio"), _T("Pitch"), _T("Hi-pitch"), _T("Duty / Noise")};
+LPCTSTR CInstrument2A03::SEQUENCE_NAME[] = {_T("Volume"), _T("Arpeggio"), _T("Pitch"), _T("Hi-pitch"), _T("Timbre")};
 
 CInstrument2A03::CInstrument2A03() : CSeqInstrument(INST_2A03),		// // //
 	m_cSamples(),

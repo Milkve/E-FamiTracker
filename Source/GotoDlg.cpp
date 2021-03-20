@@ -68,7 +68,7 @@ BOOL CGotoDlg::OnInitDialog()
 	CFamiTrackerView *pView = static_cast<CFamiTrackerView*>(((CFrameWnd*)AfxGetMainWnd())->GetActiveView());
 	CPatternEditor *pEditor = pView->GetPatternEditor();
 
-	m_cChipEdit->AddString(_T("2A03"));
+	m_cChipEdit->AddString(_T("5E01"));
 	if (pDoc->ExpansionEnabled(SNDCHIP_VRC6))
 		m_cChipEdit->AddString(_T("VRC6"));
 	if (pDoc->ExpansionEnabled(SNDCHIP_VRC7))
@@ -108,7 +108,7 @@ BOOL CGotoDlg::OnInitDialog()
 		m_cChipEdit->SelectString(-1, _T("VRC6"));
 	}
 	else
-		m_cChipEdit->SelectString(-1, _T("2A03"));
+		m_cChipEdit->SelectString(-1, _T("5E01"));
 
 	SetDlgItemInt(IDC_EDIT_GOTO_FRAME, pEditor->GetFrame());
 	SetDlgItemInt(IDC_EDIT_GOTO_ROW, pEditor->GetRow());
@@ -143,7 +143,7 @@ void CGotoDlg::CheckDestination() const
 
 int CGotoDlg::GetChipFromString(const CString str)
 {
-	if (str == _T("2A03"))
+	if (str == _T("5E01"))
 		return SNDCHIP_NONE;
 	else if (str == _T("VRC6"))
 		return SNDCHIP_VRC6;

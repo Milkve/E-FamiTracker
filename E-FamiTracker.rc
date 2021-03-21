@@ -498,11 +498,11 @@ BEGIN
     VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
     "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
     VK_F4,          ID_FILE_CLOSE,          VIRTKEY, ALT, NOINVERT
-    "E",            ID_FILE_CREATE_NSF,     VIRTKEY, CONTROL, NOINVERT
+//    "E",            ID_FILE_CREATE_NSF,     VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
-    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+//    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
     "K",            ID_KRAID1,              VIRTKEY, SHIFT, CONTROL, NOINVERT
     "R",            ID_KRAID2,              VIRTKEY, SHIFT, CONTROL, NOINVERT
     "A",            ID_KRAID3,              VIRTKEY, SHIFT, CONTROL, NOINVERT

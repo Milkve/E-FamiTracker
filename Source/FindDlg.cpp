@@ -305,7 +305,7 @@ void CFindResultsBox::SelectItem(int Index)
 	const auto ToChannelIndex = [] (const std::string &_x) {
 		CString x {_x.c_str()};
 		static const CString HEADER_STR[] = {
-			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
+			_T("Pulse "), _T("Waveform"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square ")
 		};
@@ -513,7 +513,7 @@ int CFindResultsBox::ChannelCompareFunc(LPARAM lParam1, LPARAM lParam2, LPARAM l
 
 	const auto ToIndex = [] (const CString &x) {
 		static const CString HEADER_STR[] = {
-			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
+			_T("Pulse "), _T("Waveform"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square ")
 		};

@@ -15,6 +15,7 @@ E-FamiTracker is a fork of Dn-FamiTracker meant to make it a multi-system tracke
  - [x] AY8930 soundchip emulation
  - [ ] AY8930 instrument editor
  - [ ] AY8930 as its own soundchip
+ - [ ] FDS waveform view in registers
  - [ ] "Add chip" button on channels menu
  - [ ] Extended file encoding for more soundchips
  - [ ] Checklist view soundchip dialog

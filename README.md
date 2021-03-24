@@ -1,3 +1,29 @@
+# Eulous' E-FamiTracker
+
+E-FamiTracker is a fork of Dn-FamiTracker meant to make it a multi-system tracker, adding a large amount of chips and other misc. features. This is a personal project of mine but suggestions are open.
+
+## Features
+
+- Custom 5E01 soundchip (may remove/change)
+
+- AY8930 soundchip
+
+### To-do
+
+ - [ ] Unique file type (.eft)
+ - [ ] Add 2A03 chip back (replacing 5E01)
+ - [x] AY8930 soundchip emulation
+ - [ ] AY8930 instrument editor
+ - [ ] AY8930 as its own soundchip
+ - [ ] "Add chip" button on channels menu
+ - [ ] Extended file encoding for more soundchips
+ - [ ] Checklist view soundchip dialog
+ - [ ] SN76489 soundchip
+ - [ ] T6W28 soundchip
+ - [ ] SAA1099 soundchip (option for double chips)
+ - [ ] TIA soundchip
+ - [ ] Option for disabling 2A03
+
 <img src="docs/dn logo.svg">
 
 Dn-Famitracker is a fork of 0CC-FamiTracker that incorporates numerous fixes and features. The meaning of the name "Dn" is whatever you wish it to be.

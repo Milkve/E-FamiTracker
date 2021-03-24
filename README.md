@@ -16,14 +16,18 @@ E-FamiTracker is a fork of Dn-FamiTracker meant to make it a multi-system tracke
  - [ ] AY8930 instrument editor
  - [ ] AY8930 as its own soundchip
  - [ ] FDS waveform view in registers
- - [ ] "Add chip" button on channels menu
- - [ ] Extended file encoding for more soundchips
- - [ ] Checklist view soundchip dialog
+ - [ ] "Add chip" button beside the channels (displayed as a +)
+ - [ ] Reworked file encoding for more soundchips
+ - [ ] New soundchip dialog (checklist of chips) in module properties
+ - [ ] Stereo effect 8xy
  - [ ] SN76489 soundchip
  - [ ] T6W28 soundchip
  - [ ] SAA1099 soundchip (option for double chips)
+ - [ ] AY-3-8910 soundchip
  - [ ] TIA soundchip
  - [ ] Option for disabling 2A03
+ - [ ] Rework how channels/chips are handled to un-hardcode many things.
+ - [ ] Freeform channel capabilities
 
 <img src="docs/dn logo.svg">
 

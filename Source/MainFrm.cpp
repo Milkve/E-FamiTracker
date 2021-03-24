@@ -1670,7 +1670,7 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 				String = _T(" Namco 163");
 				break;
 			case SNDCHIP_S5B:
-				String = _T(" Sunsoft 5B");
+				String = _T(" Microchip AY8930");
 				break;
 		}
 	else {
@@ -1691,7 +1691,7 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 				String += _T(" + N163");
 				break;
 			case 5:
-				String += _T(" + S5B");
+				String += _T(" + AY8930");
 				break;
 		}
 		String.Delete(0, 3);
@@ -2671,7 +2671,7 @@ void CMainFrame::OnNewInstrumentMenu(NMHDR* pNotifyStruct, LRESULT* result)
 	if (Chip & SNDCHIP_N163)
 		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_N163, _T("New Namco instrument"));
 	if (Chip & SNDCHIP_S5B)
-		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_S5B, _T("New Sunsoft instrument"));
+		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_S5B, _T("New AY8930 instrument"));
 
 	switch (SelectedChip) {
 		case SNDCHIP_NONE:

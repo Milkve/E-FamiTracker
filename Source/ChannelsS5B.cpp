@@ -39,10 +39,8 @@ int			  CChannelHandlerS5B::s_iModes		= 0;
 int			  CChannelHandlerS5B::s_iNoiseFreq	= 0;
 int			  CChannelHandlerS5B::s_iNoisePrev	= -1;
 int			  CChannelHandlerS5B::s_iDefaultNoise = 0;		// // //
-unsigned char CChannelHandlerS5B::s_iEnvFreqHi	= 0;
-unsigned char CChannelHandlerS5B::s_iEnvFreqLo	= 0;
-bool		  CChannelHandlerS5B::s_bEnvTrigger	= false;		// // // 050B
-int			  CChannelHandlerS5B::s_iEnvType	= 0;
+int			  CChannelHandlerS5B::s_iNoiseANDMask = 0x00;		// // //
+int			  CChannelHandlerS5B::s_iNoiseORMask = 0xFF;		// // //
 int			  CChannelHandlerS5B::s_unused		= 0;		// // // 050B
 
 // Class functions
@@ -76,8 +74,8 @@ void CChannelHandlerS5B::UpdateAutoEnvelope(int Period)		// // // 050B
 		}
 		else if (m_iAutoEnvelopeShift < 8)
 			Period <<= 8 - m_iAutoEnvelopeShift;
-		s_iEnvFreqLo = Period & 0xFF;
-		s_iEnvFreqHi = Period >> 8;
+		m_iEnvFreqLo = Period & 0xFF;
+		m_iEnvFreqHi = Period >> 8;
 	}
 }
 
@@ -85,21 +83,22 @@ void CChannelHandlerS5B::UpdateRegs()		// // //
 {
 	// Done only once
 	if (s_iNoiseFreq != s_iNoisePrev)		// // //
-		WriteReg(0x06, (s_iNoisePrev = s_iNoiseFreq) ^ 0x1F);
+		WriteReg(0x06, (s_iNoisePrev = s_iNoiseFreq) ^ 0xFF);
 	WriteReg(0x07, s_iModes);
-	WriteReg(0x0B, s_iEnvFreqLo);
-	WriteReg(0x0C, s_iEnvFreqHi);
-	if (s_bEnvTrigger)		// // // 050B
-		WriteReg(0x0D, s_iEnvType);
-	s_bEnvTrigger = false;
+	WriteReg(0x19, s_iNoiseANDMask);
+	WriteReg(0x1A, s_iNoiseORMask);
 }
 
 // Instance functions
 
 CChannelHandlerS5B::CChannelHandlerS5B() : 
-	CChannelHandler(0xFFF, 0x0F),
+	CChannelHandler(0xFFFF, 0x1F),
 	m_bEnvelopeEnabled(false),		// // // 050B
 	m_iAutoEnvelopeShift(0),		// // // 050B
+	m_iEnvFreqHi(0),		// // // 050B
+  m_iEnvFreqLo(0),		// // // 050B
+  m_bEnvTrigger(false),		// // // 050B
+  m_iEnvType(0),		// // // 050B
 	m_bUpdate(false)
 {
 	m_iDefaultDuty = S5B_MODE_SQUARE;		// // //
@@ -125,21 +124,32 @@ bool CChannelHandlerS5B::HandleEffect(effect_t EffNum, EffParamT EffParam)
 {
 	switch (EffNum) {
 	case EF_SUNSOFT_NOISE: // W
-		s_iDefaultNoise = s_iNoiseFreq = EffParam & 0x1F;		// // // 050B
+		s_iDefaultNoise = s_iNoiseFreq = EffParam & 0xFF;		// // // 050B
 		break;
 	case EF_SUNSOFT_ENV_HI: // I
-		s_iEnvFreqHi = EffParam;
+		m_iEnvFreqHi = EffParam;
 		break;
 	case EF_SUNSOFT_ENV_LO: // J
-		s_iEnvFreqLo = EffParam;
+		m_iEnvFreqLo = EffParam;
 		break;
 	case EF_SUNSOFT_ENV_TYPE: // H
-		s_bEnvTrigger = true;		// // // 050B
-		s_iEnvType = EffParam & 0x0F;
+		m_bEnvTrigger = true;		// // // 050B
+		m_iEnvType = EffParam & 0x0F;
 		m_bUpdate = true;
 		m_bEnvelopeEnabled = EffParam != 0;
 		m_iAutoEnvelopeShift = EffParam >> 4;
 		break;
+	case EF_SUNSOFT_PULSE_WIDTH: // X
+		m_iPulseWidth = EffParam & 0x0F;
+		break;
+	case EF_SUNSOFT_AND_MASK: // Y
+		s_iNoiseANDMask = EffParam;
+		break;
+	case EF_SUNSOFT_OR_MASK: // Z
+		s_iNoiseORMask = EffParam;
+		break;
+	case EF_SUNSOFT_VOL:
+		m_iExVolume = EffParam & 1;
 	case EF_DUTY_CYCLE: {
 		/*
 		Translate Vxx bitmask to `enum DutyType` bitmask, using VXX_TO_DUTY
@@ -157,7 +167,7 @@ bool CChannelHandlerS5B::HandleEffect(effect_t EffNum, EffParamT EffParam)
 			}
 		}
 
-		m_iDefaultDuty = m_iDutyPeriod = duty;
+		m_iDefaultDuty = m_iDutyPeriod = (duty);// | (EffParam & 0x0F);
 		break;
 	}
 	default: return CChannelHandler::HandleEffect(EffNum, EffParam);
@@ -229,16 +239,17 @@ void CChannelHandlerS5B::ResetChannel()
 	s_iNoisePrev = -1;		// // //
 	m_bEnvelopeEnabled = false;
 	m_iAutoEnvelopeShift = 0;
-	s_iEnvFreqHi = 0;
-	s_iEnvFreqLo = 0;
-	s_iEnvType = 0;
+	m_iEnvFreqHi = 0;
+	m_iEnvFreqLo = 0;
+	m_iEnvType = 0;
+	m_iPulseWidth = 0;
 	s_unused = 0;		// // // 050B
-	s_bEnvTrigger = false;
+	m_bEnvTrigger = false;
 }
 
 int CChannelHandlerS5B::CalculateVolume() const		// // //
 {
-	return LimitVolume((m_iVolume >> VOL_COLUMN_SHIFT) + m_iInstVolume - 15 - GetTremolo());
+	return LimitVolume(m_iVolume >> VOL_COLUMN_SHIFT)*2 + m_iInstVolume - 31 - GetTremolo()+m_iExVolume;
 }
 
 int CChannelHandlerS5B::ConvertDuty(int Duty) const		// // //
@@ -260,14 +271,20 @@ CString CChannelHandlerS5B::GetCustomEffectString() const		// // //
 {
 	CString str = _T("");
 
-	if (s_iEnvFreqLo)
-		str.AppendFormat(_T(" H%02X"), s_iEnvFreqLo);
-	if (s_iEnvFreqHi)
-		str.AppendFormat(_T(" I%02X"), s_iEnvFreqHi);
-	if (s_iEnvType)
-		str.AppendFormat(_T(" J%02X"), s_iEnvType);
+	if (m_iEnvFreqLo)
+		str.AppendFormat(_T(" H%02X"), m_iEnvFreqLo);
+	if (m_iEnvFreqHi)
+		str.AppendFormat(_T(" I%02X"), m_iEnvFreqHi);
+	if (m_iEnvType)
+		str.AppendFormat(_T(" J%02X"), m_iEnvType);
 	if (s_iDefaultNoise)
 		str.AppendFormat(_T(" W%02X"), s_iDefaultNoise);
+	if (m_iPulseWidth)
+		str.AppendFormat(_T(" X%02X"), m_iPulseWidth);
+	if (s_iNoiseANDMask)
+		str.AppendFormat(_T(" Y%02X"), s_iNoiseANDMask);
+	if (s_iNoiseORMask)
+		str.AppendFormat(_T(" Z%02X"), s_iNoiseORMask);
 
 	return str;
 }
@@ -278,10 +295,11 @@ void CChannelHandlerS5B::RefreshChannel()
 	unsigned char LoPeriod = Period & 0xFF;
 	unsigned char HiPeriod = Period >> 8;
 	int Volume = CalculateVolume();
+	//unsigned char DutyCycle = m_iDutyPeriod & 0x0F;
 
 	unsigned char Noise = (m_bGate && (m_iDutyPeriod & S5B_MODE_NOISE)) ? 0 : 1;
 	unsigned char Square = (m_bGate && (m_iDutyPeriod & S5B_MODE_SQUARE)) ? 0 : 1;
-	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x10 : 0; // m_bEnvelopeEnabled ? 0x10 : 0;
+	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x20 : 0; // m_bEnvelopeEnabled ? 0x10 : 0;
 
 	UpdateAutoEnvelope(Period);		// // // 050B
 	SetMode(m_iChannelID, Square, Noise);
@@ -289,10 +307,19 @@ void CChannelHandlerS5B::RefreshChannel()
 	WriteReg((m_iChannelID - CHANID_S5B_CH1) * 2    , LoPeriod);
 	WriteReg((m_iChannelID - CHANID_S5B_CH1) * 2 + 1, HiPeriod);
 	WriteReg((m_iChannelID - CHANID_S5B_CH1) + 8    , Volume | Envelope);
+	WriteReg((m_iChannelID - CHANID_S5B_CH1) + 0x16 , m_iPulseWidth);
 
+	unsigned int FreqAddr[3] = {0x0B, 0x10, 0x12};
+	unsigned int ModeAddr[3] = {0x0D, 0x14, 0x15};
 	if (Envelope && (m_bTrigger || m_bUpdate))		// // // 050B
-		s_bEnvTrigger = true;
+		m_bEnvTrigger = true;
 	m_bUpdate = false;
+	WriteReg(FreqAddr[m_iChannelID - CHANID_S5B_CH1], m_iEnvFreqLo);
+	WriteReg(FreqAddr[m_iChannelID - CHANID_S5B_CH1] + 1, m_iEnvFreqHi);
+	if (m_bEnvTrigger)		// // // 050B
+		WriteReg(ModeAddr[m_iChannelID - CHANID_S5B_CH1], m_iEnvType);
+	m_bEnvTrigger = false;
+	
 
 	if (m_iChannelID == CHANID_S5B_CH3)
 		UpdateRegs();

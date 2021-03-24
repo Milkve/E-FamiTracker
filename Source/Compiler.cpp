@@ -2128,7 +2128,7 @@ void CCompiler::AddWavetable(CInstrumentFDS *pInstrument, CChunk *pChunk)
 	// TODO Find equal existing waves
 	/*
 	for (int i = 0; i < m_iWaveTables; ++i) {
-		if (!memcmp(Wave, m_iWaveTable[i], 64))
+		if (!memcmp(Wave, m_iWaveTable[i],;))
 			return i;
 	}
 	*/

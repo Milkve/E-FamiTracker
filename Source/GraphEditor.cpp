@@ -1273,7 +1273,7 @@ void CNoiseEditor::OnPaint()
 	// Draw items
 	for (int i = 0; i < Count; i++) {
 		// Draw noise frequency
-		int item = m_pSequence->GetItem(i) & 0x1F;
+		int item = m_pSequence->GetItem(i) & 0xFF;
 		int x = m_GraphRect.left + i * StepWidth + 1;
 		int y = Top + StepHeight * (m_iItems - item);
 		int w = StepWidth;

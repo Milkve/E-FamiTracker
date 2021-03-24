@@ -228,9 +228,9 @@ void CSoundGen::CreateChannels()
 	AssignChannel(new CTrackerChannel(_T("FM Channel 6"), _T("FM6"), SNDCHIP_VRC7, CHANID_VRC7_CH6));
 
 	// // // Sunsoft 5B
-	AssignChannel(new CTrackerChannel(_T("5B Square 1"), _T("5B1"), SNDCHIP_S5B, CHANID_S5B_CH1));
-	AssignChannel(new CTrackerChannel(_T("5B Square 2"), _T("5B2"), SNDCHIP_S5B, CHANID_S5B_CH2));
-	AssignChannel(new CTrackerChannel(_T("5B Square 3"), _T("5B3"), SNDCHIP_S5B, CHANID_S5B_CH3));
+	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 1"), _T("AY1"), SNDCHIP_S5B, CHANID_S5B_CH1));
+	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 2"), _T("AY2"), SNDCHIP_S5B, CHANID_S5B_CH2));
+	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 3"), _T("AY3"), SNDCHIP_S5B, CHANID_S5B_CH3));
 }
 
 void CSoundGen::AssignChannel(CTrackerChannel *pTrackerChannel)		// // //

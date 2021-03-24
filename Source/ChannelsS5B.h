@@ -65,15 +65,19 @@ protected:
 	static int s_iNoiseFreq;
 	static int s_iNoisePrev;		// // //
 	static int s_iDefaultNoise;		// // //
-	static unsigned char s_iEnvFreqHi;
-	static unsigned char s_iEnvFreqLo;
-	static bool s_bEnvTrigger;		// // // 050B
-	static int s_iEnvType;
+	static int s_iNoiseANDMask;
+	static int s_iNoiseORMask;
 	static int s_unused;		// // // 050B, unused
 
 	// Instance members
 protected:
 	bool m_bEnvelopeEnabled;		// // // 050B
 	int m_iAutoEnvelopeShift;		// // // 050B
+	unsigned char m_iEnvFreqHi;
+	unsigned char m_iEnvFreqLo;
+	unsigned char m_iPulseWidth;
+	int m_iExVolume;
+	bool m_bEnvTrigger;		// // // 050B
+	int m_iEnvType;
 	bool m_bUpdate;
 };

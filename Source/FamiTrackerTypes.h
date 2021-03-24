@@ -149,6 +149,10 @@ enum effect_t : unsigned char {
 	EF_SUNSOFT_ENV_HI,  	// Sunsoft envelope high
 	EF_SUNSOFT_ENV_LO,  	// Sunsoft envelope low
 	EF_SUNSOFT_NOISE,   	// // // 050B Sunsoft noise period
+	EF_SUNSOFT_PULSE_WIDTH,   	// // // 050B Sunsoft noise AND mask
+	EF_SUNSOFT_AND_MASK,   	// // // 050B Sunsoft noise AND mask
+	EF_SUNSOFT_OR_MASK,   	// // // 050B Sunsoft noise OR mask
+	EF_SUNSOFT_VOL,					// // // 050B Sunsoft extra volume bit
 	EF_VRC7_PORT,       	// // // 050B VRC7 custom patch port
 	EF_VRC7_WRITE,      	// // // 050B VRC7 custom patch write
 	EF_NOTE_RELEASE,    	// // // Delayed release
@@ -172,7 +176,7 @@ const effect_t VRC7_EFFECTS[] = {EF_VRC7_PORT, EF_VRC7_WRITE};
 const effect_t FDS_EFFECTS[] = {EF_FDS_MOD_DEPTH, EF_FDS_MOD_SPEED_HI, EF_FDS_MOD_SPEED_LO, EF_FDS_VOLUME, EF_FDS_MOD_BIAS};
 // const effect_t MMC5_EFFECTS[] = {};
 const effect_t N163_EFFECTS[] = {EF_N163_WAVE_BUFFER};
-const effect_t S5B_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE};
+const effect_t S5B_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE, EF_SUNSOFT_PULSE_WIDTH, EF_SUNSOFT_AND_MASK, EF_SUNSOFT_OR_MASK, EF_SUNSOFT_VOL};
 
 // Effect checking = bool CTrackerChannel::IsEffectCompatible
 
@@ -212,6 +216,10 @@ const char EFF_CHAR[] = {
 	'I',   	// EF_SUNSOFT_ENV_HI,
 	'J',   	// EF_SUNSOFT_ENV_LO,
 	'W',   	// EF_SUNSOFT_NOISE,
+	'X',   	// EF_SUNSOFT_PULSE_WIDTH,
+	'Y',   	// EF_SUNSOFT_AND_MASK,
+	'Z',   	// EF_SUNSOFT_OR_MASK,
+	'5',    // EF_SUNSOFT_VOL,
 	'H',   	// EF_VRC7_PORT,
 	'I',   	// EF_VRC7_WRITE,
 	'L',   	// EF_NOTE_RELEASE,

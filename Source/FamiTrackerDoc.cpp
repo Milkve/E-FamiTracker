@@ -4991,6 +4991,8 @@ stFullState *CFamiTrackerDoc::RetrieveSoundState(unsigned int Track, unsigned in
 				case EF_SAMPLE_OFFSET:
 				case EF_FDS_VOLUME: case EF_FDS_MOD_BIAS:
 				case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI: case EF_SUNSOFT_ENV_TYPE:
+				case EF_SUNSOFT_PULSE_WIDTH: case EF_SUNSOFT_AND_MASK: case EF_SUNSOFT_OR_MASK:
+				case EF_SUNSOFT_VOL:
 				case EF_N163_WAVE_BUFFER:
 				case EF_VRC7_PORT:
 					if (!ch->IsEffectCompatible(fx, xy)) continue;

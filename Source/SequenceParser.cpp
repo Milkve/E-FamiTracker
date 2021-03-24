@@ -151,7 +151,7 @@ bool CSeqConversionDefault::GetNextTerm(std::string::const_iterator &b, std::str
 
 std::string CSeqConversion5B::ToString(char Value) const
 {
-	std::string Str = std::to_string(Value & 0x1F);
+	std::string Str = std::to_string(Value & 0xFF);
 	if (Value & S5B_MODE_SQUARE)
 		Str.push_back('t');
 	if (Value & S5B_MODE_NOISE)

@@ -230,7 +230,12 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 			return m_iChip == SNDCHIP_FDS;
 		case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI: case EF_SUNSOFT_ENV_TYPE:
 		case EF_SUNSOFT_NOISE:		// // // 050B
+		case EF_SUNSOFT_AND_MASK: case EF_SUNSOFT_OR_MASK:
 			return m_iChip == SNDCHIP_S5B;
+		case EF_SUNSOFT_PULSE_WIDTH:
+			return m_iChip == SNDCHIP_S5B && EffParam <= 0x0F;
+		case EF_SUNSOFT_VOL:
+			return m_iChip == SNDCHIP_S5B && EffParam <= 0x01;
 		case EF_N163_WAVE_BUFFER:
 			return m_iChip == SNDCHIP_N163 && EffParam <= 0x7F;
 		case EF_FDS_VOLUME:

@@ -109,6 +109,10 @@ enum command_t {
 	CMD_EFF_S5B_ENV_RATE_HI,	// // //
 	CMD_EFF_S5B_ENV_RATE_LO,	// // //
 	CMD_EFF_S5B_NOISE,			// // // 050B
+	CMD_EFF_S5B_PULSE_WIDTH,			// // // 050B
+	CMD_EFF_S5B_AND_MASK,			// // // 050B
+	CMD_EFF_S5B_OR_MASK,			// // // 050B
+	CMD_EFF_S5B_VOL,			// // // 050B
 };
 
 const unsigned char CMD_LOOP_POINT = 26;	// Currently unused
@@ -620,7 +624,31 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 				case EF_SUNSOFT_NOISE:		// // // 050B
 					if (ChipID == SNDCHIP_S5B) {
 						WriteData(Command(CMD_EFF_S5B_NOISE));
-						WriteData(EffParam & 0x1F);
+						WriteData(EffParam & 0xFF);
+					}
+					break;
+				case EF_SUNSOFT_PULSE_WIDTH:		// // // 050B
+					if (ChipID == SNDCHIP_S5B) {
+						WriteData(Command(CMD_EFF_S5B_PULSE_WIDTH));
+						WriteData(EffParam & 0x0F);
+					}
+					break;
+				case EF_SUNSOFT_AND_MASK:		// // // 050B
+					if (ChipID == SNDCHIP_S5B) {
+						WriteData(Command(CMD_EFF_S5B_AND_MASK));
+						WriteData(EffParam & 0xFF);
+					}
+					break;
+				case EF_SUNSOFT_OR_MASK:		// // // 050B
+					if (ChipID == SNDCHIP_S5B) {
+						WriteData(Command(CMD_EFF_S5B_OR_MASK));
+						WriteData(EffParam & 0xFF);
+					}
+					break;
+				case EF_SUNSOFT_VOL:		// // // 050B
+					if (ChipID == SNDCHIP_S5B) {
+						WriteData(Command(CMD_EFF_S5B_VOL));
+						WriteData(EffParam & 0x01);
 					}
 					break;
 				// // // N163

@@ -86,6 +86,7 @@ const CString EFFECT_TEXTS[] = {		// // //
 	_T("Vxx - Set N163 wave index to XX"),
 	_T("Vxx - Set VRC7 patch index to XX"),
 	_T("Vxx - Set Wave shape to XX"),
+	_T("Vxx - Set AY8930 channel mode to XX"),
 	_T("Yxx - Set DPCM sample offset to XX<=3F"),
 	_T("Qxy - Portamento up, X = speed, Y = notes"),
 	_T("Rxy - Portamento down, X = speed, Y = notes"),
@@ -100,11 +101,15 @@ const CString EFFECT_TEXTS[] = {		// // //
 	_T("Ixy - Auto FDS modulation, X = multiplier, Y + 1 = divider"),
 	_T("Jxx - FDS modulation rate, low byte"),
 	_T("W0x - DPCM pitch, F = highest"),
-	_T("H0y - 5B envelope shape, bit 3 = Continue, bit 2 = Attack, bit 1 = Alternate, bit 0 = Hold"),
-	_T("Hxy - Auto 5B envelope, X - 8 = shift amount, Y = shape"),
-	_T("Ixx - 5B envelope rate, high byte"),
-	_T("Jxx - 5B envelope rate, low byte"),
-	_T("Wxx - 5B noise pitch, 1F = highest"),
+	_T("H0y - AY8930 envelope shape, bit 3 = Continue, bit 2 = Attack, bit 1 = Alternate, bit 0 = Hold"),
+	_T("Hxy - Auto AY8930 envelope, X - 8 = shift amount, Y = shape"),
+	_T("Ixx - AY8930 envelope rate, high byte"),
+	_T("Jxx - AY8930 envelope rate, low byte"),
+	_T("Wxx - AY8930 noise pitch"),
+	_T("Xxx - AY8930 pulse width, values above 08 act as 08"),
+	_T("Yxx - AY8930 noise AND mask"),
+	_T("Zxx - AY8930 noise OR mask"),
+	_T("5xx - AY8930 least significant volume bit"),
 	_T("Hxx - VRC7 custom patch port, XX = register address"),
 	_T("Ixx - VRC7 custom patch write, XX = register value"),
 	_T("Lxx - Note release, XX = frames to wait"),
@@ -4102,9 +4107,10 @@ CString	CFamiTrackerView::GetEffectHint(const stChanNote &Note, int Column) cons
 	if (Index > EF_FDS_MOD_SPEED_HI || (Index == EF_FDS_MOD_SPEED_HI && Param >= 0x10)) ++Index;
 	if (Index > EF_FDS_MOD_DEPTH || (Index == EF_FDS_MOD_DEPTH && Param >= 0x80)) ++Index;
 	if (Index > EF_NOTE_CUT || (Index == EF_NOTE_CUT && Param >= 0x80 && Channel == CHANID_TRIANGLE)) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_VRC7 || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && Channel == CHANID_TRIANGLE)) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_VRC7 || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Channel == CHANID_TRIANGLE))) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && Chip == SNDCHIP_S5B)) ++Index;
 	if (Index > EF_VOLUME || (Index == EF_VOLUME && Param >= 0xE0)) ++Index;
 	if (Index > EF_SPEED || (Index == EF_SPEED && Param >= GetDocument()->GetSpeedSplitPoint())) ++Index;
 

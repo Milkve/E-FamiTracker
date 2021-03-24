@@ -164,7 +164,7 @@ void CS5B::Reset()
 {
 	m_iNoiseState = 0x1FFFF;
 	m_iCounter = 0;
-	m_iNoisePeriod = 0xFF << 4;
+	m_iNoisePeriod = 0xFF << 5;
 	m_iNoiseClock = 0;
 
 	m_iNoiseValue = 0;
@@ -191,7 +191,7 @@ void CS5B::Process(uint32_t Time)
 
 		m_iCounter += TimeToRun;
 		Time -= TimeToRun;
-		
+
 		RunNoise(TimeToRun);
 		for (auto x : m_pChannel)
 			x->RunEnvelope(TimeToRun);
@@ -379,10 +379,9 @@ void CS5BChannel::RunEnvelope(uint32_t Time)
 */
 void CS5B::RunNoise(uint32_t Time)
 {
-	m_iNoiseClock += Time*2;
+	m_iNoiseClock += (int)(Time * 2.33333);
 	while (m_iNoiseClock >= m_iNoisePeriod) {
 		m_iNoiseClock -= m_iNoisePeriod;
-		m_iNoiseValue += 1;
 		if (m_iNoiseValue >= ((m_iNoiseState & 0xFF & m_iNoiseANDMask) | m_iNoiseORMask)) {
 			m_iNoiseValue = 0;
 
@@ -393,5 +392,7 @@ void CS5B::RunNoise(uint32_t Time)
 			m_iNoiseState >>= 1;
 			m_iNoiseState |= (feedback << 16);
 		}
+		m_iNoiseValue += 1;
+		
 	}
 }

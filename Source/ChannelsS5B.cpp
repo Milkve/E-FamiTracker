@@ -217,7 +217,7 @@ bool CChannelHandlerS5B::CreateInstHandler(inst_type_t Type)
 		switch (m_iInstTypeCurrent) {
 		case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS: break;
 		default:
-			m_pInstHandler.reset(new CSeqInstHandlerS5B(this, 0x0F, Type == INST_S5B ? 0x40 : 0));
+			m_pInstHandler.reset(new CSeqInstHandlerS5B(this, 0x1F, Type == INST_S5B ? 0x40 : 0));
 			return true;
 		}
 	}
@@ -236,6 +236,8 @@ void CChannelHandlerS5B::ResetChannel()
 
 	m_iDefaultDuty = m_iDutyPeriod = S5B_MODE_SQUARE;
 	s_iDefaultNoise = s_iNoiseFreq = 0;		// // //
+	s_iNoiseORMask = 0x00;		// // //
+	s_iNoiseANDMask = 0x0F;   // // //
 	s_iNoisePrev = -1;		// // //
 	m_bEnvelopeEnabled = false;
 	m_iAutoEnvelopeShift = 0;
@@ -243,6 +245,7 @@ void CChannelHandlerS5B::ResetChannel()
 	m_iEnvFreqLo = 0;
 	m_iEnvType = 0;
 	m_iPulseWidth = 0;
+	m_iExVolume = 0;
 	s_unused = 0;		// // // 050B
 	m_bEnvTrigger = false;
 }

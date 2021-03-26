@@ -29,7 +29,7 @@ class CInstHandlerVRC7 : public CInstHandler
 {
 public:
 	CInstHandlerVRC7(CChannelHandlerInterface *pInterface, int Vol) :
-		CInstHandler(pInterface, Vol) { }
+		CInstHandler(pInterface, Vol, Vol) { }
 	void LoadInstrument(std::shared_ptr<CInstrument> pInst) override;
 	void TriggerInstrument() override;
 	void ReleaseInstrument() override;

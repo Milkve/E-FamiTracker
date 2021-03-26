@@ -33,7 +33,7 @@ bool CSeqInstHandlerS5B::ProcessSequence(int Index, unsigned Setting, int Value)
 			m_pInterface->SetDutyPeriod(Value & 0xE0);
 
 			if (Value & S5B_MODE_NOISE) {
-				pChan->SetNoiseFreq(Value & 0xFF);
+				pChan->SetNoiseFreq(Value & 0x1F);
 			}
 			
 			return true;

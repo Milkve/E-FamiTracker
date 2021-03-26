@@ -49,7 +49,7 @@ public:
 		\param pInterface Pointer to the channel interface.
 		\param Vol Default volume for instruments used by this handler.
 		\param Duty Default duty cycle for instruments used by this handler. */
-	CSeqInstHandler(CChannelHandlerInterface *pInterface, int Vol, int Duty);
+	CSeqInstHandler(CChannelHandlerInterface *pInterface, int Vol, int DefaultVol, int Duty);
 
 	void LoadInstrument(std::shared_ptr<CInstrument> pInst) override;
 	void TriggerInstrument() override;

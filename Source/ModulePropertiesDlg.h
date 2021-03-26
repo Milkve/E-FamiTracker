@@ -37,7 +37,7 @@ private:
 	
 	bool m_bSingleSelection;		// // //
 	unsigned int m_iSelectedSong;
-	unsigned char m_iExpansions;		// // //
+	unsigned int m_iExpansions;		// // //
 	int m_iN163Channels;
 	int N163LevelOffset;
 

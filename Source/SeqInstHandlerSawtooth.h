@@ -38,7 +38,7 @@ public:
 		\param Vol Default volume for instruments used by this handler.
 		\param Duty Default duty cycle for instruments used by this handler. */
 	CSeqInstHandlerSawtooth(CChannelHandlerInterface *pInterface, int Vol, int Duty) :
-		CSeqInstHandler(pInterface, Vol, Duty) { }
+		CSeqInstHandler(pInterface, Vol, Vol, Duty) { }
 
 	/*!	\brief Starts a new note for the instrument handler.
 		\details This reimplementation checks whether the current instrument uses a 64-step volume

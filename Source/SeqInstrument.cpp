@@ -54,7 +54,7 @@ CInstrument *CSeqInstrument::Clone() const
 void CSeqInstrument::CloneFrom(const CInstrument *pInst)
 {
 	CInstrument::CloneFrom(pInst);
-	
+
 	if (auto pNew = dynamic_cast<const CSeqInstrument*>(pInst))
 		for (int i = 0; i < SEQ_COUNT; i++) {
 			SetSeqEnable(i, pNew->GetSeqEnable(i));

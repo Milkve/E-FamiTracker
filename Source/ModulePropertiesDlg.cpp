@@ -394,8 +394,8 @@ void CModulePropertiesDlg::OnBnClickedSongImport()
 	CModuleImportDlg importDlg(m_pDocument);
 
 	// TODO use string table
-	CFileDialog OpenFileDlg(TRUE, _T("0cc"), 0, OFN_HIDEREADONLY,
-							_T(APP_NAME " modules (*.0cc;*.ftm)|*.0cc; *.ftm|All files (*.*)|*.*||"),		// // //
+	CFileDialog OpenFileDlg(TRUE, _T("eft"), 0, OFN_HIDEREADONLY,
+							_T(APP_NAME " modules (*.eft;*.0cc;*.ftm)|*.eft; *.0cc; *.ftm|All files (*.*)|*.*||"),		// // //
 							theApp.GetMainWnd(), 0);
 
 	if (OpenFileDlg.DoModal() == IDCANCEL)

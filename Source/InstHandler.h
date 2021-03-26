@@ -41,8 +41,8 @@ protected:
 	/*!	\brief Constructor of the sequence instrument handler.
 		\param pInterface Pointer to the channel interface.
 		\param Vol Default volume for instruments used by this handler. */
-	CInstHandler(CChannelHandlerInterface *pInterface, int Vol) :
-		m_pInterface(pInterface), m_iVolume(Vol), m_iDefaultVolume(Vol) { }
+	CInstHandler(CChannelHandlerInterface *pInterface, int Vol, int DefaultVol) :
+		m_pInterface(pInterface), m_iVolume(Vol), m_iDefaultVolume(DefaultVol) { }
 
 public:
 	/*!	\brief Destructor of the instrument handler. */

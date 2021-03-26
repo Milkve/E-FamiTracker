@@ -262,7 +262,7 @@ private:
 	unsigned int	m_iWaveTables;
 
 	// // // Full chip export
-	unsigned char	m_iActualChip;
+	unsigned int	m_iActualChip;
 	int				m_iActualNamcoChannels;
 
 	// Optimization

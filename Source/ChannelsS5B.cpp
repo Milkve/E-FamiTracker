@@ -139,16 +139,16 @@ bool CChannelHandlerS5B::HandleEffect(effect_t EffNum, EffParamT EffParam)
 		m_bEnvelopeEnabled = EffParam != 0;
 		m_iAutoEnvelopeShift = EffParam >> 4;
 		break;
-	case EF_SUNSOFT_PULSE_WIDTH: // X
+	case EF_AY8930_PULSE_WIDTH: // X
 		m_iPulseWidth = EffParam & 0x0F;
 		break;
-	case EF_SUNSOFT_AND_MASK: // Y
+	case EF_AY8930_AND_MASK: // Y
 		s_iNoiseANDMask = EffParam;
 		break;
-	case EF_SUNSOFT_OR_MASK: // Z
+	case EF_AY8930_OR_MASK: // Z
 		s_iNoiseORMask = EffParam;
 		break;
-	case EF_SUNSOFT_VOL:
+	case EF_AY8930_VOL:
 		m_iExVolume = EffParam & 1;
 	case EF_DUTY_CYCLE: {
 		/*
@@ -217,7 +217,7 @@ bool CChannelHandlerS5B::CreateInstHandler(inst_type_t Type)
 		switch (m_iInstTypeCurrent) {
 		case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS: break;
 		default:
-			m_pInstHandler.reset(new CSeqInstHandlerS5B(this, 0x1F, Type == INST_S5B ? 0x40 : 0));
+			m_pInstHandler.reset(new CSeqInstHandlerS5B(this, 0x1F, 0x1F, Type == INST_S5B ? 0x40 : 0));
 			return true;
 		}
 	}
@@ -252,7 +252,7 @@ void CChannelHandlerS5B::ResetChannel()
 
 int CChannelHandlerS5B::CalculateVolume() const		// // //
 {
-	return LimitVolume(m_iVolume >> VOL_COLUMN_SHIFT)*2 + m_iInstVolume - 31 - GetTremolo()+m_iExVolume;
+	return LimitVolume((((m_iVolume >> VOL_COLUMN_SHIFT) - GetTremolo())*2 + m_iInstVolume - 31) | m_iExVolume);
 }
 
 int CChannelHandlerS5B::ConvertDuty(int Duty) const		// // //
@@ -330,5 +330,11 @@ void CChannelHandlerS5B::RefreshChannel()
 
 void CChannelHandlerS5B::SetNoiseFreq(int Pitch)		// // //
 {
-	s_iNoiseFreq = Pitch;
+	s_iNoiseFreq =  0xFF - (0x1F - (Pitch & 0x1F));
+}
+
+
+void CChannelHandlerS5B::SetExtra(int Value)		// // //
+{
+	m_iPulseWidth = Value;
 }

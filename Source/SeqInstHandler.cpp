@@ -36,8 +36,8 @@
  * Class CSeqInstHandler
  */
 
-CSeqInstHandler::CSeqInstHandler(CChannelHandlerInterface *pInterface, int Vol, int Duty) :
-	CInstHandler(pInterface, Vol),
+CSeqInstHandler::CSeqInstHandler(CChannelHandlerInterface *pInterface, int Vol, int DefaultVol, int Duty) :
+	CInstHandler(pInterface, Vol, DefaultVol),
 	m_iDefaultDuty(Duty)
 {
 	for (std::size_t i = 0; i < sizeof(m_pSequence) / sizeof(CSequence*); i++)
@@ -201,7 +201,12 @@ bool CSeqInstHandler::ProcessSequence(int Index, unsigned Setting, int Value)
 	case SEQ_DUTYCYCLE:
 		m_pInterface->SetDutyPeriod(Value);
 		return true;
+	// Extra
+	//case SEQ_EXTRA:
+		//m_pInterface->SetExtra(Value);
+		//return true;
 	}
+
 	return false;
 }
 

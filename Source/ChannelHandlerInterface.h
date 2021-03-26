@@ -33,6 +33,7 @@ class CChannelHandlerInterface		// // //
 public:
 	virtual int		TriggerNote(int) = 0;
 
+	virtual void	SetExtra(int) = 0;
 	virtual void	SetVolume(int) = 0;
 	virtual void	SetPeriod(int) = 0;
 	virtual void	SetNote(int) = 0;
@@ -84,6 +85,7 @@ public:
 	virtual void	SetWaveCount(int) = 0;
 	virtual void	FillWaveRAM(const char*, int) = 0;
 };
+
 
 class CChannelHandlerInterfaceS5B
 {

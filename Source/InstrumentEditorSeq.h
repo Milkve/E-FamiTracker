@@ -50,6 +50,7 @@ protected:
 
 protected:
 	LPCTSTR *m_pSequenceName;
+	int m_pSequenceCount;
 	TCHAR *m_pTitle;
 	const int m_iMaxVolume;
 	const int m_iMaxDuty;

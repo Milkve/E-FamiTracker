@@ -32,7 +32,7 @@
  */
 
 CSeqInstHandlerN163::CSeqInstHandlerN163(CChannelHandlerInterface *pInterface, int Vol, int Duty) :
-	CSeqInstHandler(pInterface, Vol, Duty),
+	CSeqInstHandler(pInterface, Vol, Vol, Duty),
 	m_cBuffer(),
 	m_pBufferCurrent(m_cBuffer),
 	m_bForceUpdate(false),

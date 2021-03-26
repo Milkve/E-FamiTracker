@@ -646,7 +646,7 @@ BOOL CFamiTrackerDoc::SaveDocument(LPCTSTR lpszPathName) const
 
 	// First write to a temp file (if saving fails, the original is not destroyed)
 	CString updir = "/..";
-	GetTempFileName(lpszPathName + updir, _T("0CC"), 0, TempFile);
+	GetTempFileName(lpszPathName + updir, _T("EFT"), 0, TempFile);
 
 	if (!DocumentFile.Open(TempFile, CFile::modeWrite | CFile::modeCreate, &ex)) {
 		// Could not open file
@@ -729,9 +729,9 @@ bool CFamiTrackerDoc::WriteBlocks(CDocumentFile *pDocFile) const
 {
 	static const int DEFAULT_BLOCK_VERSION[] = {		// // // TODO: use version info
 #ifdef TRANSPOSE_FDS
-		6, 1, 3, 6, 6, 3, 5, 1, 1,	// internal
+		7, 1, 3, 6, 6, 3, 5, 1, 1,	// internal
 #else
-		6, 1, 3, 6, 6, 3, 4, 1, 1,
+		7, 1, 3, 6, 6, 3, 4, 1, 1,
 #endif
 		6, 1, 1,					// expansion
 		2, 1, 1, 1,					// 0cc-ft
@@ -771,7 +771,9 @@ bool CFamiTrackerDoc::WriteBlock_Parameters(CDocumentFile *pDocFile, const int V
 	pDocFile->CreateBlock(FILE_BLOCK_PARAMS, Version);
 	
 	if (Version >= 2)
-		pDocFile->WriteBlockChar(m_iExpansionChip);		// ver 2 change
+		pDocFile->WriteBlockInt(m_iExpansionChip);		// e-ft change
+	//if (Version >= 2)
+	//	pDocFile->WriteBlockChar(m_iExpansionChip);		// ver 2 change
 	else
 		pDocFile->WriteBlockInt(GetTrack(0)->GetSongSpeed());
 
@@ -1087,7 +1089,7 @@ bool CFamiTrackerDoc::WriteBlock_SequencesS5B(CDocumentFile *pDocFile, const int
 
 	// Count number of used sequences
 	for (int i = 0; i < MAX_SEQUENCES; ++i)
-		for (int j = 0; j < SEQ_COUNT; ++j)
+		for (int j = 0; j < SEQ_COUNT; ++j) 
 			if (GetSequenceItemCount(INST_S5B, i, j) > 0)
 				Count++;
 
@@ -1659,8 +1661,12 @@ void CFamiTrackerDoc::ReadBlock_Parameters(CDocumentFile *pDocFile, const int Ve
 	if (Version == 1) {
 		pTrack->SetSongSpeed(pDocFile->GetBlockInt());
 	}
-	else
+	else if (Version < 7) {
 		m_iExpansionChip = pDocFile->GetBlockChar();
+	}
+	else {
+		m_iExpansionChip = pDocFile->GetBlockInt();
+	}
 
 	m_iChannelsAvailable = AssertRange(pDocFile->GetBlockInt(), 1, MAX_CHANNELS, "Channel count");		// // //
 	AssertRange<MODULE_ERROR_OFFICIAL>(static_cast<int>(m_iChannelsAvailable), 1, MAX_CHANNELS - 1, "Channel count");
@@ -1668,18 +1674,18 @@ void CFamiTrackerDoc::ReadBlock_Parameters(CDocumentFile *pDocFile, const int Ve
 	m_iMachine = static_cast<machine_t>(pDocFile->GetBlockInt());
 	AssertFileData(m_iMachine == NTSC || m_iMachine == PAL, "Unknown machine");
 
-	if (Version >= 7) {		// // // 050B
-		switch (pDocFile->GetBlockInt()) {
-		case 1:
-			m_iEngineSpeed = static_cast<int>(1000000. / pDocFile->GetBlockInt() + .5);
-			break;
-		case 0: case 2:
-		default:
-			pDocFile->GetBlockInt();
-			m_iEngineSpeed = 0;
-		}
-	}
-	else
+	//if (Version >= 7) {		// // // 050B
+	//	switch (pDocFile->GetBlockInt()) {
+	//	case 1:
+	//		m_iEngineSpeed = static_cast<int>(1000000. / pDocFile->GetBlockInt() + .5);
+	//		break;
+	//	case 0: case 2:
+	//	default:
+	//		pDocFile->GetBlockInt();
+	//		m_iEngineSpeed = 0;
+	//	}
+	//}
+	//else
 		m_iEngineSpeed = pDocFile->GetBlockInt();
 
 	if (Version > 2)
@@ -1694,7 +1700,7 @@ void CFamiTrackerDoc::ReadBlock_Parameters(CDocumentFile *pDocFile, const int Ve
 
 	m_vHighlight = CPatternData::DEFAULT_HIGHLIGHT;		// // //
 
-	if (Version > 3 && Version <= 6) {		// // // 050B
+	if (Version > 3 && Version <= 7) {		// // // 050B
 		m_vHighlight.First = pDocFile->GetBlockInt();
 		m_vHighlight.Second = pDocFile->GetBlockInt();
 	}
@@ -1733,7 +1739,7 @@ void CFamiTrackerDoc::ReadBlock_Parameters(CDocumentFile *pDocFile, const int Ve
 		m_iSpeedSplitPoint = OLD_SPEED_SPLIT_POINT;
 	}
 
-	AssertRange<MODULE_ERROR_STRICT>(m_iExpansionChip, 0, 0x3F, "Expansion chip flag");
+	//AssertRange<MODULE_ERROR_STRICT>(m_iExpansionChip, 0, 0x3F, "Expansion chip flag");
 
 	if (Version >= 8) {		// // // 050B
 		m_iDetuneSemitone = pDocFile->GetBlockChar();
@@ -3942,7 +3948,7 @@ unsigned int CFamiTrackerDoc::GetTrackCount() const
 	return m_iTrackCount;
 }
 
-void CFamiTrackerDoc::SelectExpansionChip(unsigned char Chip, bool Move)
+void CFamiTrackerDoc::SelectExpansionChip(unsigned int Chip, bool Move)
 {
 	// // // Move pattern data upon removing expansion chips
 	if (Move) {
@@ -3982,7 +3988,7 @@ void CFamiTrackerDoc::SelectExpansionChip(unsigned char Chip, bool Move)
 		m_iNamcoChannels = 0;
 }
 
-void CFamiTrackerDoc::SetupChannels(unsigned char Chip)
+void CFamiTrackerDoc::SetupChannels(unsigned int Chip)
 {
 	// This will select a chip in the sound emulator
 
@@ -4196,7 +4202,7 @@ int CFamiTrackerDoc::GetChannelCount() const
 	return m_iRegisteredChannels;
 }
 
-int CFamiTrackerDoc::GetChannelPosition(int Channel, unsigned char Chip)		// // //
+int CFamiTrackerDoc::GetChannelPosition(int Channel, unsigned int Chip)		// // //
 {
 	// TODO: use information from the current channel map instead
 	unsigned int pos = Channel;
@@ -4307,7 +4313,7 @@ CString CFamiTrackerDoc::GetFileTitle() const
 	// Return file name without extension
 	CString FileName = GetTitle();
 
-	static const LPCSTR EXT[] = {_T(".ftm"), _T(".0cc"), _T(".ftm.bak"), _T(".0cc.bak")};		// // //
+	static const LPCSTR EXT[] = {_T(".ftm"), _T(".0cc"), _T(".eft"), _T(".ftm.bak"), _T(".0cc.bak"), _T(".eft.bak"), };		// // //
 	// Remove extension
 
 	for (size_t i = 0; i < sizeof(EXT) / sizeof(LPCSTR); ++i) {
@@ -4991,8 +4997,8 @@ stFullState *CFamiTrackerDoc::RetrieveSoundState(unsigned int Track, unsigned in
 				case EF_SAMPLE_OFFSET:
 				case EF_FDS_VOLUME: case EF_FDS_MOD_BIAS:
 				case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI: case EF_SUNSOFT_ENV_TYPE:
-				case EF_SUNSOFT_PULSE_WIDTH: case EF_SUNSOFT_AND_MASK: case EF_SUNSOFT_OR_MASK:
-				case EF_SUNSOFT_VOL:
+				case EF_AY8930_PULSE_WIDTH: case EF_AY8930_AND_MASK: case EF_AY8930_OR_MASK:
+				case EF_AY8930_VOL:
 				case EF_N163_WAVE_BUFFER:
 				case EF_VRC7_PORT:
 					if (!ch->IsEffectCompatible(fx, xy)) continue;

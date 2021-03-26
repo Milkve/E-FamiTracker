@@ -98,7 +98,7 @@ private:
 class CSeqConversion5B : public CSeqConversionDefault
 {
 public:
-	CSeqConversion5B() : CSeqConversionDefault(0, 255) { }
+	CSeqConversion5B() : CSeqConversionDefault(0, 0x1F) { }
 	std::string ToString(char Value) const override;
 	bool ToValue(const std::string &String) override;
 	char GetValue() override;

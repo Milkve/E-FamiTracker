@@ -109,12 +109,12 @@ bool CModuleImportDlg::LoadFile(CString Path, CFamiTrackerDoc *pDoc)
 		if (m_pDocument->GetNamcoChannels() > Max) Max = m_pDocument->GetNamcoChannels();
 		m_pImportedDoc->SetNamcoChannels(Max, true);
 		m_pDocument->SetNamcoChannels(Max, true);
-		unsigned char Chip = m_pImportedDoc->GetExpansionChip() | m_pDocument->GetExpansionChip();
+		unsigned int Chip = m_pImportedDoc->GetExpansionChip() | m_pDocument->GetExpansionChip();
 		m_pImportedDoc->SelectExpansionChip(Chip, true);
 		m_pDocument->SelectExpansionChip(Chip, true);
 	}
 	if (m_pImportedDoc->GetExpansionChip() != m_pDocument->GetExpansionChip()) {
-		unsigned char Chip = m_pImportedDoc->GetExpansionChip() | m_pDocument->GetExpansionChip();
+		unsigned int Chip = m_pImportedDoc->GetExpansionChip() | m_pDocument->GetExpansionChip();
 		m_pImportedDoc->SelectExpansionChip(Chip, true);
 		m_pDocument->SelectExpansionChip(Chip, true);
 	}

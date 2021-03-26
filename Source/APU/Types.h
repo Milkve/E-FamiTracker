@@ -24,13 +24,13 @@
 
 #include <cstdint>
 
-const uint8_t SNDCHIP_NONE = 0;
-const uint8_t SNDCHIP_VRC6 = 1;			// Konami VRCVI
-const uint8_t SNDCHIP_VRC7 = 2;			// Konami VRCVII
-const uint8_t SNDCHIP_FDS  = 4;			// Famicom Disk Sound
-const uint8_t SNDCHIP_MMC5 = 8;			// Nintendo MMC5
-const uint8_t SNDCHIP_N163 = 16;		// Namco N-106
-const uint8_t SNDCHIP_S5B  = 32;		// Sunsoft 5B
+const int SNDCHIP_NONE = 0;
+const int SNDCHIP_VRC6 = 1;			// Konami VRCVI
+const int SNDCHIP_VRC7 = 2;			// Konami VRCVII
+const int SNDCHIP_FDS  = 4;			// Famicom Disk Sound
+const int SNDCHIP_MMC5 = 8;			// Nintendo MMC5
+const int SNDCHIP_N163 = 16;		// Namco N-106
+const int SNDCHIP_S5B  = 64;		// Microchip S5B
 
 enum chan_id_t {
 	CHANID_SQUARE1,

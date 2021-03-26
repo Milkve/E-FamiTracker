@@ -4,18 +4,28 @@ REGEDIT
 ;   registered in your InitInstance automatically with a call to
 ;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
 
-HKEY_CLASSES_ROOT\.0cc = "0CCFamiTracker.Document"
-HKEY_CLASSES_ROOT\0CCFamiTracker.Document\shell\open\command = 0CC-FamiTracker.EXE %1
-HKEY_CLASSES_ROOT\0CCFamiTracker.Document\shell\open\ddeexec = [open("%1")]
-HKEY_CLASSES_ROOT\0CCFamiTracker.Document\shell\open\ddeexec\application = 0CC-FamiTracker
+;HKEY_CLASSES_ROOT\.0cc = "0CCFamiTracker.Document"
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Document\shell\open\command = 0CC-FamiTracker.EXE %1
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Document\shell\open\ddeexec = [open("%1")]
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Document\shell\open\ddeexec\application = 0CC-FamiTracker
     ; note: the application is optional
     ;  (it defaults to the app name in "command")
-HKEY_CLASSES_ROOT\0CCFamiTracker.Document = 0CC-FamiTracker Module
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Document = 0CC-FamiTracker Module
 
-HKEY_CLASSES_ROOT\.0ci = "0CCFamiTracker.Instrument"
-HKEY_CLASSES_ROOT\0CCFamiTracker.Instrument = 0CC-FamiTracker Instrument
-HKEY_CLASSES_ROOT\0CCFamiTracker.Instrument\DefaultIcon = 0CC-FamiTracker.EXE,1
-HKEY_CLASSES_ROOT\.fti = "0CCFamiTracker.Instrument"
-HKEY_CLASSES_ROOT\.ftm = "0CCFamiTracker.Document"
-HKEY_CLASSES_ROOT\0CCFamiTracker.Document\DefaultIcon = 0CC-FamiTracker.EXE,1
+;HKEY_CLASSES_ROOT\.0ci = "0CCFamiTracker.Instrument"
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Instrument = 0CC-FamiTracker Instrument
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Instrument\DefaultIcon = 0CC-FamiTracker.EXE,1
+;HKEY_CLASSES_ROOT\.fti = "0CCFamiTracker.Instrument"
+;HKEY_CLASSES_ROOT\.ftm = "0CCFamiTracker.Document"
+;HKEY_CLASSES_ROOT\0CCFamiTracker.Document\DefaultIcon = 0CC-FamiTracker.EXE,1
+
+
+HKEY_CLASSES_ROOT\.eft = "EFamiTracker.Document"
+
+HKEY_CLASSES_ROOT\EFamiTracker.Document\shell\open\command = E-FamiTracker.EXE %1
+HKEY_CLASSES_ROOT\EFamiTracker.Document\shell\open\ddeexec = [open("%1")]
+HKEY_CLASSES_ROOT\EFamiTracker.Document\shell\open\ddeexec\application = E-FamiTracker
+
+HKEY_CLASSES_ROOT\EFamiTracker.Document\DefaultIcon = E-FamiTracker.EXE,1
+HKEY_CLASSES_ROOT\EFamiTracker.Document = E-FamiTracker Module
 

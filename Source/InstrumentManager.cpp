@@ -41,6 +41,7 @@ CInstrumentManager::CInstrumentManager(CFTMComponentInterface *pInterface) :
 {
 	for (int i = 0; i < SEQ_MANAGER_COUNT; i++)
 		m_pSequenceManager.push_back(std::unique_ptr<CSequenceManager>(new CSequenceManager(i == 2 ? 3 : SEQ_COUNT)));
+		//m_pSequenceManager.push_back(std::unique_ptr<CSequenceManager>(new CSequenceManager(SEQ_COUNTS[i])));
 }
 
 CInstrumentManager::~CInstrumentManager()
@@ -107,6 +108,7 @@ void CInstrumentManager::ClearAll()
 	}
 	for (int i = 0; i < SEQ_MANAGER_COUNT; i++)
 		m_pSequenceManager[i].reset(new CSequenceManager(i == 2 ? 3 : SEQ_COUNT));
+	//m_pSequenceManager[i].reset(new CSequenceManager(SEQ_COUNTS[i]));
 	m_pDSampleManager.reset(new CDSampleManager());
 }
 

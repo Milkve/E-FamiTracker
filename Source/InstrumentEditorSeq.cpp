@@ -43,10 +43,11 @@ const inst_type_t CInstrumentEditorSeq::INST_TYPE = INST_NONE;
 */
 
 IMPLEMENT_DYNAMIC(CInstrumentEditorSeq, CSequenceInstrumentEditPanel)
-CInstrumentEditorSeq::CInstrumentEditorSeq(CWnd* pParent, TCHAR *Title, LPCTSTR *SeqName, int Vol, int Duty, inst_type_t Type) : 
+CInstrumentEditorSeq::CInstrumentEditorSeq(CWnd* pParent, TCHAR *Title, LPCTSTR *SeqName, int Vol, int Duty, inst_type_t Type) :
 	CSequenceInstrumentEditPanel(CInstrumentEditorSeq::IDD, pParent),
 	m_pTitle(Title),
 	m_pSequenceName(SeqName),
+	m_pSequenceCount(SEQ_COUNT),
 	m_iMaxVolume(Vol),
 	m_iMaxDuty(Duty),
 	m_iInstType(Type)
@@ -115,6 +116,11 @@ void CInstrumentEditorSeq::SetupParser() const		// // //
 			pConv = new CSeqConversion5B { }; break;
 		}
 		Max = m_iMaxDuty; Min = 0; break;
+	//case SEQ_EXTRA:
+	//	if (m_iInstType == INST_S5B) {
+	//		Max = 8; Min = 0; break;
+	//	}
+	//	Max = 4; Min = 0; break;
 	}
 	if (pConv == nullptr)
 		pConv = new CSeqConversionDefault {Min, Max};

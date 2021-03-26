@@ -217,7 +217,7 @@ void CSequenceInstrumentEditPanel::SetupDialog(LPCTSTR *pListItems)
 	pList->InsertColumn(1, _T("#"), LVCFMT_LEFT, static_cast<int>(.22 * Width));
 	pList->InsertColumn(2, _T("Effect name"), LVCFMT_LEFT, static_cast<int>(.6 * Width));
 	pList->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
-	
+
 	for (int i = SEQ_COUNT - 1; i > -1; i--) {
 		pList->InsertItem(0, _T(""), 0);
 		pList->SetCheck(0, 0);

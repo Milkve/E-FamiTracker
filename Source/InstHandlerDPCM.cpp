@@ -28,7 +28,7 @@
 #include "InstHandlerDPCM.h"
 
 CInstHandlerDPCM::CInstHandlerDPCM(CChannelHandlerInterface *pInterface) :
-	CInstHandler(pInterface, 0)
+	CInstHandler(pInterface, 0, 0)
 {
 }
 

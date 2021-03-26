@@ -1017,6 +1017,12 @@ void CChannelHandler::SetVolume(int Volume)
 	m_iInstVolume = Volume;
 }
 
+
+void CChannelHandler::SetExtra(int Value)
+{
+	//return -1;
+}
+
 int CChannelHandler::GetVolume() const
 {
 	return m_iInstVolume;
@@ -1040,6 +1046,8 @@ int CChannelHandler::GetDutyPeriod() const
 int CChannelHandler::getDutyMax() const {
 	return -1;
 }
+
+
 
 
 unsigned char CChannelHandler::GetArpParam() const

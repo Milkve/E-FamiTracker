@@ -209,7 +209,7 @@ BOOL CFamiTrackerApp::InitInstance()
 	// Add shell options
 	RegisterShellFileTypes();		// // //
 	static const LPCTSTR FILE_ASSOC_NAME = _T(APP_NAME " Module");
-	AfxRegSetValue(HKEY_CLASSES_ROOT, "0CCFamiTracker.Document", REG_SZ, FILE_ASSOC_NAME, lstrlen(FILE_ASSOC_NAME) * sizeof(TCHAR));
+	AfxRegSetValue(HKEY_CLASSES_ROOT, "EFamiTracker.Document", REG_SZ, FILE_ASSOC_NAME, lstrlen(FILE_ASSOC_NAME) * sizeof(TCHAR));
 	// Add an option to play files
 	CString strPathName, strTemp, strFileTypeId;
 	AfxGetModuleShortFileName(AfxGetInstanceHandle(), strPathName);
@@ -1036,8 +1036,8 @@ BOOL CDocManager0CC::DoPromptFileName(CString &fileName, UINT nIDSTitle, DWORD l
 	// // // disregard doc template
 	CString path = theApp.GetSettings()->GetPath(PATH_FTM) + _T("\\");
 
-	CFileDialog OpenFileDlg(bOpenFileDialog, _T("0cc"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-							_T(APP_NAME " modules (*.0cc;*.ftm)|*.0cc; *.ftm|All files (*.*)|*.*||"),
+	CFileDialog OpenFileDlg(bOpenFileDialog, _T("eft"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+							_T(APP_NAME " modules (*.eft;*.0cc;*.ftm)|*.eft; *.0cc; *.ftm|All files (*.*)|*.*||"),
 							AfxGetMainWnd(), 0);
 	OpenFileDlg.m_ofn.Flags |= lFlags;
 	OpenFileDlg.m_ofn.lpstrFile = fileName.GetBuffer(_MAX_PATH);

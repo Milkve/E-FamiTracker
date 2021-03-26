@@ -627,25 +627,25 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 						WriteData(EffParam & 0xFF);
 					}
 					break;
-				case EF_SUNSOFT_PULSE_WIDTH:		// // // 050B
+				case EF_AY8930_PULSE_WIDTH:		// // // 050B
 					if (ChipID == SNDCHIP_S5B) {
 						WriteData(Command(CMD_EFF_S5B_PULSE_WIDTH));
 						WriteData(EffParam & 0x0F);
 					}
 					break;
-				case EF_SUNSOFT_AND_MASK:		// // // 050B
+				case EF_AY8930_AND_MASK:		// // // 050B
 					if (ChipID == SNDCHIP_S5B) {
 						WriteData(Command(CMD_EFF_S5B_AND_MASK));
 						WriteData(EffParam & 0xFF);
 					}
 					break;
-				case EF_SUNSOFT_OR_MASK:		// // // 050B
+				case EF_AY8930_OR_MASK:		// // // 050B
 					if (ChipID == SNDCHIP_S5B) {
 						WriteData(Command(CMD_EFF_S5B_OR_MASK));
 						WriteData(EffParam & 0xFF);
 					}
 					break;
-				case EF_SUNSOFT_VOL:		// // // 050B
+				case EF_AY8930_VOL:		// // // 050B
 					if (ChipID == SNDCHIP_S5B) {
 						WriteData(Command(CMD_EFF_S5B_VOL));
 						WriteData(EffParam & 0x01);

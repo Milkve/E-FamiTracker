@@ -33,6 +33,7 @@ public:
 	void	RefreshChannel() override;
 
 	void	SetNoiseFreq(int Pitch) override final;		// // //
+	void	SetExtra(int Value) override;		// // //
 
 	int getDutyMax() const override;
 protected:

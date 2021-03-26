@@ -328,6 +328,11 @@ public:		// // //
 	/*!	\brief Obtains the current duty cycle value of the channel.
 		\return The duty cycle value. */
 	int		GetDutyPeriod() const override;
+
+	/*!	\brief Sets extra sequence data.
+		\details The value received by the channel is converted according to the current channel type.
+		\param Value The value to write. */
+	void	SetExtra(int Value) override;
 	/*!
 	 * Returns maximum valid duty cycle, inclusive (-1 if none are valid).
 	 * Used to mark invalid Vxx red in the GUI.

@@ -1636,7 +1636,7 @@ BEGIN
     CONTROL         "N163",IDC_EXPANSION_N163,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,168,33,10
     CONTROL         "FDS",IDC_EXPANSION_FDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,182,29,10
     CONTROL         "VRC7",IDC_EXPANSION_VRC7,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,59,182,33,10
-    CONTROL         "AY8930",IDC_EXPANSION_S5B,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,182,24,10
+    CONTROL         "AY8930",IDC_EXPANSION_S5B,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,182,40,10
     LTEXT           "Channels: 1",IDC_CHANNELS_NR,150,168,51,8,WS_DISABLED
     CONTROL         "",IDC_CHANNELS,"msctls_trackbar32",TBS_AUTOTICKS | WS_DISABLED | WS_TABSTOP,145,180,51,13
     GROUPBOX        "Vibrato",IDC_STATIC,7,202,199,31
@@ -2408,7 +2408,7 @@ IDR_HTML1               HTML                    "res/export_report.htm"
 
 STRINGTABLE
 BEGIN
-    IDR_MAINFRAME           "E-FamiTracker\nUntitled\n.0cc\n0CCFamiTracker.Document\n0CCFamiTracker.Document"
+    IDR_MAINFRAME           "E-FamiTracker\nUntitled\n.eft\nEFamiTracker.Document\nEFamiTracker.Document"
     IDS_FRAME_DROP_MOVE     "Drop selection to move frames"
     IDS_DPCM_IMPORT_QUALITY_FORMAT "Quality: %1"
     IDS_CLIPBOARD_ERROR     "Could not register clipboard format"
@@ -2450,7 +2450,7 @@ END
 STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "0CC-FamiTracker"
-    AFX_IDS_IDLEMESSAGE     "For Help, press F1"
+    AFX_IDS_IDLEMESSAGE     "E-FamiTracker 0.0.1.4.01a"
     AFX_IDS_HELPMODEMESSAGE "Select an object on which to get Help"
 END
 
@@ -2774,7 +2774,7 @@ BEGIN
     IDS_NEW_VRC7_INSTRUMENT "New VRC7 instrument"
     IDS_NEW_FDS_INSTRUMENT  "New FDS instrument"
     IDS_NEW_N163_INSTRUMENT "New Namco instrument"
-    IDS_NEW_S5B_INSTRUMENT  "New AY8930 instrument"
+    IDS_NEW_S5B_INSTRUMENT  "New Sunsoft instrument"
     IDS_FRAME_DROP_COPY_NEW "Drop selection to copy frames to new pattern numbers"
     IDS_FRAME_DROP_COPY     "Drop selection to copy frames"
 END

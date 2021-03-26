@@ -121,7 +121,7 @@ uint32_t CS5BChannel::GetTime()
 
 void CS5BChannel::Output(uint32_t Noise)
 {
-	int Level = ((m_iVolume & 0x20) ? m_iEnvelopeLevel+1 : m_iVolume) & 0x1F;
+	int Level = ((m_iVolume & 0x20) ? m_iEnvelopeLevel : m_iVolume) & 0x1F;
 	int32_t Output = EXP_VOLUME[Level];
 	if (!m_bSquareDisable && !(DUTY_CYCLES[m_iDutyCycle & 0x0F][m_iDutyCycleCounter]) && m_iPeriod >= 2U)
 		Output = 0;

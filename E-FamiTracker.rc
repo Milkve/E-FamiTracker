@@ -2450,7 +2450,7 @@ END
 STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "0CC-FamiTracker"
-    AFX_IDS_IDLEMESSAGE     "E-FamiTracker 0.0.1.4.01a"
+    AFX_IDS_IDLEMESSAGE     "E-FamiTracker 0.0.1.4.02a"
     AFX_IDS_HELPMODEMESSAGE "Select an object on which to get Help"
 END
 

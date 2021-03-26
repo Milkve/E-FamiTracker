@@ -1,33 +1,61 @@
 # Eulous' E-FamiTracker
 
-E-FamiTracker is a fork of Dn-FamiTracker meant to make it a multi-system tracker, adding a large amount of chips and other misc. features. This is a personal project of mine but suggestions are open.
+E-FamiTracker is a fork of Dn-FamiTracker meant to make it a multi-system tracker, adding a large amount of chips and other misc. features. This is a personal project of mine, and I am looking for any feedback I can get. Be responsible with this software in its early stages, and have fun.
 
 ## Features
 
-- Custom 5E01 soundchip (may remove/change)
-
 - AY8930 soundchip
+
+---
+
+**__Info__**
+
+Building from source runs the risk of incompatability with future versions and potential loss of data.
+Using the latest release build is the safest way to ensure stability and compatability.
+
+I am not liable for any loss of data as a result of using this software.
+Make backups of any older modules before opening them to avoid damage to the contents.
+
+If you need assistance or have a suggestion, you may contact me on Discord (Eulous#3210).
+
+---
+
+E-FamiTracker is licenced under the GNU General Public License, and may be used, studied, modified, or redistributed at the user's discretion.
+This software is strictly free and open-source.
+Modules or other media generated with E-FamiTracker are property of their respective creator(s).
+
+By using this software, you agree to these terms.
+
+---
 
 ### To-do
 
- - [ ] Unique file type (.eft)
- - [ ] Add 2A03 chip back (replacing 5E01)
- - [x] AY8930 soundchip emulation
- - [ ] AY8930 instrument editor
+ - [x] Unique file type (.eft)
+ - [ ] Add 2A03 chip back (removing 5E01)
+ - [x] AY8930 soundchip
+ - [x] AY8930 emulation
  - [ ] AY8930 as its own soundchip
  - [ ] FDS waveform view in registers
  - [ ] "Add chip" button beside the channels (displayed as a +)
- - [ ] Reworked file encoding for more soundchips
+ - [x] Reworked file encoding for more soundchips
  - [ ] New soundchip dialog (checklist of chips) in module properties
+ - [ ] Oscilloscope rising edge detection
  - [ ] Stereo effect 8xy
+ - [ ] SAA1099 soundchip
+ - [ ] SAA1099 emulation
  - [ ] SN76489 soundchip
  - [ ] T6W28 soundchip
- - [ ] SAA1099 soundchip (option for double chips)
  - [ ] AY-3-8910 soundchip
  - [ ] TIA soundchip
  - [ ] Option for disabling 2A03
  - [ ] Rework how channels/chips are handled to un-hardcode many things.
- - [ ] Freeform channel capabilities
+ - [ ] Panning macro in instrument editor
+ - [ ] NSF export
+ - [ ] NSF import
+ - [ ] VGM export
+ - [ ] Multiple audio export options
+ - [ ] Other tracker module imports
+ - [ ] Help and documentation
 
 <img src="docs/dn logo.svg">
 

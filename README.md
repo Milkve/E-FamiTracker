@@ -34,7 +34,7 @@ By using this software, you agree to these terms.
  - [ ] Add 2A03 chip back (removing 5E01)
  - [x] AY8930 soundchip
  - [x] AY8930 emulation
- - [ ] AY8930 as its own soundchip
+ - [x] AY8930 as its own soundchip
  - [ ] FDS waveform view in registers
  - [ ] "Add chip" button beside the channels (displayed as a +)
  - [x] Reworked file encoding for more soundchips

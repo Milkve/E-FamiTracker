@@ -109,10 +109,10 @@ enum command_t {
 	CMD_EFF_S5B_ENV_RATE_HI,	// // //
 	CMD_EFF_S5B_ENV_RATE_LO,	// // //
 	CMD_EFF_S5B_NOISE,			// // // 050B
-	CMD_EFF_S5B_PULSE_WIDTH,			// // // 050B
-	CMD_EFF_S5B_AND_MASK,			// // // 050B
-	CMD_EFF_S5B_OR_MASK,			// // // 050B
-	CMD_EFF_S5B_VOL,			// // // 050B
+	CMD_EFF_AY8930_PULSE_WIDTH,			// // // 050B
+	CMD_EFF_AY8930_AND_MASK,			// // // 050B
+	CMD_EFF_AY8930_OR_MASK,			// // // 050B
+	CMD_EFF_AY8930_VOL,			// // // 050B
 };
 
 const unsigned char CMD_LOOP_POINT = 26;	// Currently unused
@@ -369,7 +369,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
 							switch (ChipID) {		// // //
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B:
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930:
 								if (!m_pDocument->GetLinearPitch()) {
 									WriteData(Command(CMD_EFF_PORTAUP));
 									break;
@@ -388,7 +388,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
 							switch (ChipID) {		// // //
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B:
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930:
 								if (!m_pDocument->GetLinearPitch()) {
 									WriteData(Command(CMD_EFF_PORTADOWN));
 									break;
@@ -450,7 +450,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_RESET_PITCH));
 						else {
 							switch (ChipID) {
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B:		// // //
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930:		// // //
 								if (!m_pDocument->GetLinearPitch()) break;
 							default:
 								EffParam = (char)(256 - (int)EffParam);
@@ -474,7 +474,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 						WriteData(Command(CMD_EFF_VRC7_PATCH));
 						WriteData(EffParam << 4);
 					}
-					else if (ChipID == SNDCHIP_S5B) {
+					else if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_DUTY));
 						WriteData((EffParam << 6) | ((EffParam & 0x04) << 3));
 					}
@@ -604,19 +604,19 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					break;
 				// // // Sunsoft 5B
 				case EF_SUNSOFT_ENV_TYPE:
-					if (ChipID == SNDCHIP_S5B) {
+					if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_S5B_ENV_TYPE));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_SUNSOFT_ENV_HI:
-					if (ChipID == SNDCHIP_S5B) {
+					if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_S5B_ENV_RATE_HI));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_SUNSOFT_ENV_LO:
-					if (ChipID == SNDCHIP_S5B) {
+					if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_S5B_ENV_RATE_LO));
 						WriteData(EffParam);
 					}
@@ -624,30 +624,34 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 				case EF_SUNSOFT_NOISE:		// // // 050B
 					if (ChipID == SNDCHIP_S5B) {
 						WriteData(Command(CMD_EFF_S5B_NOISE));
+						WriteData(EffParam & 0x1F);
+					}
+					else if (ChipID == SNDCHIP_AY8930) {
+						WriteData(Command(CMD_EFF_S5B_NOISE));
 						WriteData(EffParam & 0xFF);
 					}
 					break;
 				case EF_AY8930_PULSE_WIDTH:		// // // 050B
-					if (ChipID == SNDCHIP_S5B) {
-						WriteData(Command(CMD_EFF_S5B_PULSE_WIDTH));
+					if (ChipID == SNDCHIP_AY8930) {
+						WriteData(Command(CMD_EFF_AY8930_PULSE_WIDTH));
 						WriteData(EffParam & 0x0F);
 					}
 					break;
 				case EF_AY8930_AND_MASK:		// // // 050B
-					if (ChipID == SNDCHIP_S5B) {
-						WriteData(Command(CMD_EFF_S5B_AND_MASK));
+					if (ChipID == SNDCHIP_AY8930) {
+						WriteData(Command(CMD_EFF_AY8930_AND_MASK));
 						WriteData(EffParam & 0xFF);
 					}
 					break;
 				case EF_AY8930_OR_MASK:		// // // 050B
-					if (ChipID == SNDCHIP_S5B) {
-						WriteData(Command(CMD_EFF_S5B_OR_MASK));
+					if (ChipID == SNDCHIP_AY8930) {
+						WriteData(Command(CMD_EFF_AY8930_OR_MASK));
 						WriteData(EffParam & 0xFF);
 					}
 					break;
 				case EF_AY8930_VOL:		// // // 050B
-					if (ChipID == SNDCHIP_S5B) {
-						WriteData(Command(CMD_EFF_S5B_VOL));
+					if (ChipID == SNDCHIP_AY8930) {
+						WriteData(Command(CMD_EFF_AY8930_VOL));
 						WriteData(EffParam & 0x01);
 					}
 					break;

@@ -44,7 +44,7 @@ public:
 	int				GetChipType(int Channel) const;
 
 public:
-	static const int CHIP_COUNT = 8;	// Number of allowed expansion chips
+	static const int CHIP_COUNT = 32;	// Number of allowed expansion chips
 
 protected:
 	void AddChip(int Ident, inst_type_t Inst, LPCTSTR pName);

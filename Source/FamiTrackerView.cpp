@@ -101,11 +101,11 @@ const CString EFFECT_TEXTS[] = {		// // //
 	_T("Ixy - Auto FDS modulation, X = multiplier, Y + 1 = divider"),
 	_T("Jxx - FDS modulation rate, low byte"),
 	_T("W0x - DPCM pitch, F = highest"),
-	_T("H0y - AY8930 envelope shape, bit 3 = Continue, bit 2 = Attack, bit 1 = Alternate, bit 0 = Hold"),
-	_T("Hxy - Auto AY8930 envelope, X - 8 = shift amount, Y = shape"),
-	_T("Ixx - AY8930 envelope rate, high byte"),
-	_T("Jxx - AY8930 envelope rate, low byte"),
-	_T("Wxx - AY8930 noise pitch"),
+	_T("H0y - Envelope shape, bit 3 = Continue, bit 2 = Attack, bit 1 = Alternate, bit 0 = Hold"),
+	_T("Hxy - Auto envelope, X - 8 = shift amount, Y = shape"),
+	_T("Ixx - Envelope rate, high byte"),
+	_T("Jxx - Envelope rate, low byte"),
+	_T("Wxx - Noise pitch"),
 	_T("Xxx - AY8930 pulse width, values above 08 act as 08"),
 	_T("Yxx - AY8930 noise AND mask"),
 	_T("Zxx - AY8930 noise OR mask"),
@@ -1078,7 +1078,7 @@ void CFamiTrackerView::OnTrackerDetune()			// // //
 	UINT nResult = DetuneDlg.DoModal();
 	if (nResult != IDOK) return;
 	const int *Table = DetuneDlg.GetDetuneTable();
-	for (int i = 0; i < 6; i++) for (int j = 0; j < NOTE_COUNT; j++)
+	for (int i = 0; i < 7; i++) for (int j = 0; j < NOTE_COUNT; j++)
 		pDoc->SetDetuneOffset(i, j, *(Table + j + i * NOTE_COUNT));
 	pDoc->SetTuning(DetuneDlg.GetDetuneSemitone(), DetuneDlg.GetDetuneCent());		// // // 050B
 	theApp.GetSoundGenerator()->DocumentPropertiesChanged(pDoc);
@@ -2423,6 +2423,8 @@ void CFamiTrackerView::UpdateNoteQueues()		// // //
 		}
 		if (pDoc->ExpansionEnabled(SNDCHIP_S5B))
 			m_pNoteQueue->AddMap({CHANID_S5B_CH1, CHANID_S5B_CH2, CHANID_S5B_CH3});
+		if (pDoc->ExpansionEnabled(SNDCHIP_AY8930))
+			m_pNoteQueue->AddMap({ CHANID_AY8930_CH1, CHANID_AY8930_CH2, CHANID_AY8930_CH3 });
 	}
 
 //	for (int i = 0; i < Channels; ++i)
@@ -3727,7 +3729,7 @@ void CFamiTrackerView::OnTrackerRecordToInst()		// // //
 		case SNDCHIP_NONE: case SNDCHIP_MMC5: Type = INST_2A03; break;
 		case SNDCHIP_VRC6: Type = INST_VRC6; break;
 		case SNDCHIP_N163: Type = INST_N163; break;
-		case SNDCHIP_S5B:  Type = INST_S5B; break;
+		case SNDCHIP_S5B: case SNDCHIP_AY8930: Type = INST_S5B; break;
 		}
 		if (Type != INST_NONE) for (int i = 0; i < SEQ_COUNT; i++)
 			if (pDoc->GetFreeSequence(Type, i) == -1) {
@@ -4107,10 +4109,10 @@ CString	CFamiTrackerView::GetEffectHint(const stChanNote &Note, int Column) cons
 	if (Index > EF_FDS_MOD_SPEED_HI || (Index == EF_FDS_MOD_SPEED_HI && Param >= 0x10)) ++Index;
 	if (Index > EF_FDS_MOD_DEPTH || (Index == EF_FDS_MOD_DEPTH && Param >= 0x80)) ++Index;
 	if (Index > EF_NOTE_CUT || (Index == EF_NOTE_CUT && Param >= 0x80 && Channel == CHANID_TRIANGLE)) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_VRC7 || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Channel == CHANID_TRIANGLE))) ++Index;
-	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && Chip == SNDCHIP_S5B)) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_AY8930 || Chip == SNDCHIP_VRC7 || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_AY8930 || Chip == SNDCHIP_N163 || Channel == CHANID_TRIANGLE))) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_AY8930 || Channel == CHANID_TRIANGLE))) ++Index;
+	if (Index > EF_DUTY_CYCLE || (Index == EF_DUTY_CYCLE && (Chip == SNDCHIP_S5B || Chip == SNDCHIP_AY8930))) ++Index;
 	if (Index > EF_VOLUME || (Index == EF_VOLUME && Param >= 0xE0)) ++Index;
 	if (Index > EF_SPEED || (Index == EF_SPEED && Param >= GetDocument()->GetSpeedSplitPoint())) ++Index;
 

@@ -71,7 +71,7 @@
     </li>
     <li><b>EXPANSION</b> [chips]
         <ul>
-            <li><i>chips</i>: int[0,255] - bitfield representing expansion chips used: 1=VRC6, 2=VRC7, 4=FDS, 8=MMC5, 16=N163, 32=S5B</li>
+            <li><i>chips</i>: int[0,255] - bitfield representing expansion chips used: 1=VRC6, 2=VRC7, 4=FDS, 8=MMC5, 16=N163, 32=AY8930</li>
         </ul>
     </li>
     <li><b>VIBRATO</b> [mode]
@@ -122,7 +122,7 @@
             <li><i>macro</i>: int_list[-128,127] - macro sequence</li>
         </ul>
     </li>
-    <li><b>MACROS5B</b> [type] [index] [loop] [release] [setting] : [macro]
+    <li><b>MACROAY8930</b> [type] [index] [loop] [release] [setting] : [macro]
         <ul>
             Defines a macro sequence for a Sunsoft 5B instrument.
             <li><i>type</i>: int[0,4] - 0=volume, 1=arpeggio, 2=pitch, 3=hi-pitch, 4=tone</li>
@@ -215,10 +215,10 @@
             <li><i>name</i>: string - name of the instrument</li>
         </ul>
     </li>
-    <li><b>INSTS5B</b> [index] [seq_vol] [seq_arp] [seq_pit] [seq_hpi] [seq_ton] [name]
+    <li><b>INSTAY8930</b> [index] [seq_vol] [seq_arp] [seq_pit] [seq_hpi] [seq_ton] [name]
         <ul>
             Defines a Sunsoft 5B instrument.
-            Use the <i>MACROS5B</i> command to define sequences for use with S5B instruments.
+            Use the <i>MACROAY8930</i> command to define sequences for use with AY8930 instruments.
             <li><i>index</i>: int[0,63] - index of the instrument</li>
             <li><i>seq_vol</i>: int[-1,127] - volume macro sequence, -1 for none</li>
             <li><i>seq_arp</i>: int[-1,127] - arpeggio macro sequence, -1 for none</li>

@@ -81,6 +81,7 @@ CMixer::CMixer(CAPU * Parent)
 	m_fLevelFDS = 1.0f;
 	m_fLevelN163 = 1.0f;
 	m_fLevelS5B = 1.0f;		// // // 050B
+	m_fLevelAY8930 = 1.0f;		// // // 050B
 
 	m_iExternalChip = 0;
 	m_iSampleRate = 0;
@@ -121,6 +122,9 @@ void CMixer::SetChipLevel(chip_level_t Chip, float Level)
 		case CHIP_LEVEL_S5B:		// // // 050B
 			m_fLevelS5B = Level;
 			break;
+		case CHIP_LEVEL_AY8930:		// // // 050B
+			m_fLevelAY8930 = Level;
+			break;
 		case CHIP_LEVEL_VRC7: case CHIP_LEVEL_COUNT:
 			break;
 	}
@@ -133,7 +137,8 @@ float CMixer::GetAttenuation() const
 	const float ATTENUATION_MMC5 = 0.83f;
 	const float ATTENUATION_FDS  = 0.90f;
 	const float ATTENUATION_N163 = 0.70f;
-	const float ATTENUATION_S5B  = 0.50f;		// // // 050B
+	const float ATTENUATION_S5B = 0.50f;		// // // 050B
+	const float ATTENUATION_AY8930  = 0.50f;		// // // 050B
 
 	float Attenuation = 1.0f;
 
@@ -157,6 +162,9 @@ float CMixer::GetAttenuation() const
 	if (m_iExternalChip & SNDCHIP_S5B)		// // // 050B
 		Attenuation *= ATTENUATION_S5B;
 
+	if (m_iExternalChip & SNDCHIP_AY8930)		// // // 050B
+		Attenuation *= ATTENUATION_AY8930;
+
 	return Attenuation;
 }
 
@@ -178,6 +186,7 @@ void CMixer::RecomputeMixing()
 	SynthVRC6.treble_eq(eq);
 	SynthMMC5.treble_eq(eq);
 	SynthS5B.treble_eq(eq);
+	SynthAY8930.treble_eq(eq);
 
 	// See https://docs.google.com/document/d/19vtipTYI-vqL3-BPrE9HPjHmPpkFuIZKvWfevP3Oo_A/edit#heading=h.h70ipevgjbn7
 	// for an exploration of how I came to this design.
@@ -213,6 +222,7 @@ void CMixer::RecomputeMixing()
 	SynthVRC6.volume(Volume * 3.98333f * m_fLevelVRC6, 500);
 	SynthMMC5.volume(Volume * 1.18421f * m_fLevelMMC5, 130);
 	SynthS5B.volume(Volume * m_fLevelS5B, 1600);  // Not checked
+	SynthAY8930.volume(Volume * m_fLevelAY8930, 1600);  // Not checked
 	SynthN163.volume(Volume * 1.1f * m_fLevelN163, N163_RANGE);  // Not checked
 }
 
@@ -369,6 +379,11 @@ void CMixer::MixS5B(int Value, int Time)
 	SynthS5B.offset(Time, Value, &BlipBuffer);
 }
 
+void CMixer::MixAY8930(int Value, int Time)
+{
+	SynthAY8930.offset(Time, Value, &BlipBuffer);
+}
+
 void CMixer::AddValue(int ChanID, int Chip, int Value, int AbsValue, int FrameCycles)
 {
 	// Add sound to mixer
@@ -396,6 +411,9 @@ void CMixer::AddValue(int ChanID, int Chip, int Value, int AbsValue, int FrameCy
 			break;
 		case SNDCHIP_S5B:		// // // 050B
 			MixS5B(Value, FrameCycles);
+			break;
+		case SNDCHIP_AY8930:		// // // 050B
+			MixAY8930(Value, FrameCycles);
 			break;
 	}
 }
@@ -428,6 +446,10 @@ void CMixer::StoreChannelLevel(int Channel, int Value)
 	}
 
 	if (Channel >= CHANID_S5B_CH1 && Channel <= CHANID_S5B_CH3) {
+		AbsVol = (int)(logf((float)AbsVol) * 2.8f);
+	}
+
+	if (Channel >= CHANID_AY8930_CH1 && Channel <= CHANID_AY8930_CH3) {
 		AbsVol = (int)(logf((float)AbsVol) * 2.8f);
 	}
 

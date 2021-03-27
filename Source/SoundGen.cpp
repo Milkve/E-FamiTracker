@@ -228,9 +228,14 @@ void CSoundGen::CreateChannels()
 	AssignChannel(new CTrackerChannel(_T("FM Channel 6"), _T("FM6"), SNDCHIP_VRC7, CHANID_VRC7_CH6));
 
 	// // // Sunsoft 5B
-	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 1"), _T("AY1"), SNDCHIP_S5B, CHANID_S5B_CH1));
-	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 2"), _T("AY2"), SNDCHIP_S5B, CHANID_S5B_CH2));
-	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 3"), _T("AY3"), SNDCHIP_S5B, CHANID_S5B_CH3));
+	AssignChannel(new CTrackerChannel(_T("5B Square 1"), _T("5B1"), SNDCHIP_S5B, CHANID_S5B_CH1));
+	AssignChannel(new CTrackerChannel(_T("5B Square 2"), _T("5B2"), SNDCHIP_S5B, CHANID_S5B_CH2));
+	AssignChannel(new CTrackerChannel(_T("5B Square 3"), _T("5B3"), SNDCHIP_S5B, CHANID_S5B_CH3));
+
+	// // // Microchip AY8930
+	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 1"), _T("AY1"), SNDCHIP_AY8930, CHANID_AY8930_CH1));
+	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 2"), _T("AY2"), SNDCHIP_AY8930, CHANID_AY8930_CH2));
+	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 3"), _T("AY3"), SNDCHIP_AY8930, CHANID_AY8930_CH3));
 }
 
 void CSoundGen::AssignChannel(CTrackerChannel *pTrackerChannel)		// // //
@@ -401,6 +406,7 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 		Pitch = (clock_ntsc / Freq) - 0.5;
 		m_iNoteLookupTableNTSC[i] = (unsigned int)(Pitch - pDocument->GetDetuneOffset(0, i));		// // //
 		m_iNoteLookupTableS5B[i] = m_iNoteLookupTableNTSC[i] + 1;		// correction
+		m_iNoteLookupTableAY8930[i] = m_iNoteLookupTableNTSC[i] + 1;		// correction
 
 		// VRC6 Saw
 		Pitch = ((clock_ntsc * 16.0) / (Freq * 14.0)) - 0.5;
@@ -452,6 +458,8 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 			Table = m_iNoteLookupTableN163; break;
 		case CHANID_S5B_CH1: case CHANID_S5B_CH2: case CHANID_S5B_CH3:
 			Table = m_iNoteLookupTableS5B; break;
+		case CHANID_AY8930_CH1: case CHANID_AY8930_CH2: case CHANID_AY8930_CH3:
+			Table = m_iNoteLookupTableAY8930; break;
 		default: continue;
 		}
 		m_pChannels[i]->SetNoteTable(Table);
@@ -773,6 +781,7 @@ bool CSoundGen::ResetAudioDevice()
 		config.SetChipLevel(CHIP_LEVEL_N163, float(
 			(pSettings->ChipLevels.iLevelN163 + currN163LevelOffset) / 10.0f));
 		config.SetChipLevel(CHIP_LEVEL_S5B, float(pSettings->ChipLevels.iLevelS5B / 10.0f));
+		config.SetChipLevel(CHIP_LEVEL_AY8930, float(pSettings->ChipLevels.iLevelAY8930 / 10.0f));
 
 		// Update blip-buffer filtering
 		config.SetupMixer(
@@ -1042,6 +1051,7 @@ int CSoundGen::ReadPeriodTable(int Index, int Table) const		// // //
 	case CDetuneTable::DETUNE_FDS:  return m_iNoteLookupTableFDS[Index]; break;
 	case CDetuneTable::DETUNE_N163: return m_iNoteLookupTableN163[Index]; break;
 	case CDetuneTable::DETUNE_S5B:  return m_iNoteLookupTableNTSC[Index] + 1; break;
+	case CDetuneTable::DETUNE_AY8930:  return m_iNoteLookupTableNTSC[Index] + 1; break;
 	default:
 		AfxDebugBreak(); return m_iNoteLookupTableNTSC[Index];
 	}
@@ -1230,7 +1240,13 @@ static CString GetStateString(const stChannelState &State)
 			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
 		}
 	else if (State.ChannelIndex >= CHANID_S5B_CH1 && State.ChannelIndex <= CHANID_S5B_CH3)
-		for (const auto &x : S5B_EFFECTS) {
+		for (const auto& x : S5B_EFFECTS) {
+			int p = State.Effect[x];
+			if (p < 0) continue;
+			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
+		}
+	else if (State.ChannelIndex >= CHANID_AY8930_CH1 && State.ChannelIndex <= CHANID_AY8930_CH3)
+		for (const auto &x : AY8930_EFFECTS) {
 			int p = State.Effect[x];
 			if (p < 0) continue;
 			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
@@ -1366,7 +1382,7 @@ void CSoundGen::HaltPlayer()
 	if (m_pDocument) { // TODO: do this in BeginPlayer
 		if (m_pDocument->ExpansionEnabled(SNDCHIP_FDS))
 			*reinterpret_cast<int*>(Header + 0x84) |= 0x80000000;
-		if (m_pDocument->ExpansionEnabled(SNDCHIP_S5B)) {
+		if (m_pDocument->ExpansionEnabled(SNDCHIP_AY8930)) {
 			*reinterpret_cast<int*>(Header + 0x74) = CAPU::BASE_FREQ_NTSC / 2;
 			*reinterpret_cast<int*>(Header + 0x78) = 0x0110;
 		}

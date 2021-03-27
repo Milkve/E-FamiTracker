@@ -44,6 +44,7 @@ class CFDS;
 class CMMC5;
 class CN163;
 class CS5B;
+class CAY8930;
 
 class CSoundChip;		// // //
 class CSoundChip2;
@@ -127,7 +128,8 @@ private:
 	std::unique_ptr<CFDS> m_pFDS;
 	CN163		*m_pN163;
 	CVRC7		*m_pVRC7;
-	CS5B		*m_pS5B;
+	CS5B    *m_pS5B;
+	CAY8930 *m_pAY8930;
 
 	/// Bitfield of external sound chips enabled.
 	/// Never read, except for code hidden behind #ifdef LOGGING.

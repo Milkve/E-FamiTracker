@@ -30,7 +30,8 @@ const int SNDCHIP_VRC7 = 2;			// Konami VRCVII
 const int SNDCHIP_FDS  = 4;			// Famicom Disk Sound
 const int SNDCHIP_MMC5 = 8;			// Nintendo MMC5
 const int SNDCHIP_N163 = 16;		// Namco N-106
-const int SNDCHIP_S5B  = 64;		// Microchip S5B
+const int SNDCHIP_S5B  = 32;		// Sunsoft 5B
+const int SNDCHIP_AY8930  = 64;		// Microchip AY8930
 
 enum chan_id_t {
 	CHANID_SQUARE1,
@@ -68,6 +69,10 @@ enum chan_id_t {
 	CHANID_S5B_CH1,
 	CHANID_S5B_CH2,
 	CHANID_S5B_CH3,
+
+	CHANID_AY8930_CH1,
+	CHANID_AY8930_CH2,
+	CHANID_AY8930_CH3,
 
 	CHANNELS		/* Total number of channels */
 };

@@ -28,18 +28,19 @@
 
 // // // 050B
 
-class CS5BChannel : public CChannel
+class CAY8930Channel : public CChannel
 {
 public:
-	friend class CS5B;
+	friend class CAY8930;
 
-	CS5BChannel(CMixer *pMixer, uint8_t ID);
+	CAY8930Channel(CMixer *pMixer, uint8_t ID);
 	
 	void Process(uint32_t Time);
+	void RunEnvelope(uint32_t Time);
 	void Reset();
 
 	uint32_t GetTime();
-	void Output(uint32_t Noise, uint32_t Envelope);
+	void Output(uint32_t Noise);
 
 	double GetFrequency() const;
 
@@ -48,16 +49,25 @@ private:
 	uint32_t m_iPeriod;
 	uint32_t m_iPeriodClock;
 
+	uint8_t m_iDutyCycleCounter;
+	uint8_t m_iDutyCycle;
+
 	bool m_bSquareHigh;
 	bool m_bSquareDisable;
 	bool m_bNoiseDisable;
+
+	uint32_t m_iEnvelopePeriod;
+	uint32_t m_iEnvelopeClock;
+	char m_iEnvelopeLevel;
+	char m_iEnvelopeShape;
+	bool m_bEnvelopeHold;
 };
 
-class CS5B : public CSoundChip
+class CAY8930 : public CSoundChip
 {
 public:
-	CS5B(CMixer *pMixer);
-	virtual ~CS5B();
+	CAY8930(CMixer *pMixer);
+	virtual ~CAY8930();
 	
 	void	Reset();
 	void	Process(uint32_t Time);
@@ -71,11 +81,10 @@ public:
 
 private:
 	void	WriteReg(uint8_t Port, uint8_t Value);
-	void	RunEnvelope(uint32_t Time);
-	void	RunNoise(uint32_t Time);
+	void  RunNoise(uint32_t Time);
 
 private:
-	CS5BChannel *m_pChannel[3];
+	CAY8930Channel *m_pChannel[3];
 
 	uint8_t m_cPort;
 
@@ -84,10 +93,10 @@ private:
 	uint32_t m_iNoisePeriod;
 	uint32_t m_iNoiseClock;
 	uint32_t m_iNoiseState;
+	uint32_t m_iNoiseValue;
+	uint32_t m_iNoiseLatch;
 
-	uint32_t m_iEnvelopePeriod;
-	uint32_t m_iEnvelopeClock;
-	char m_iEnvelopeLevel;
-	char m_iEnvelopeShape;
-	bool m_bEnvelopeHold;
+	uint32_t m_iNoiseANDMask;
+	uint32_t m_iNoiseORMask;
+
 };

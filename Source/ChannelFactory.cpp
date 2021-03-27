@@ -32,6 +32,7 @@
 #include "ChannelsMMC5.h"
 #include "ChannelsN163.h"
 #include "ChannelsS5B.h"
+#include "ChannelsAY8930.h"
 
 // // // Default implementation for channel factory
 
@@ -74,9 +75,14 @@ CChannelFactory::CChannelFactory() : CFactory()
 	m_pMakeFunc[CHANID_N163_CH6] = Func;
 	m_pMakeFunc[CHANID_N163_CH7] = Func;
 	m_pMakeFunc[CHANID_N163_CH8] = Func;
-	
+
 	Func = MakeCtor<CChannelHandlerS5B>();
 	m_pMakeFunc[CHANID_S5B_CH1] = Func;
 	m_pMakeFunc[CHANID_S5B_CH2] = Func;
 	m_pMakeFunc[CHANID_S5B_CH3] = Func;
+	
+	Func = MakeCtor<CChannelHandlerAY8930>();
+	m_pMakeFunc[CHANID_AY8930_CH1] = Func;
+	m_pMakeFunc[CHANID_AY8930_CH2] = Func;
+	m_pMakeFunc[CHANID_AY8930_CH3] = Func;
 }

@@ -56,6 +56,13 @@ enum s5b_mode_t {
 	S5B_MODE_NOISE    = 0x80
 };
 
+// // // Sunsoft modes
+enum ay8930_mode_t {
+	AY8930_MODE_ENVELOPE = 0x20,
+	AY8930_MODE_SQUARE = 0x40,
+	AY8930_MODE_NOISE = 0x80
+};
+
 // // // Arpeggio scheme modes
 enum arp_scheme_mode_t {
 	ARPSCHEME_MODE_X     = 0x40,

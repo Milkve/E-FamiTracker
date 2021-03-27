@@ -17,7 +17,8 @@ const TCHAR *ROOT_ITEMS[] = {
 	_T("Nintendo FDS"), 
 	_T("Nintendo MMC5"), 
 	_T("Namco 106"), 
-	_T("Sunsoft 5B")
+	_T("Sunsoft 5B"),
+	_T("Microchip AY8930")
 };
 
 const int CHILD_ITEMS_ID[ROOT_ITEM_COUNT][9] = {
@@ -33,8 +34,10 @@ const int CHILD_ITEMS_ID[ROOT_ITEM_COUNT][9] = {
 	{CHANID_MMC5_SQUARE1, CHANID_MMC5_SQUARE2},
 	// N163
 	{CHANID_N163_CH1, CHANID_N163_CH2, CHANID_N163_CH3, CHANID_N163_CH4, CHANID_N163_CH5, CHANID_N163_CH6, CHANID_N163_CH7, CHANID_N163_CH8}, 
-	 // S5B
-	{CHANID_S5B_CH1, CHANID_S5B_CH2, CHANID_S5B_CH3}
+	// S5B
+	{CHANID_S5B_CH1, CHANID_S5B_CH2, CHANID_S5B_CH3},
+	// AY8930
+	{CHANID_AY8930_CH1, CHANID_AY8930_CH2, CHANID_AY8930_CH3}
 };
 
 const TCHAR *CHILD_ITEMS[ROOT_ITEM_COUNT][9] = {
@@ -50,8 +53,10 @@ const TCHAR *CHILD_ITEMS[ROOT_ITEM_COUNT][9] = {
 	{_T("Square 1"), _T("Square 2")},
 	// N163
 	{_T("Channel 1"), _T("Channel 2"), _T("Channel 3"), _T("Channel 4"), _T("Channel 5"), _T("Channel 6"), _T("Channel 7"), _T("Channel 8")},
-	 // S5B
-	{_T("Square 1"), _T("Square 2"), _T("Square 3")}
+	// S5B
+	{_T("Square 1"), _T("Square 2"), _T("Square 3")},
+	// AY8930
+	{_T("Pulse 1"), _T("Pulse 2"), _T("Pulse 3")}
 };
 
 // CChannelsDlg dialog

@@ -495,7 +495,7 @@
     <ClCompile Include="Source\ChannelsN163.cpp">
       <Filter>Source Files\Sound Driver\Channels</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ChannelsS5B.cpp">
+    <ClCompile Include="Source\ChannelsAY8930.cpp">
       <Filter>Source Files\Sound Driver\Channels</Filter>
     </ClCompile>
     <ClCompile Include="Source\ChannelsVRC6.cpp">
@@ -696,7 +696,7 @@
     <ClCompile Include="Source\SeqInstHandlerSawtooth.cpp">
       <Filter>Source Files\Sound Driver\Instruments</Filter>
     </ClCompile>
-    <ClCompile Include="Source\APU\S5B.cpp">
+    <ClCompile Include="Source\APU\AY8930.cpp">
       <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
     </ClCompile>
     <ClCompile Include="Source\FrameEditorTypes.cpp">
@@ -748,6 +748,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\APU\FDS.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ChannelsS5B.cpp">
+      <Filter>Source Files\Sound Driver\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\S5B.cpp">
       <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
     </ClCompile>
   </ItemGroup>
@@ -827,7 +833,7 @@
     <ClInclude Include="Source\ChannelsN163.h">
       <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ChannelsS5B.h">
+    <ClInclude Include="Source\ChannelsAY8930.h">
       <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\ChannelsVRC6.h">
@@ -1262,7 +1268,7 @@
     <ClInclude Include="Source\SeqInstHandlerSawtooth.h">
       <Filter>Header Files\Sound Driver Headers\Instruments Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\APU\S5B.h">
+    <ClInclude Include="Source\APU\AY8930.h">
       <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\FrameEditorTypes.h">
@@ -1498,6 +1504,12 @@
     </ClInclude>
     <ClInclude Include="Source\APU\ChannelLevelState.h">
       <Filter>Header Files\Sound Driver Headers\Emulation Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\S5B.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChannelsS5B.h">
+      <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

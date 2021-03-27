@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CModulePropertiesDlg, CDialog)
 	ON_BN_CLICKED(IDC_EXPANSION_FDS, OnBnClickedExpansionFDS)
 	ON_BN_CLICKED(IDC_EXPANSION_MMC5, OnBnClickedExpansionMMC5)
 	ON_BN_CLICKED(IDC_EXPANSION_S5B, OnBnClickedExpansionS5B)
+	ON_BN_CLICKED(IDC_EXPANSION_AY8930, OnBnClickedExpansionAY8930)
 	ON_BN_CLICKED(IDC_EXPANSION_N163, OnBnClickedExpansionN163)
 	ON_EN_CHANGE(IDC_N163_OFFSET_EDIT, &CModulePropertiesDlg::OnEnChangeEditN163Offset)
 END_MESSAGE_MAP()
@@ -115,6 +116,7 @@ BOOL CModulePropertiesDlg::OnInitDialog()
 	((CButton*)GetDlgItem(IDC_EXPANSION_MMC5))->SetCheck((m_iExpansions & SNDCHIP_MMC5) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_N163))->SetCheck((m_iExpansions & SNDCHIP_N163) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_S5B))->SetCheck((m_iExpansions & SNDCHIP_S5B) != 0);
+	((CButton*)GetDlgItem(IDC_EXPANSION_AY8930))->SetCheck((m_iExpansions & SNDCHIP_AY8930) != 0);
 
 	// Namco channel count
 	CSliderCtrl *pChanSlider = static_cast<CSliderCtrl*>(GetDlgItem(IDC_CHANNELS));
@@ -153,7 +155,7 @@ void CModulePropertiesDlg::OnBnClickedOk()
 	{
 		CString str;
 		unsigned int Gone = m_pDocument->GetExpansionChip() & ~m_iExpansions;
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 7; i++) {
 			if (Gone & (1 << i)) switch (i) {
 			case 0: str += _T("VRC6 "); break;
 			case 1: str += _T("VRC7 "); break;
@@ -161,6 +163,7 @@ void CModulePropertiesDlg::OnBnClickedOk()
 			case 3: str += _T("MMC5 "); break;
 			case 4: str += _T("N163 "); break;
 			case 5: str += _T("5B ");   break;
+			case 6: str += _T("AY8930 ");   break;
 			}
 			if (i == 4 && m_pDocument->ExpansionEnabled(SNDCHIP_N163)
 				&& (m_iExpansions & SNDCHIP_N163) && m_iN163Channels < m_pDocument->GetNamcoChannels()) {
@@ -417,6 +420,7 @@ void CModulePropertiesDlg::OnBnClickedSongImport()
 	((CButton*)GetDlgItem(IDC_EXPANSION_MMC5))->SetCheck((m_iExpansions & SNDCHIP_MMC5) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_N163))->SetCheck((m_iExpansions & SNDCHIP_N163) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_S5B))->SetCheck((m_iExpansions & SNDCHIP_S5B) != 0);
+	((CButton*)GetDlgItem(IDC_EXPANSION_AY8930))->SetCheck((m_iExpansions & SNDCHIP_AY8930) != 0);
 	m_pDocument->UpdateAllViews(NULL, UPDATE_PROPERTIES);
 }
 
@@ -519,14 +523,25 @@ void CModulePropertiesDlg::OnBnClickedExpansionMMC5()
 		m_iExpansions &= ~SNDCHIP_MMC5;
 }
 
+
 void CModulePropertiesDlg::OnBnClickedExpansionS5B()
 {
-	CButton *pCheckBox = (CButton*)GetDlgItem(IDC_EXPANSION_S5B);
+	CButton* pCheckBox = (CButton*)GetDlgItem(IDC_EXPANSION_S5B);
 
 	if (pCheckBox->GetCheck() == BST_CHECKED)
 		m_iExpansions |= SNDCHIP_S5B;
 	else
 		m_iExpansions &= ~SNDCHIP_S5B;		// // //
+}
+
+void CModulePropertiesDlg::OnBnClickedExpansionAY8930()
+{
+	CButton *pCheckBox = (CButton*)GetDlgItem(IDC_EXPANSION_AY8930);
+
+	if (pCheckBox->GetCheck() == BST_CHECKED)
+		m_iExpansions |= SNDCHIP_AY8930;
+	else
+		m_iExpansions &= ~SNDCHIP_AY8930;		// // //
 }
 
 void CModulePropertiesDlg::OnBnClickedExpansionN163()

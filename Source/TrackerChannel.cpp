@@ -153,6 +153,7 @@ bool CTrackerChannel::IsInstrumentCompatible(int Instrument, inst_type_t Type) c
 		case SNDCHIP_MMC5:
 		case SNDCHIP_N163:		// // //
 		case SNDCHIP_S5B:
+		case SNDCHIP_AY8930:
 		case SNDCHIP_VRC6:
 		case SNDCHIP_FDS:
 			switch (Type) {
@@ -229,13 +230,15 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 		case EF_FDS_MOD_SPEED_HI: case EF_FDS_MOD_SPEED_LO: case EF_FDS_MOD_BIAS:
 			return m_iChip == SNDCHIP_FDS;
 		case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI: case EF_SUNSOFT_ENV_TYPE:
+			return m_iChip == SNDCHIP_S5B || m_iChip == SNDCHIP_AY8930;
 		case EF_SUNSOFT_NOISE:		// // // 050B
+			return (m_iChip == SNDCHIP_S5B && (EffParam <= 0x1F)) || m_iChip == SNDCHIP_AY8930;
 		case EF_AY8930_AND_MASK: case EF_AY8930_OR_MASK:
-			return m_iChip == SNDCHIP_S5B;
+			return m_iChip == SNDCHIP_AY8930;
 		case EF_AY8930_PULSE_WIDTH:
-			return m_iChip == SNDCHIP_S5B && EffParam <= 0x0F;
+			return m_iChip == SNDCHIP_AY8930 && EffParam <= 0x0F;
 		case EF_AY8930_VOL:
-			return m_iChip == SNDCHIP_S5B && EffParam <= 0x01;
+			return m_iChip == SNDCHIP_AY8930 && EffParam <= 0x01;
 		case EF_N163_WAVE_BUFFER:
 			return m_iChip == SNDCHIP_N163 && EffParam <= 0x7F;
 		case EF_FDS_VOLUME:

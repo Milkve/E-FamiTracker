@@ -58,6 +58,7 @@ const TCHAR *CInstrumentEditDlg::CHIP_NAMES[] = {
 	_T("VRC7"), 
 	_T("FDS"), 
 	_T("Namco"), 
+	_T("S5B"),
 	_T("AY8930")
 };
 
@@ -212,7 +213,7 @@ void CInstrumentEditDlg::SetCurrentInstrument(int Index)
 				InsertPane(new CInstrumentEditorN163Wave(), false);
 				break;
 			case INST_S5B:
-				InsertPane(new CInstrumentEditorSeq(NULL, _T("Microchip AY8930"), CInstrumentS5B::SEQUENCE_NAME, 31, 31, INST_S5B), true);
+				InsertPane(new CInstrumentEditorSeq(NULL, _T("Sunsoft 5B"), CInstrumentS5B::SEQUENCE_NAME, 31, 31, INST_S5B), true);
 				break;
 		}
 

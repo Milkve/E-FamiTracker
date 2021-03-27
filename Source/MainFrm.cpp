@@ -200,6 +200,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_INSTRUMENT_ADD_MMC5, OnAddInstrumentMMC5)
 	ON_COMMAND(ID_INSTRUMENT_ADD_N163, OnAddInstrumentN163)
 	ON_COMMAND(ID_INSTRUMENT_ADD_S5B, OnAddInstrumentS5B)
+	ON_COMMAND(ID_INSTRUMENT_ADD_AY8930, OnAddInstrumentAY8930)
 	ON_COMMAND(ID_MODULE_MODULEPROPERTIES, OnModuleModuleproperties)
 	ON_COMMAND(ID_MODULE_CHANNELS, OnModuleChannels)
 	ON_COMMAND(ID_MODULE_COMMENTS, OnModuleComments)
@@ -1210,6 +1211,11 @@ void CMainFrame::OnAddInstrumentS5B()
 	NewInstrument(SNDCHIP_S5B);
 }
 
+void CMainFrame::OnAddInstrumentAY8930()
+{
+	NewInstrument(SNDCHIP_AY8930);
+}
+
 void CMainFrame::OnAddInstrument()
 {
 	// Add new instrument to module
@@ -1670,11 +1676,14 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 				String = _T(" Namco 163");
 				break;
 			case SNDCHIP_S5B:
+				String = _T(" Sunsoft 5B");
+				break;
+			case SNDCHIP_AY8930:
 				String = _T(" Microchip AY8930");
 				break;
 		}
 	else {
-		for (int i = 0; i < 6; i++)	if (Chip & (1 << i)) switch (i) {
+		for (int i = 0; i < 7; i++)	if (Chip & (1 << i)) switch (i) {
 			case 0:
 				String += _T(" + VRC6");
 				break;
@@ -1691,6 +1700,9 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 				String += _T(" + N163");
 				break;
 			case 5:
+				String += _T(" + S5B");
+				break;
+			case 6:
 				String += _T(" + AY8930");
 				break;
 		}
@@ -2671,7 +2683,9 @@ void CMainFrame::OnNewInstrumentMenu(NMHDR* pNotifyStruct, LRESULT* result)
 	if (Chip & SNDCHIP_N163)
 		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_N163, _T("New Namco instrument"));
 	if (Chip & SNDCHIP_S5B)
-		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_S5B, _T("New AY8930 instrument"));
+		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_S5B, _T("New Sunsoft instrument"));
+	if (Chip & SNDCHIP_AY8930)
+		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_AY8930, _T("New AY8930 instrument"));
 
 	switch (SelectedChip) {
 		case SNDCHIP_NONE:
@@ -2694,6 +2708,9 @@ void CMainFrame::OnNewInstrumentMenu(NMHDR* pNotifyStruct, LRESULT* result)
 			break;
 		case SNDCHIP_S5B:
 			menu.SetDefaultItem(ID_INSTRUMENT_ADD_S5B);
+			break;
+		case SNDCHIP_AY8930:
+			menu.SetDefaultItem(ID_INSTRUMENT_ADD_AY8930);
 			break;
 	}
 	

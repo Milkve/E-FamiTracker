@@ -85,7 +85,7 @@ const int ECHO_BUFFER_LENGTH = 3;
 
 // Number of available channels (max) TODO: should not be used anymore!
 // instead, check the channelsavailable variable and allocate dynamically
-const int MAX_CHANNELS	 = 5 + 3 + 2 + 6 + 1 + 8 + 3;
+const int MAX_CHANNELS	 = 5 + 3 + 2 + 6 + 1 + 8 + 3 + 3;
 
 const int CHANNELS_DEFAULT = 5;
 const int CHANNELS_VRC6	   = 3;
@@ -158,10 +158,10 @@ enum effect_t : unsigned char {
 	EF_SUNSOFT_ENV_HI,  	// Sunsoft envelope high
 	EF_SUNSOFT_ENV_LO,  	// Sunsoft envelope low
 	EF_SUNSOFT_NOISE,   	// // // 050B Sunsoft noise period
-	EF_AY8930_PULSE_WIDTH,   	// // // S5B pulse width
-	EF_AY8930_AND_MASK,   	// // // S5B noise AND mask
-	EF_AY8930_OR_MASK,   	// // // S5B noise OR mask
-	EF_AY8930_VOL,					// // // S5B extra volume bit
+	EF_AY8930_PULSE_WIDTH,   	// // // AY8930 pulse width
+	EF_AY8930_AND_MASK,   	// // // AY8930 noise AND mask
+	EF_AY8930_OR_MASK,   	// // // AY8930 noise OR mask
+	EF_AY8930_VOL,					// // // AY8930 extra volume bit
 	EF_VRC7_PORT,       	// // // 050B VRC7 custom patch port
 	EF_VRC7_WRITE,      	// // // 050B VRC7 custom patch write
 	EF_NOTE_RELEASE,    	// // // Delayed release
@@ -185,7 +185,8 @@ const effect_t VRC7_EFFECTS[] = {EF_VRC7_PORT, EF_VRC7_WRITE};
 const effect_t FDS_EFFECTS[] = {EF_FDS_MOD_DEPTH, EF_FDS_MOD_SPEED_HI, EF_FDS_MOD_SPEED_LO, EF_FDS_VOLUME, EF_FDS_MOD_BIAS};
 // const effect_t MMC5_EFFECTS[] = {};
 const effect_t N163_EFFECTS[] = {EF_N163_WAVE_BUFFER};
-const effect_t S5B_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE, EF_AY8930_PULSE_WIDTH, EF_AY8930_AND_MASK, EF_AY8930_OR_MASK, EF_AY8930_VOL};
+const effect_t S5B_EFFECTS[] = { EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE };
+const effect_t AY8930_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE, EF_AY8930_PULSE_WIDTH, EF_AY8930_AND_MASK, EF_AY8930_OR_MASK, EF_AY8930_VOL};
 
 // Effect checking = bool CTrackerChannel::IsEffectCompatible
 

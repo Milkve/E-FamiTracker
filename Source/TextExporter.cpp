@@ -49,7 +49,7 @@ enum
 	// global settings
 	CT_MACHINE,        // uint (0=NTSC, 1=PAL)
 	CT_FRAMERATE,      // uint (0=default)
-	CT_EXPANSION,      // uint (0=none, 1=VRC6, 2=VRC7, 4=FDS, 8=MMC5, 16=N163, 32=S5B)
+	CT_EXPANSION,      // uint (0=none, 1=VRC6, 2=VRC7, 4=FDS, 8=MMC5, 16=N163, 32=S5B, 64=AY8930)
 	CT_VIBRATO,        // uint (0=old, 1=new)
 	CT_SPLIT,          // uint (32=default)
 	// // // 050B

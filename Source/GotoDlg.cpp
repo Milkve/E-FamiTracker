@@ -81,9 +81,15 @@ BOOL CGotoDlg::OnInitDialog()
 		m_cChipEdit->AddString(_T("N163"));
 	if (pDoc->ExpansionEnabled(SNDCHIP_S5B))
 		m_cChipEdit->AddString(_T("5B"));
+	if (pDoc->ExpansionEnabled(SNDCHIP_AY8930))
+		m_cChipEdit->AddString(_T("AY8930"));
 		
 	int Channel = pDoc->GetChannelType(pEditor->GetChannel());
-	if (Channel >= CHANID_S5B_CH1) {
+	if (Channel >= CHANID_AY8930_CH1) {
+		Channel -= CHANID_AY8930_CH1;
+		m_cChipEdit->SelectString(-1, _T("AY8930"));
+	}
+	else if (Channel >= CHANID_S5B_CH1) {
 		Channel -= CHANID_S5B_CH1;
 		m_cChipEdit->SelectString(-1, _T("5B"));
 	}
@@ -157,6 +163,8 @@ int CGotoDlg::GetChipFromString(const CString str)
 		return SNDCHIP_N163;
 	else if (str == _T("5B"))
 		return SNDCHIP_S5B;
+	else if (str == _T("AY8930"))
+		return SNDCHIP_AY8930;
 	else
 		return SNDCHIP_NONE;
 }
@@ -173,6 +181,7 @@ int CGotoDlg::GetFinalChannel() const
 	case SNDCHIP_MMC5: Channel += CHANID_MMC5_SQUARE1; break;
 	case SNDCHIP_N163: Channel += CHANID_N163_CH1; break;
 	case SNDCHIP_S5B:  Channel += CHANID_S5B_CH1; break;
+	case SNDCHIP_AY8930:  Channel += CHANID_AY8930_CH1; break;
 	}
 
 	return pDoc->GetChannelIndex(Channel);

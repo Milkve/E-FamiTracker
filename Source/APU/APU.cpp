@@ -34,6 +34,7 @@
 #include "N163.h"
 #include "VRC7.h"
 #include "S5B.h"
+#include "AY8930.h"
 #include "SoundChip.h"
 #include "SoundChip2.h"
 #include "../RegisterState.h"		// // //
@@ -68,6 +69,7 @@ CAPU::CAPU(IAudioCallback *pCallback) :		// // //
 	m_pVRC7 = new CVRC7(m_pMixer);
 	m_pN163 = new CN163(m_pMixer);
 	m_pS5B  = new CS5B(m_pMixer);
+	m_pAY8930 = new CAY8930(m_pMixer);
 
 	m_fLevelVRC7 = 1.0f;
 
@@ -84,6 +86,7 @@ CAPU::~CAPU()
 	SAFE_RELEASE(m_pVRC7);
 	SAFE_RELEASE(m_pN163);
 	SAFE_RELEASE(m_pS5B);
+	SAFE_RELEASE(m_pAY8930);
 
 	SAFE_RELEASE(m_pMixer);
 
@@ -210,6 +213,8 @@ void CAPU::SetExternalSound(uint8_t Chip)
 		m_SoundChips.push_back(m_pN163);
 	if (Chip & SNDCHIP_S5B)
 		m_SoundChips.push_back(m_pS5B);
+	if (Chip & SNDCHIP_AY8930)
+		m_SoundChips.push_back(m_pAY8930);
 
 	// Set (unused) bitfield of external sound chips enabled.
 	m_iExternalSoundChips = Chip;
@@ -442,6 +447,7 @@ double CAPU::GetFreq(int Chip, int Chan) const
 	case SNDCHIP_MMC5: return PtrGetFreq(*m_pMMC5);
 	case SNDCHIP_N163: return PtrGetFreq(*m_pN163);
 	case SNDCHIP_S5B:  return PtrGetFreq(*m_pS5B);
+	case SNDCHIP_AY8930:  return PtrGetFreq(*m_pAY8930);
 	default: AfxDebugBreak(); return 0.;
 	}
 }
@@ -460,6 +466,7 @@ CRegisterState *CAPU::GetRegState(int Chip, int Reg) const		// // //
 	case SNDCHIP_MMC5: return PtrGetRegState(*m_pMMC5);
 	case SNDCHIP_N163: return PtrGetRegState(*m_pN163);
 	case SNDCHIP_S5B:  return PtrGetRegState(*m_pS5B);
+	case SNDCHIP_AY8930:  return PtrGetRegState(*m_pAY8930);
 	default: AfxDebugBreak(); return nullptr;
 	}
 }

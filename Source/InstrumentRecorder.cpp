@@ -118,6 +118,9 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 	case SNDCHIP_S5B:
 		ID -= CHANID_S5B_CH1;
 		PitchReg = (REG(ID << 1) | (0x0F & REG(1 + (ID << 1))) << 8); break;
+	case SNDCHIP_AY8930:
+		ID -= CHANID_AY8930_CH1;
+		PitchReg = (REG(ID << 1) | (REG(1 + (ID << 1))) << 8); break;
 	}
 
 	CDetuneTable::type_t Table;
@@ -129,6 +132,7 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 	case SNDCHIP_MMC5: Table = CDetuneTable::DETUNE_NTSC; break;
 	case SNDCHIP_N163: Table = CDetuneTable::DETUNE_N163; break;
 	case SNDCHIP_S5B:  Table = CDetuneTable::DETUNE_S5B; break;
+	case SNDCHIP_AY8930:  Table = CDetuneTable::DETUNE_AY8930; break;
 	}
 	int Note = 0;
 	if (m_iRecordChannel == CHANID_NOISE) {
@@ -149,6 +153,7 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 	case SNDCHIP_FDS:  InstType = INST_FDS; break;
 	case SNDCHIP_N163: InstType = INST_N163; break;
 	case SNDCHIP_S5B:  InstType = INST_S5B; break;
+	case SNDCHIP_AY8930:  InstType = INST_S5B; break;
 	}
 
 	switch (InstType) {
@@ -168,6 +173,8 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 					Val = 0x0F & REG(0x7F - (ID << 3)); break;
 				case SNDCHIP_S5B:
 					Val = 0x0F & REG(0x08 + ID); break;
+				case SNDCHIP_AY8930:
+					Val = 0x1F & REG(0x08 + ID); break;
 				}
 				break;
 			case SEQ_ARPEGGIO: Val = static_cast<char>(Note); break;
@@ -217,6 +224,10 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 					break;
 				case SNDCHIP_S5B:
 					//0x1F accounts for inverted noise period value
+					Val = 0x1F - (0xFF & REG(0x06)) | (0x10 & REG(0x08 + ID)) << 1
+						| (0x01 << ID & ~REG(0x07)) << (6 - ID) | (0x08 << ID & ~REG(0x07)) << (4 - ID); break;
+				case SNDCHIP_AY8930:
+					//0xFF accounts for inverted noise period value
 					Val = 0xFF - (0xFF & REG(0x06)) | (0x10 & REG(0x08 + ID)) << 1
 						| (0x01 << ID & ~REG(0x07)) << (6 - ID) | (0x08 << ID & ~REG(0x07)) << (4 - ID); break;
 				}
@@ -323,6 +334,7 @@ void CInstrumentRecorder::InitRecordInstrument()
 	case SNDCHIP_FDS:  Type = INST_FDS; break;
 	case SNDCHIP_N163: Type = INST_N163; break;
 	case SNDCHIP_S5B:  Type = INST_S5B; break;
+	case SNDCHIP_AY8930:  Type = INST_S5B; break;
 	}
 	*m_pDumpInstrument = CInstrumentFactory::CreateNew(Type);		// // //
 	if (!*m_pDumpInstrument) return;

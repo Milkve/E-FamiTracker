@@ -150,6 +150,7 @@ bool CChannelHandlerAY8930::HandleEffect(effect_t EffNum, EffParamT EffParam)
 		break;
 	case EF_AY8930_VOL:
 		m_iExVolume = EffParam & 1;
+		break;
 	case EF_DUTY_CYCLE: {
 		/*
 		Translate Vxx bitmask to `enum DutyType` bitmask, using VXX_TO_DUTY
@@ -288,6 +289,8 @@ CString CChannelHandlerAY8930::GetCustomEffectString() const		// // //
 		str.AppendFormat(_T(" Y%02X"), s_iNoiseANDMask);
 	if (s_iNoiseORMask)
 		str.AppendFormat(_T(" Z%02X"), s_iNoiseORMask);
+	if (m_iExVolume)
+		str.AppendFormat(_T(" S%02X"), m_iExVolume);
 
 	return str;
 }

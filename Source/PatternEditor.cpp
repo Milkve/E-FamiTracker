@@ -1456,8 +1456,8 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 					if (pTrackerChannel->GetID() == CHANID_NOISE) {
 						// Noise
 						char NoiseFreq = (pNoteData->Note - 1 + pNoteData->Octave * 12) & 0x1F;
-						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[(NoiseFreq & 0x10) >> 4], pColorInfo->Note);		// // //
-						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[NoiseFreq & 0x0F], pColorInfo->Note);
+						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[NoiseFreq & 0x0F], pColorInfo->Note);		// // //
+						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, '-', pColorInfo->Note);
 						DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, '#', pColorInfo->Note);
 					}
 					else {
@@ -1831,8 +1831,8 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		return str;
 	};
 
-	// 5E01
-	DrawHeaderFunc(_T("5E01"));		// // //
+	// 2A03
+	DrawHeaderFunc(_T("2A03"));		// // //
 
 	for (int i = 0; i < 5; ++i) {
 		GetRegsFunc(SNDCHIP_NONE, [&] (int x) { return 0x4000 + i * 4 + x; }, 4);
@@ -1843,8 +1843,6 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
 //		pDC->FillSolidRect(x + 200, y, x + 400, y + 18, m_colEmptyBg);
 
-		LPCTSTR waveNames[4] = {_T("tri"),_T("saw"),_T("squ"),_T("sin")};
-
 		switch (i) {
 		case 0: case 1:
 			period = reg[2] | ((reg[3] & 7) << 8);
@@ -1853,7 +1851,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		case 2:
 			period = reg[2] | ((reg[3] & 7) << 8);
 			vol = reg[0] ? 15 : 0;
-			text.Format(_T("%s, shape = %i (%s)"), GetPitchTextFunc(3, period, freq), reg[1], waveNames[reg[1]]); break;
+			text.Format(_T("%s"), GetPitchTextFunc(3, period, freq)); break;
 		case 3:
 			period = reg[2] & 0x1F;
 			vol = reg[0] & 0x0F;

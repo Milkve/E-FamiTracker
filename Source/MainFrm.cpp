@@ -2670,7 +2670,7 @@ void CMainFrame::OnNewInstrumentMenu(NMHDR* pNotifyStruct, LRESULT* result)
 	int Chip = pDoc->GetExpansionChip();
 	int SelectedChip = pDoc->GetChannel(pView->GetSelectedChannel())->GetChip();	// where the cursor is located
 
-	menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_2A03, _T("New 5E01 instrument"));
+	menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_2A03, _T("New 2A03 instrument"));
 
 	if (Chip & SNDCHIP_VRC6)
 		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_VRC6, _T("New VRC6 instrument"));

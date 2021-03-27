@@ -128,7 +128,7 @@ static const TCHAR* CT[CT_COUNT] =
 	_T("GROOVE"),
 	_T("USEGROOVE"),
 	// instruments
-	_T("INST5E01"),
+	_T("INST2A03"),
 	_T("INSTVRC6"),
 	_T("INSTVRC7"),
 	_T("INSTFDS"),
@@ -569,8 +569,8 @@ const CString& CTextExport::ExportCellText(const stChanNote& stCell, unsigned in
 	{
 		if (bNoise)
 		{
-			char nNoiseFreq = (stCell.Note - 1 + stCell.Octave * NOTE_RANGE) & 0x1F;
-			s.Format(_T("%02X#"), nNoiseFreq);
+			char nNoiseFreq = (stCell.Note - 1 + stCell.Octave * NOTE_RANGE) & 0x0F;
+			s.Format(_T("%X-#"), nNoiseFreq);
 		}
 		else
 		{
@@ -942,7 +942,7 @@ const CString& CTextExport::ImportFile(LPCTSTR FileName, CFamiTrackerDoc *pDoc)
 					CHECK(t.ReadInt(i,0,MAX_INSTRUMENTS-1,&sResult));
 					if (pDoc->GetInstrumentType(i) != INST_2A03)
 					{
-						sResult.Format(_T("Line %d column %d: instrument %d is not defined as a 5E01 instrument."), t.line, t.GetColumn(), i);
+						sResult.Format(_T("Line %d column %d: instrument %d is not defined as a 2A03 instrument."), t.line, t.GetColumn(), i);
 						return sResult;
 					}
 					auto pInst = std::static_pointer_cast<CInstrument2A03>(pDoc->GetInstrument(i));

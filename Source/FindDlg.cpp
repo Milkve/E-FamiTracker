@@ -261,8 +261,7 @@ void CFindResultsBox::AddResult(const stChanNote *pNote, const CFindCursor *pCur
 		m_cListResults->SetItemText(Pos, NOTE, str); break;
 	default:
 		if (Noise) {
-			//str.Format(_T("%X-#"), MIDI_NOTE(pNote->Octave, pNote->Note) & 0x0F);
-			str.Format(_T("%02X#"), MIDI_NOTE(pNote->Octave, pNote->Note) & 0x1F);
+			str.Format(_T("%X-#"), MIDI_NOTE(pNote->Octave, pNote->Note) & 0x0F);
 			m_cListResults->SetItemText(Pos, NOTE, str);
 		}
 		else
@@ -305,7 +304,7 @@ void CFindResultsBox::SelectItem(int Index)
 	const auto ToChannelIndex = [] (const std::string &_x) {
 		CString x {_x.c_str()};
 		static const CString HEADER_STR[] = {
-			_T("Pulse "), _T("Waveform"), _T("Noise"), _T("DPCM"),
+			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square "),
 			_T("AY8930 Pulse ")
@@ -515,10 +514,10 @@ int CFindResultsBox::ChannelCompareFunc(LPARAM lParam1, LPARAM lParam2, LPARAM l
 
 	const auto ToIndex = [] (const CString &x) {
 		static const CString HEADER_STR[] = {
-			_T("Pulse "), _T("Waveform"), _T("Noise"), _T("DPCM"),
+			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square "),
-			_T("AY8930 Pulse")
+			_T("AY8930 Pulse ")
 		};
 		int Pos = 0;
 		for (const auto &n : HEADER_STR) {

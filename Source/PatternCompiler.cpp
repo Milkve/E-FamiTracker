@@ -622,11 +622,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_SUNSOFT_NOISE:		// // // 050B
-					if (ChipID == SNDCHIP_S5B) {
-						WriteData(Command(CMD_EFF_S5B_NOISE));
-						WriteData(EffParam & 0x1F);
-					}
-					else if (ChipID == SNDCHIP_AY8930) {
+					if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_S5B_NOISE));
 						WriteData(EffParam & 0xFF);
 					}

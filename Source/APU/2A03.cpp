@@ -170,7 +170,7 @@ double C2A03::GetFreq(int Channel) const		// // !!
 
 int C2A03::GetChannelLevel(int Channel)
 {
-	ASSERT(0 <= Channel && Channel < 5);
+	//ASSERT(0 <= Channel && Channel < 5);
 	if (0 <= Channel && Channel < 5) {
 		return m_ChannelLevels[Channel].getLevel();
 	}
@@ -179,7 +179,7 @@ int C2A03::GetChannelLevel(int Channel)
 
 int C2A03::GetChannelLevelRange(int Channel) const
 {
-	ASSERT(0 <= Channel && Channel < 5);
+	//ASSERT(0 <= Channel && Channel < 5);
 	switch (Channel) {
 	case 0: case 1: case 2: case 3:
 		// pulse/tri/noise

@@ -34,7 +34,7 @@ namespace xgm
 
   public:
     // Noise.
-    static const UINT32 wavlen_table[2][32];
+    static const UINT32 wavlen_table[2][16];
 
     UINT32 tnd_table[2][16][16][128];
 
@@ -63,7 +63,6 @@ namespace xgm
 
     INT32 counter[3];  // frequency dividers
     int tphase;        // triangle phase
-    int tduty;         // wave shape
     UINT32 nfreq;      // noise frequency
     UINT32 dfreq;      // DPCM frequency
 

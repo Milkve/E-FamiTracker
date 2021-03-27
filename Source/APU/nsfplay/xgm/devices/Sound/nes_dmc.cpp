@@ -6,12 +6,12 @@
 
 namespace xgm
 {
-  const UINT32 NES_DMC::wavlen_table[2][32] = {
+  const UINT32 NES_DMC::wavlen_table[2][16] = {
   { // NTSC
-    4,5,6,7,9,12,15,19,23,29,37,46,58,72,91,114,142,178,222,278,348,435,544,681,851,1064,1331,1664,2081,2602,3253,4068
+    4, 8, 16, 32, 64, 96, 128, 160, 202, 254, 380, 508, 762, 1016, 2034, 4068
   },
   { // PAL
-    3,4,6,7,9,12,15,18,23,29,36,45,56,70,88,110,137,171,213,266,332,414,517,644,804,1003,1251,1560,1946,2428,3028,3778
+    4, 8, 14, 30, 60, 88, 118, 148, 188, 236, 354, 472, 708,  944, 1890, 3778
   }};
 
   const UINT32 NES_DMC::freq_table[2][16] = {
@@ -94,7 +94,7 @@ namespace xgm
         trkinfo[0].freq = clock/32/(trkinfo[0]._freq + 1);
       else
         trkinfo[0].freq = 0;
-      trkinfo[0].tone = tduty;
+      trkinfo[0].tone = -1;
       trkinfo[0].output = out[0];
       break;
     case 1:
@@ -102,8 +102,8 @@ namespace xgm
       trkinfo[1].volume = noise_volume+(envelope_disable?0:0x10)+(envelope_loop?0x20:0);
       trkinfo[1].key = length_counter[1]>0 && enable[1] &&
                        (envelope_disable ? (noise_volume>0) : (envelope_counter>0));
-      trkinfo[1]._freq = reg[0x400e - 0x4008]&0x1F;
-      trkinfo[1].freq = clock / double(wavlen_table[1][trkinfo[1]._freq]);// * ((noise_tap & (1 << 6)) ? 93 : 1));
+      trkinfo[1]._freq = reg[0x400e - 0x4008]&0xF;
+      trkinfo[1].freq = clock/double(wavlen_table[pal][trkinfo[1]._freq] * ((noise_tap&(1<<6)) ? 93 : 1));
       trkinfo[1].tone = noise_tap & (1<<6);
       trkinfo[1].output = out[1];
       break;
@@ -132,7 +132,7 @@ namespace xgm
 
   double NES_DMC::GetFrequencyNoise() const     // // !!
   {
-    return clock / double(wavlen_table[pal][reg[0x400e - 0x4008] & 0x1F]);// * ((noise_tap & (1 << 6)) ? 93 : 1));
+      return clock / double(wavlen_table[pal][reg[0x400e - 0x4008] & 0xF] * ((noise_tap & (1 << 6)) ? 93 : 1));
   }
 
   double NES_DMC::GetFrequencyDPCM() const      // // !!
@@ -234,38 +234,19 @@ namespace xgm
   // 三角波チャンネルの計算 戻り値は0-15
   UINT32 NES_DMC::calc_tri (UINT32 clocks)
   {
-    static UINT32 wavtbl[4][32] =
+    static UINT32 tritbl[32] = 
     {
-      {
-       15,14,13,12,11,10, 9, 8,
-        7, 6, 5, 4, 3, 2, 1, 0,
-        0, 1, 2, 3, 4, 5, 6, 7,
-        8, 9,10,11,12,13,14,15,
-      },
-      {
-       11,11,11,11,10,10,10,10,
-        9, 9, 9, 9, 8, 8, 8, 8,
-        7, 7, 7, 7, 6, 6, 6, 6,
-        5, 5, 5, 5, 4, 4, 4, 4,
-      },
-      {
-       11,11,11,11,11,11,11,11,
-       11,11,11,11,11,11,11,11,
-        4, 4, 4, 4, 4, 4, 4, 4,
-        4, 4, 4, 4, 4, 4, 4, 4,
-      },
-      //{
-      //  8, 9,10,12,13,14,14,15,
-      // 15,15,14,14,13,12,10, 9,
-      //  8, 6, 5, 3, 2, 1, 1, 0,
-      //  0, 0, 1, 1, 2, 3, 5, 6,
-      //},
-      {
-        0, 0, 1, 1, 1, 2, 4, 6,
-        9,11,13,14,14,14,15,15,
-       15,15,14,14,14,13,11, 9,
-        6, 4, 2, 1, 1, 1, 0, 0
-      },
+     15,14,13,12,11,10, 9, 8,
+      7, 6, 5, 4, 3, 2, 1, 0,
+      0, 1, 2, 3, 4, 5, 6, 7,
+      8, 9,10,11,12,13,14,15,
+    };
+    static UINT32 sawtbl[32] =
+    {
+     15,14,13,12,11,10, 9, 8,
+      7, 6, 5, 4, 3, 2, 1, 0,
+     15,14,13,12,11,10, 9, 8,
+      7, 6, 5, 4, 3, 2, 1, 0,
     };
 
     if (linear_counter > 0 && length_counter[0] > 0
@@ -278,8 +259,8 @@ namespace xgm
         counter[0] += (tri_freq + 1);
       }
     }
-    
-    UINT32 ret = wavtbl[tduty][tphase];
+
+    UINT32 ret = tritbl[tphase];
     return ret;
   }
 
@@ -599,7 +580,6 @@ namespace xgm
     counter[1] = 0;
     counter[2] = 0;
     tphase = 0;
-    tduty = 0;
     nfreq = wavlen_table[0][0];
     dfreq = freq_table[0][0];
     tri_freq = 0;
@@ -773,7 +753,6 @@ namespace xgm
       break;
 
     case 0x4009:
-      tduty = val & 3;
       break;
 
     case 0x400a:
@@ -806,13 +785,13 @@ namespace xgm
         noise_tap = (val & 0x80) ? (1<<6) : (1<<1);
       else
         noise_tap = (1<<1);
-      nfreq = wavlen_table[pal][val&31];
+      nfreq = wavlen_table[pal][val&15];
       break;
 
     case 0x400f:
       if (enable[1])
       {
-        length_counter[1] = length_table[(val >> 3) & 0xf];
+        length_counter[1] = length_table[(val >> 3) & 0x1f];
       }
       envelope_write = true;
       break;

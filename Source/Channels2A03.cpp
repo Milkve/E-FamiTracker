@@ -54,6 +54,7 @@ void CChannelHandler2A03::HandleNoteData(stChanNote *pNoteData, int EffColumns)
 		if (!m_bEnvelopeLoop || m_bHardwareEnvelope)		// // //
 			m_bResetEnvelope = true;
 	}
+
 }
 
 bool CChannelHandler2A03::HandleEffect(effect_t EffNum, unsigned char EffParam)
@@ -111,11 +112,11 @@ void CChannelHandler2A03::HandleRelease()
 bool CChannelHandler2A03::CreateInstHandler(inst_type_t Type)
 {
 	switch (Type) {
-	case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS:
+	case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS: 
 		switch (m_iInstTypeCurrent) {
 		case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS: break;
 		default:
-			m_pInstHandler.reset(new CSeqInstHandler(this, 0x0F, 0x0F, Type == INST_S5B ? 0x40 : 0));
+			m_pInstHandler.reset(new CSeqInstHandler(this, 0x0F, Type == INST_S5B ? 0x40 : 0));
 			return true;
 		}
 	}
@@ -289,13 +290,11 @@ void CTriangleChan::RefreshChannel()
 {
 	int Freq = CalculatePeriod();
 
-	char DutyCycle = (m_iDutyPeriod & MAX_DUTY);
 	unsigned char HiFreq = (Freq & 0xFF);
 	unsigned char LoFreq = (Freq >> 8);
-
+	
 	if (m_iInstVolume > 0 && m_iVolume > 0 && m_bGate) {
 		WriteRegister(0x4008, (m_bEnvelopeLoop << 7) | (m_iLinearCounter & 0x7F));		// // //
-		WriteRegister(0x4009, DutyCycle);		// // //
 		WriteRegister(0x400A, HiFreq);
 		if (m_bEnvelopeLoop || m_bResetEnvelope)		// // //
 			WriteRegister(0x400B, LoFreq + (m_iLengthCounter << 3));
@@ -315,12 +314,6 @@ void CTriangleChan::ResetChannel()
 int CTriangleChan::GetChannelVolume() const
 {
 	return m_iVolume ? VOL_COLUMN_MAX : 0;
-}
-
-const char CTriangleChan::MAX_DUTY = 0x03;
-
-int CTriangleChan::getDutyMax() const {
-	return static_cast<int>(MAX_DUTY);
 }
 
 bool CTriangleChan::HandleEffect(effect_t EffNum, unsigned char EffParam)
@@ -359,7 +352,6 @@ bool CTriangleChan::HandleEffect(effect_t EffNum, unsigned char EffParam)
 void CTriangleChan::ClearRegisters()
 {
 	WriteRegister(0x4008, 0);
-	WriteRegister(0x4009, 0);
 	WriteRegister(0x400A, 0);
 	WriteRegister(0x400B, 0);
 }
@@ -386,7 +378,7 @@ void CNoiseChan::HandleNote(int Note, int Octave)
 {
 	CChannelHandler2A03::HandleNote(Note, Octave);		// // //
 
-	int NewNote = (MIDI_NOTE(Octave, Note) & 0x1F) | 0x100;
+	int NewNote = (MIDI_NOTE(Octave, Note) & 0x0F) | 0x100;
 	int NesFreq = TriggerNote(NewNote);
 
 	// // // NesFreq = (NesFreq & 0x0F) | 0x10;
@@ -452,8 +444,8 @@ void CNoiseChan::RefreshChannel()
 	int Volume = CalculateVolume();
 	char NoiseMode = (m_iDutyPeriod & MAX_DUTY) << 7;
 
-	Period = Period & 0x1F;
-	Period ^= 0x1F;
+	Period = Period & 0x0F;
+	Period ^= 0x0F;
 	
 	if (m_bGate)		// // //
 		WriteRegister(0x400C, (m_bEnvelopeLoop << 5) | (!m_bHardwareEnvelope << 4) | Volume);		// // //

@@ -46,7 +46,7 @@ CChannelMap::~CChannelMap()
 void CChannelMap::SetupSoundChips()
 {
 	// Add available chips
-	AddChip(SNDCHIP_NONE, INST_2A03, _T("5E01 channels only"));
+	AddChip(SNDCHIP_NONE, INST_2A03, _T("2A03 channels only"));
 	AddChip(SNDCHIP_VRC6, INST_VRC6, _T("Konami VRC6"));
 	AddChip(SNDCHIP_VRC7, INST_VRC7, _T("Konami VRC7"));
 	AddChip(SNDCHIP_FDS,  INST_FDS,  _T("Nintendo FDS sound"));

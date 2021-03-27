@@ -77,7 +77,7 @@ BOOL CSwapDlg::OnInitDialog()
 	m_cChipSecond->SubclassDlgItem(IDC_COMBO_SWAP_CHIP2, this);
 	
 	CFamiTrackerDoc *pDoc = CFamiTrackerDoc::GetDoc();
-	m_cChipFirst->AddString(_T("5E01"));
+	m_cChipFirst->AddString(_T("2A03"));
 	if (pDoc->ExpansionEnabled(SNDCHIP_VRC6))
 		m_cChipFirst->AddString(_T("VRC6"));
 	if (pDoc->ExpansionEnabled(SNDCHIP_VRC7))
@@ -119,7 +119,7 @@ void CSwapDlg::CheckDestination() const
 
 int CSwapDlg::GetChipFromString(const CString str)
 {
-	if (str == _T("5E01"))
+	if (str == _T("2A03"))
 		return SNDCHIP_NONE;
 	else if (str == _T("VRC6"))
 		return SNDCHIP_VRC6;

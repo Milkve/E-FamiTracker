@@ -232,7 +232,7 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 		case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI: case EF_SUNSOFT_ENV_TYPE:
 			return m_iChip == SNDCHIP_S5B || m_iChip == SNDCHIP_AY8930;
 		case EF_SUNSOFT_NOISE:		// // // 050B
-			return (m_iChip == SNDCHIP_S5B && (EffParam <= 0x1F)) || m_iChip == SNDCHIP_AY8930;
+			return (m_iChip == SNDCHIP_S5B && (EffParam <= 0x1F)) || (m_iChip == SNDCHIP_AY8930);
 		case EF_AY8930_AND_MASK: case EF_AY8930_OR_MASK:
 			return m_iChip == SNDCHIP_AY8930;
 		case EF_AY8930_PULSE_WIDTH:

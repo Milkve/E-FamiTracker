@@ -154,6 +154,7 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 	case SNDCHIP_N163: InstType = INST_N163; break;
 	case SNDCHIP_S5B:  InstType = INST_S5B; break;
 	case SNDCHIP_AY8930:  InstType = INST_S5B; break;
+	case SNDCHIP_SAA1099:  InstType = INST_2A03; break;
 	}
 
 	switch (InstType) {

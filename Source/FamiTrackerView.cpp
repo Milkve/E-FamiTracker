@@ -2425,6 +2425,8 @@ void CFamiTrackerView::UpdateNoteQueues()		// // //
 			m_pNoteQueue->AddMap({CHANID_S5B_CH1, CHANID_S5B_CH2, CHANID_S5B_CH3});
 		if (pDoc->ExpansionEnabled(SNDCHIP_AY8930))
 			m_pNoteQueue->AddMap({ CHANID_AY8930_CH1, CHANID_AY8930_CH2, CHANID_AY8930_CH3 });
+		if (pDoc->ExpansionEnabled(SNDCHIP_SAA1099))
+			m_pNoteQueue->AddMap({ CHANID_SAA1099_CH1, CHANID_SAA1099_CH2, CHANID_SAA1099_CH3, CHANID_SAA1099_CH4, CHANID_SAA1099_CH5, CHANID_SAA1099_CH6 });
 	}
 
 //	for (int i = 0; i < Channels; ++i)

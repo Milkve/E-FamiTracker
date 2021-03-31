@@ -453,6 +453,10 @@ void CMixer::StoreChannelLevel(int Channel, int Value)
 		AbsVol = (int)(logf((float)AbsVol) * 2.8f);
 	}
 
+	if (Channel >= CHANID_SAA1099_CH1 && Channel <= CHANID_SAA1099_CH6) {
+		AbsVol = (int)(logf((float)AbsVol) * 2.8f);
+	}
+
 	if (float(AbsVol) >= m_fChannelLevels[Channel]) {
 		m_fChannelLevels[Channel] = float(AbsVol);
 		m_iChanLevelFallOff[Channel] = LEVEL_FALL_OFF_DELAY;

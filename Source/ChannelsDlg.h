@@ -20,7 +20,7 @@
 
 #pragma once
 
-const int ROOT_ITEM_COUNT = 8;
+const int ROOT_ITEM_COUNT = 9;
 
 // CChannelsDlg dialog
 

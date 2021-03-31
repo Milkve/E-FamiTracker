@@ -307,13 +307,13 @@ void CFindResultsBox::SelectItem(int Index)
 			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square "),
-			_T("AY8930 Pulse ")
+			_T("AY8930 Pulse "), _T("SAA1099 Channel "),
 		};
 		static const int HEADER_ID[] = {
 			CHANID_SQUARE1, CHANID_TRIANGLE, CHANID_NOISE, CHANID_DPCM,
 			CHANID_VRC6_PULSE1, CHANID_VRC6_SAWTOOTH,
 			CHANID_MMC5_SQUARE1, CHANID_N163_CH1, CHANID_FDS, CHANID_VRC7_CH1, CHANID_S5B_CH1,
-			CHANID_AY8930_CH1,
+			CHANID_AY8930_CH1, CHANID_SAA1099_CH1,
 		};
 		for (int i = 0; i < sizeof(HEADER_ID) / sizeof(int); ++i) {
 			const auto &n = HEADER_STR[i];

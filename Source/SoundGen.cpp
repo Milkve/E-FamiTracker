@@ -236,6 +236,14 @@ void CSoundGen::CreateChannels()
 	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 1"), _T("AY1"), SNDCHIP_AY8930, CHANID_AY8930_CH1));
 	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 2"), _T("AY2"), SNDCHIP_AY8930, CHANID_AY8930_CH2));
 	AssignChannel(new CTrackerChannel(_T("AY8930 Pulse 3"), _T("AY3"), SNDCHIP_AY8930, CHANID_AY8930_CH3));
+
+	// // // Philips SAA1099
+	AssignChannel(new CTrackerChannel(_T("SAA Channel 1"), _T("SA1"), SNDCHIP_SAA1099, CHANID_SAA1099_CH1));
+	AssignChannel(new CTrackerChannel(_T("SAA Channel 2"), _T("SA2"), SNDCHIP_SAA1099, CHANID_SAA1099_CH2));
+	AssignChannel(new CTrackerChannel(_T("SAA Channel 3"), _T("SA3"), SNDCHIP_SAA1099, CHANID_SAA1099_CH3));
+	AssignChannel(new CTrackerChannel(_T("SAA Channel 4"), _T("SA4"), SNDCHIP_SAA1099, CHANID_SAA1099_CH4));
+	AssignChannel(new CTrackerChannel(_T("SAA Channel 5"), _T("SA5"), SNDCHIP_SAA1099, CHANID_SAA1099_CH5));
+	AssignChannel(new CTrackerChannel(_T("SAA Channel 6"), _T("SA6"), SNDCHIP_SAA1099, CHANID_SAA1099_CH6));
 }
 
 void CSoundGen::AssignChannel(CTrackerChannel *pTrackerChannel)		// // //
@@ -460,6 +468,9 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 			Table = m_iNoteLookupTableS5B; break;
 		case CHANID_AY8930_CH1: case CHANID_AY8930_CH2: case CHANID_AY8930_CH3:
 			Table = m_iNoteLookupTableAY8930; break;
+		case CHANID_SAA1099_CH1: case CHANID_SAA1099_CH2: case CHANID_SAA1099_CH3:
+		case CHANID_SAA1099_CH4: case CHANID_SAA1099_CH5: case CHANID_SAA1099_CH6:
+			Table = m_iNoteLookupTableNTSC; break;
 		default: continue;
 		}
 		m_pChannels[i]->SetNoteTable(Table);

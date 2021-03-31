@@ -32,6 +32,7 @@ const int SNDCHIP_MMC5 = 8;			// Nintendo MMC5
 const int SNDCHIP_N163 = 16;		// Namco N-106
 const int SNDCHIP_S5B  = 32;		// Sunsoft 5B
 const int SNDCHIP_AY8930  = 64;		// Microchip AY8930
+const int SNDCHIP_SAA1099 = 128;		// Philips SAA1099
 
 enum chan_id_t {
 	CHANID_SQUARE1,
@@ -73,6 +74,13 @@ enum chan_id_t {
 	CHANID_AY8930_CH1,
 	CHANID_AY8930_CH2,
 	CHANID_AY8930_CH3,
+
+	CHANID_SAA1099_CH1,
+	CHANID_SAA1099_CH2,
+	CHANID_SAA1099_CH3,
+	CHANID_SAA1099_CH4,
+	CHANID_SAA1099_CH5,
+	CHANID_SAA1099_CH6,
 
 	CHANNELS		/* Total number of channels */
 };

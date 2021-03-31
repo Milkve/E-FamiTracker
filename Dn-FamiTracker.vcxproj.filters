@@ -756,6 +756,9 @@
     <ClCompile Include="Source\APU\S5B.cpp">
       <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ChannelsSAA1099.cpp">
+      <Filter>Source Files\Sound Driver\Channels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Exception.h">
@@ -1509,6 +1512,9 @@
       <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\ChannelsS5B.h">
+      <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChannelsSAA1099.h">
       <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
   </ItemGroup>

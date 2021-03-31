@@ -625,6 +625,7 @@
 #define IDC_RELEASE_MSG                 1492
 #define IDC_ICON_STATIC                 1493
 #define IDC_EXPANSION_AY8930            1494
+#define IDC_EXPANSION_SAA1099           1495
 #define IDS_FIND_BEGIN                  9001
 #define IDS_FIND_END                    9002
 #define ID_TRACKER_PLAY                 32771

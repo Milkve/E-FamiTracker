@@ -1681,9 +1681,12 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 			case SNDCHIP_AY8930:
 				String = _T(" Microchip AY8930");
 				break;
+			case SNDCHIP_SAA1099:
+				String = _T(" Philips SAA1099");
+				break;
 		}
 	else {
-		for (int i = 0; i < 7; i++)	if (Chip & (1 << i)) switch (i) {
+		for (int i = 0; i < 8; i++)	if (Chip & (1 << i)) switch (i) {
 			case 0:
 				String += _T(" + VRC6");
 				break;
@@ -1704,6 +1707,9 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 				break;
 			case 6:
 				String += _T(" + AY8930");
+				break;
+			case 7:
+				String += _T(" + SAA1099");
 				break;
 		}
 		String.Delete(0, 3);

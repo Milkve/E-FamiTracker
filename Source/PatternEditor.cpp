@@ -2073,12 +2073,12 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 			text.Format(_T("$%02X:"), i * 2);
 			DrawRegFunc(text, 2);
 
-			int period = reg[0] | ((reg[1] & 0x0F) << 8);
+			int period = reg[0] | (reg[1] << 8);
 			int vol = pSoundGen->GetReg(SNDCHIP_AY8930, 8 + i) & 0x1F;
 			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_AY8930, i);		// // //
 
 			if (i < 3)
-				text.Format(_T("%s, vol = %02i, mode = %c%c%c, duty = %02i"), GetPitchTextFunc(3, period, freq), vol,
+				text.Format(_T("%s, vol = %02i, mode = %c%c%c, duty = %02i"), GetPitchTextFunc(4, period, freq), vol,
 					(pSoundGen->GetReg(SNDCHIP_AY8930, 7) & (1 << i)) ? _T('-') : _T('T'),
 					(pSoundGen->GetReg(SNDCHIP_AY8930, 7) & (8 << i)) ? _T('-') : _T('N'),
 					(pSoundGen->GetReg(SNDCHIP_AY8930, 8 + i) & 0x20) ? _T('E') : _T('-'),

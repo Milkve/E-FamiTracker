@@ -269,7 +269,7 @@ void CAY8930::WriteReg(uint8_t Port, uint8_t Value)
 	case 0x01: case 0x03: case 0x05:
 	{
 		auto pChan = m_pChannel[Port >> 1];
-		pChan->m_iPeriod = (pChan->m_iPeriod & 0x00FF) | ((Value & 0x0F) << 8);//<< 12);
+		pChan->m_iPeriod = (pChan->m_iPeriod & 0x00FF) | (Value << 8);//<< 12);
 	}
 		break;
 	case 0x06:
@@ -286,10 +286,10 @@ void CAY8930::WriteReg(uint8_t Port, uint8_t Value)
 		m_pChannel[Port - 0x08]->m_iVolume = Value;
 		break;
 	case 0x0B:
-		m_pChannel[0]->m_iEnvelopePeriod = (m_pChannel[0]->m_iEnvelopePeriod & 0xFF000) | (Value << 4);
+		m_pChannel[0]->m_iEnvelopePeriod = (m_pChannel[0]->m_iEnvelopePeriod & 0x7F800) | (Value << 3);
 		break;
 	case 0x0C:
-		m_pChannel[0]->m_iEnvelopePeriod = (m_pChannel[0]->m_iEnvelopePeriod & 0x00FF0) | (Value << 12);
+		m_pChannel[0]->m_iEnvelopePeriod = (m_pChannel[0]->m_iEnvelopePeriod & 0x007F8) | (Value << 11);
 		break;
 	case 0x0D:
 		m_pChannel[0]->m_iEnvelopeClock = 0;
@@ -298,16 +298,16 @@ void CAY8930::WriteReg(uint8_t Port, uint8_t Value)
 		m_pChannel[0]->m_iEnvelopeLevel = (Value & 0x04) ? 0 : 0x1F;
 		break;
 	case 0x10:
-		m_pChannel[1]->m_iEnvelopePeriod = (m_pChannel[1]->m_iEnvelopePeriod & 0xFF000) | (Value << 4);
+		m_pChannel[1]->m_iEnvelopePeriod = (m_pChannel[1]->m_iEnvelopePeriod & 0x7F800) | (Value << 3);
 		break;
 	case 0x11:
-		m_pChannel[1]->m_iEnvelopePeriod = (m_pChannel[1]->m_iEnvelopePeriod & 0x00FF0) | (Value << 12);
+		m_pChannel[1]->m_iEnvelopePeriod = (m_pChannel[1]->m_iEnvelopePeriod & 0x007F8) | (Value << 11);
 		break;
 	case 0x12:
-		m_pChannel[2]->m_iEnvelopePeriod = (m_pChannel[2]->m_iEnvelopePeriod & 0xFF000) | (Value << 4);
+		m_pChannel[2]->m_iEnvelopePeriod = (m_pChannel[2]->m_iEnvelopePeriod & 0x7F800) | (Value << 3);
 		break;
 	case 0x13:
-		m_pChannel[2]->m_iEnvelopePeriod = (m_pChannel[2]->m_iEnvelopePeriod & 0x00FF0) | (Value << 12);
+		m_pChannel[2]->m_iEnvelopePeriod = (m_pChannel[2]->m_iEnvelopePeriod & 0x007F8) | (Value << 11);
 		break;
 	case 0x14:
 		m_pChannel[1]->m_iEnvelopeClock = 0;

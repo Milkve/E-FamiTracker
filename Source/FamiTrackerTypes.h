@@ -83,6 +83,9 @@ const int MAX_GROOVE = 32;
 // // // Maximum number of entries in the echo buffer
 const int ECHO_BUFFER_LENGTH = 3;
 
+// // // Number of chips
+const int CHIP_COUNT = 8;
+
 // Number of available channels (max) TODO: should not be used anymore!
 // instead, check the channelsavailable variable and allocate dynamically
 const int MAX_CHANNELS	 = 5 + 3 + 2 + 6 + 1 + 8 + 3 + 3 + 6;

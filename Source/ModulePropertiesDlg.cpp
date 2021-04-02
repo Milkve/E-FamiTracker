@@ -157,7 +157,7 @@ void CModulePropertiesDlg::OnBnClickedOk()
 	{
 		CString str;
 		unsigned int Gone = m_pDocument->GetExpansionChip() & ~m_iExpansions;
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < CHIP_COUNT; i++) {
 			if (Gone & (1 << i)) switch (i) {
 			case 0: str += _T("VRC6 "); break;
 			case 1: str += _T("VRC7 "); break;

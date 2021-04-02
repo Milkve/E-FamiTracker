@@ -1686,7 +1686,7 @@ void CMainFrame::OnUpdateSBChip(CCmdUI *pCmdUI)
 				break;
 		}
 	else {
-		for (int i = 0; i < 8; i++)	if (Chip & (1 << i)) switch (i) {
+		for (int i = 0; i < CHIP_COUNT; i++)	if (Chip & (1 << i)) switch (i) {
 			case 0:
 				String += _T(" + VRC6");
 				break;

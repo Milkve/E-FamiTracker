@@ -1078,7 +1078,7 @@ void CFamiTrackerView::OnTrackerDetune()			// // //
 	UINT nResult = DetuneDlg.DoModal();
 	if (nResult != IDOK) return;
 	const int *Table = DetuneDlg.GetDetuneTable();
-	for (int i = 0; i < 7; i++) for (int j = 0; j < NOTE_COUNT; j++)
+	for (int i = 0; i < CHIP_COUNT; i++) for (int j = 0; j < NOTE_COUNT; j++)
 		pDoc->SetDetuneOffset(i, j, *(Table + j + i * NOTE_COUNT));
 	pDoc->SetTuning(DetuneDlg.GetDetuneSemitone(), DetuneDlg.GetDetuneCent());		// // // 050B
 	theApp.GetSoundGenerator()->DocumentPropertiesChanged(pDoc);

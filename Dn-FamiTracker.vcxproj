@@ -268,6 +268,7 @@
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\nes_apu.cpp" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\nes_dmc.cpp" />
     <ClCompile Include="Source\APU\S5B.cpp" />
+    <ClCompile Include="Source\APU\SAA1099.cpp" />
     <ClCompile Include="Source\APU\SoundChip2.cpp" />
     <ClCompile Include="Source\ChannelsS5B.cpp" />
     <ClCompile Include="Source\ChannelsSAA1099.cpp" />
@@ -528,6 +529,7 @@ makehm /h /a afxhh.h IDW_,HIDW_,0x50000 "%(FullPath)" &gt;&gt; "hlp\HTMLDefines.
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Source\APU\S5B.h" />
+    <ClInclude Include="Source\APU\SAA1099.h" />
     <ClInclude Include="Source\APU\SoundChip2.h" />
     <ClInclude Include="Source\array_view.h" />
     <ClInclude Include="Source\ChannelsS5B.h" />

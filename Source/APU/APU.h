@@ -45,6 +45,7 @@ class CMMC5;
 class CN163;
 class CS5B;
 class CAY8930;
+class CSAA1099;
 
 class CSoundChip;		// // //
 class CSoundChip2;
@@ -130,6 +131,7 @@ private:
 	CVRC7		*m_pVRC7;
 	CS5B    *m_pS5B;
 	CAY8930 *m_pAY8930;
+	CSAA1099* m_pSAA1099;
 
 	/// Bitfield of external sound chips enabled.
 	/// Never read, except for code hidden behind #ifdef LOGGING.

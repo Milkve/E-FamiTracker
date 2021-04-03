@@ -122,6 +122,8 @@ const CString EFFECT_TEXTS[] = {		// // //
 	_T("Zxx - Auto FDS modulation rate bias, XX - 80 = offset"),
 	_T("=00 - Reset channel phase"),
 	_T("Kxx - Multiply frequency by XX, does not affect FDS Ixy modulator"),
+	_T("Nxx - PWM (incomplete)"),
+	_T("9xy - Volume shift, X = amount to increase, Y = amount to decrease"),
 };
 
 // OLE copy and mix
@@ -3728,7 +3730,7 @@ void CFamiTrackerView::OnTrackerRecordToInst()		// // //
 	if (Chip != SNDCHIP_FDS) {
 		inst_type_t Type = INST_NONE;
 		switch (Chip) {
-		case SNDCHIP_NONE: case SNDCHIP_MMC5: Type = INST_2A03; break;
+		case SNDCHIP_NONE: case SNDCHIP_MMC5: case SNDCHIP_SAA1099: Type = INST_2A03; break;
 		case SNDCHIP_VRC6: Type = INST_VRC6; break;
 		case SNDCHIP_N163: Type = INST_N163; break;
 		case SNDCHIP_S5B: case SNDCHIP_AY8930: Type = INST_S5B; break;

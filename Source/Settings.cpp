@@ -234,6 +234,7 @@ void CSettings::SetupSettings()
 	SETTING_INT("Mixer", "N163", 0, &ChipLevels.iLevelN163);
 	SETTING_INT("Mixer", "S5B", 0, &ChipLevels.iLevelS5B);
 	SETTING_INT("Mixer", "AY8930", 0, &ChipLevels.iLevelAY8930);
+	SETTING_INT("Mixer", "SAA1099", 0, &ChipLevels.iLevelSAA1099);
 
 	// Emulation
 		// FDS

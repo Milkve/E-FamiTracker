@@ -92,6 +92,8 @@ BOOL CSwapDlg::OnInitDialog()
 		m_cChipFirst->AddString(_T("5B"));
 	if (pDoc->ExpansionEnabled(SNDCHIP_AY8930))
 		m_cChipFirst->AddString(_T("AY8930"));
+	if (pDoc->ExpansionEnabled(SNDCHIP_SAA1099))
+		m_cChipFirst->AddString(_T("SAA1099"));
 
 	CString str;
 	for (int i = 0; i < m_cChipFirst->GetCount(); i++)
@@ -135,6 +137,8 @@ int CSwapDlg::GetChipFromString(const CString str)
 		return SNDCHIP_S5B;
 	else if (str == _T("AY8930"))
 		return SNDCHIP_AY8930;
+	else if (str == _T("SAA1099"))
+		return SNDCHIP_SAA1099;
 	else
 		return SNDCHIP_NONE;
 }

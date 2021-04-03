@@ -113,6 +113,9 @@ enum command_t {
 	CMD_EFF_AY8930_AND_MASK,			// // // 050B
 	CMD_EFF_AY8930_OR_MASK,			// // // 050B
 	CMD_EFF_AY8930_VOL,			// // // 050B
+
+	CMD_EFF_PWM,
+	CMD_EFF_VOLUME_OFFSET,
 };
 
 const unsigned char CMD_LOOP_POINT = 26;	// Currently unused
@@ -369,7 +372,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
 							switch (ChipID) {		// // //
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930:
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099:
 								if (!m_pDocument->GetLinearPitch()) {
 									WriteData(Command(CMD_EFF_PORTAUP));
 									break;
@@ -388,7 +391,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
 							switch (ChipID) {		// // //
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930:
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099:
 								if (!m_pDocument->GetLinearPitch()) {
 									WriteData(Command(CMD_EFF_PORTADOWN));
 									break;
@@ -656,6 +659,19 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					if (ChipID == SNDCHIP_N163 && EffParam <= 0x7F) {
 						WriteData(Command(CMD_EFF_N163_WAVE_BUFFER));
 						WriteData(EffParam == 0x7F ? 0x80 : EffParam);
+					}
+					break;
+			  // // // E-FT additions
+				case EF_PWM:
+					if (ChanID != CHANID_TRIANGLE && ChanID != CHANID_DPCM) {	// Not triangle and dpcm
+						WriteData(Command(CMD_EFF_PWM));
+						WriteData(EffParam);
+					}
+					break;
+				case EF_VOLUME_OFFSET:
+					if (ChanID != CHANID_TRIANGLE && ChanID != CHANID_DPCM) {	// Not triangle and dpcm
+						WriteData(Command(CMD_EFF_VOLUME_OFFSET));
+						WriteData(EffParam);
 					}
 					break;
 			}

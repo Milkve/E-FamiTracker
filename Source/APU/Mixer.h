@@ -37,6 +37,7 @@ enum chip_level_t {
 	CHIP_LEVEL_N163,
 	CHIP_LEVEL_S5B,
 	CHIP_LEVEL_AY8930,
+	CHIP_LEVEL_SAA1099,
 	CHIP_LEVEL_COUNT
 };
 
@@ -94,6 +95,7 @@ private:
 	void MixMMC5(int Value, int Time);
 	void MixS5B(int Value, int Time);
 	void MixAY8930(int Value, int Time);
+	void MixSAA1099(int Value, int Time);
 
 	void StoreChannelLevel(int Channel, int Value);
 	void ClearChannelLevels();
@@ -113,6 +115,7 @@ private:
 	Blip_Synth<blip_good_quality> SynthN163;
 	Blip_Synth<blip_good_quality> SynthS5B;		// // // 050B
 	Blip_Synth<blip_good_quality> SynthAY8930;		// // // 050B
+	Blip_Synth<blip_good_quality> SynthSAA1099;		// // // 050B
 
 	/// Only used by CMixer::ClearBuffer(), which clears the global Blip_Buffer
 	/// and all Blip_Synth owned by CMixer.
@@ -128,7 +131,8 @@ private:
 		X(SynthMMC5) SEP \
 		X(SynthN163) SEP \
 		X(SynthS5B) SEP \
-		X(SynthAY8930)
+		X(SynthAY8930) SEP \
+		X(SynthSAA1099)
 
 	// Blip buffer object
 	Blip_Buffer	BlipBuffer;
@@ -151,6 +155,7 @@ private:
 	float		m_fLevelN163;
 	float		m_fLevelS5B;		// // // 050B
 	float		m_fLevelAY8930;		// // // 050B
+	float		m_fLevelSAA1099;		// // // 050B
 
 	friend class CAPU;
 };

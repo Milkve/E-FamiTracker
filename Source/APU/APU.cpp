@@ -35,6 +35,7 @@
 #include "VRC7.h"
 #include "S5B.h"
 #include "AY8930.h"
+#include "SAA1099.h"
 #include "SoundChip.h"
 #include "SoundChip2.h"
 #include "../RegisterState.h"		// // //
@@ -45,6 +46,7 @@ const uint32_t	CAPU::BASE_FREQ_NTSC		= 1789773;		// 72.667
 const uint32_t	CAPU::BASE_FREQ_PAL			= 1662607;
 const uint8_t	CAPU::FRAME_RATE_NTSC		= 60;
 const uint8_t	CAPU::FRAME_RATE_PAL		= 50;
+
 
 const uint8_t CAPU::LENGTH_TABLE[] = {
 	0x0A, 0xFE, 0x14, 0x02, 0x28, 0x04, 0x50, 0x06,
@@ -70,6 +72,7 @@ CAPU::CAPU(IAudioCallback *pCallback) :		// // //
 	m_pN163 = new CN163(m_pMixer);
 	m_pS5B  = new CS5B(m_pMixer);
 	m_pAY8930 = new CAY8930(m_pMixer);
+	m_pSAA1099 = new CSAA1099(m_pMixer);
 
 	m_fLevelVRC7 = 1.0f;
 
@@ -87,6 +90,7 @@ CAPU::~CAPU()
 	SAFE_RELEASE(m_pN163);
 	SAFE_RELEASE(m_pS5B);
 	SAFE_RELEASE(m_pAY8930);
+	SAFE_RELEASE(m_pSAA1099);
 
 	SAFE_RELEASE(m_pMixer);
 
@@ -215,6 +219,8 @@ void CAPU::SetExternalSound(uint8_t Chip)
 		m_SoundChips.push_back(m_pS5B);
 	if (Chip & SNDCHIP_AY8930)
 		m_SoundChips.push_back(m_pAY8930);
+	if (Chip & SNDCHIP_SAA1099)
+		m_SoundChips.push_back(m_pSAA1099);
 
 	// Set (unused) bitfield of external sound chips enabled.
 	m_iExternalSoundChips = Chip;
@@ -448,6 +454,7 @@ double CAPU::GetFreq(int Chip, int Chan) const
 	case SNDCHIP_N163: return PtrGetFreq(*m_pN163);
 	case SNDCHIP_S5B:  return PtrGetFreq(*m_pS5B);
 	case SNDCHIP_AY8930:  return PtrGetFreq(*m_pAY8930);
+	case SNDCHIP_SAA1099:  return PtrGetFreq(*m_pSAA1099);
 	default: AfxDebugBreak(); return 0.;
 	}
 }
@@ -467,6 +474,7 @@ CRegisterState *CAPU::GetRegState(int Chip, int Reg) const		// // //
 	case SNDCHIP_N163: return PtrGetRegState(*m_pN163);
 	case SNDCHIP_S5B:  return PtrGetRegState(*m_pS5B);
 	case SNDCHIP_AY8930:  return PtrGetRegState(*m_pAY8930);
+	case SNDCHIP_SAA1099:  return PtrGetRegState(*m_pSAA1099);
 	default: AfxDebugBreak(); return nullptr;
 	}
 }
@@ -474,7 +482,9 @@ CRegisterState *CAPU::GetRegState(int Chip, int Reg) const		// // //
 
 void CAPUConfig::SetupMixer(int LowCut, int HighCut, int HighDamp, int Volume, int FDSLowpass)
 {
-	m_MixerConfig = MixerConfig{ LowCut, HighCut, HighDamp, float(Volume) / 100.0f, FDSLowpass };
+	CSettings* pSettings = theApp.GetSettings();
+	
+	m_MixerConfig = MixerConfig{ LowCut, HighCut, HighDamp, float(Volume) / 100.0f, pSettings->Emulation.iFDSLowpass };
 }
 
 void CAPUConfig::SetChipLevel(chip_level_t Chip, float LeveldB)

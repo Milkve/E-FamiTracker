@@ -59,7 +59,8 @@ const TCHAR *CInstrumentEditDlg::CHIP_NAMES[] = {
 	_T("FDS"), 
 	_T("Namco"), 
 	_T("S5B"),
-	_T("AY8930")
+	_T("AY8930"),
+	_T("SAA1099")
 };
 
 // CInstrumentEditDlg dialog

@@ -1420,7 +1420,7 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 							for (unsigned int i = 0; i <= m_pDocument->GetEffColumns(GetSelectedTrack(), Channel); i++) {
 								if (pNoteData->EffNumber[i] != EF_NONE) {
 									DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, EFF_CHAR[pNoteData->EffNumber[i]], DimEff);
-									DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[pNoteData->EffParam[i] & 0x10], DimEff);
+									DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[(pNoteData->EffParam[i] & 0xF0) >> 4], DimEff);
 									DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, HEX[pNoteData->EffParam[i] & 0x0F], DimEff);
 									Found = true;
 									break;
@@ -1763,7 +1763,8 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		m_pDocument->ExpansionEnabled(SNDCHIP_FDS) * 13 +
 		m_pDocument->ExpansionEnabled(SNDCHIP_VRC7) * 9 +
 		m_pDocument->ExpansionEnabled(SNDCHIP_S5B) * 8 +
-		m_pDocument->ExpansionEnabled(SNDCHIP_AY8930) * 12);		// // //
+		m_pDocument->ExpansionEnabled(SNDCHIP_AY8930) * 12 +
+		m_pDocument->ExpansionEnabled(SNDCHIP_SAA1099) * 12);		// // //
 	int vis_line = 0;
 
 	const auto DrawHeaderFunc = [&] (CString Text) {
@@ -1855,7 +1856,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		case 3:
 			period = reg[2] & 0x1F;
 			vol = reg[0] & 0x0F;
-			text.Format(_T("pitch = $%02X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
+			text.Format(_T("pitch = $%01X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
 			period = (period << 4) | ((reg[2] & 0x80) >> 4);
 			freq /= 32; break; // for display
 		case 4:
@@ -1980,6 +1981,36 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 	if (m_pDocument->ExpansionEnabled(SNDCHIP_FDS)) {
 		DrawHeaderFunc(_T("FDS"));		// // //
 		
+
+		//////////////
+
+
+		const int wave_x = x + DPI::SX(180);
+
+		// // // FDS wave
+		const int Length = 0x40;
+
+		y += 36;
+		pDC->FillSolidRect(wave_x - 1, y - 1, Length + 2, 65, 0x808080);
+		pDC->FillSolidRect(wave_x, y, Length, 63, 0);
+		for (int i = 0; i < Length; i++) {
+			auto pState = pSoundGen->GetRegState(SNDCHIP_FDS, 0x4040 + (i & 0x3F));
+			int state = pState->GetValue();
+
+			COLORREF Col = BLEND(
+				0xC0C0C0, DECAY_COLOR[pState->GetNewValueTime()], 100 * pState->GetLastUpdatedTime() / CRegisterState::DECAY_RATE
+			);
+			pDC->FillSolidRect(wave_x + i, y + 0x3F - state, 1, 1, Col);
+			if (pSoundGen->GetReg(SNDCHIP_FDS, 0x4040 + ((i + 1) & 0x3F)) - state > 1)
+				pDC->FillSolidRect(wave_x + ((i + 1) & 0x3F), y + 0x3F - pSoundGen->GetReg(SNDCHIP_FDS, 0x4040 + ((i + 1) & 0x3F)) + 1, 1, pSoundGen->GetReg(SNDCHIP_FDS, 0x4040 + ((i + 1) & 0x3F)) - state - 1, Col);
+			if (state - pSoundGen->GetReg(SNDCHIP_FDS, 0x4040 + ((i - 1) & 0x3F)) < -1)
+			  pDC->FillSolidRect(wave_x + ((i - 1) & 0x3F), y + 0x3F - pSoundGen->GetReg(SNDCHIP_FDS, 0x4040 + ((i - 1) & 0x3F)) + 1, 1, pSoundGen->GetReg(SNDCHIP_FDS, 0x4040 + ((i - 1) & 0x3F)) - state - 1, Col);
+		}
+		y -= 36;
+
+
+		/////////////////
+
 		int period = (pSoundGen->GetReg(SNDCHIP_FDS, 0x4082) & 0xFF) | ((pSoundGen->GetReg(SNDCHIP_FDS, 0x4083) & 0x0F) << 8);
 		int vol = (pSoundGen->GetReg(SNDCHIP_FDS, 0x4080) & 0x3F);
 		double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_FDS, 0);		// // //
@@ -2131,6 +2162,11 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		GetRegsFunc(SNDCHIP_AY8930, [&](int x) { return x + 0x19; }, 3);
 		text.Format(_T("$%02X:"), 0x19);
 		DrawRegFunc(text, 2);
+
+	}
+
+	if (m_pDocument->ExpansionEnabled(SNDCHIP_SAA1099)) {		// // //
+		DrawHeaderFunc(_T("SAA1099 (incomplete)"));		// // //
 
 	}
 

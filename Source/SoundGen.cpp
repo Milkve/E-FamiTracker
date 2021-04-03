@@ -774,7 +774,6 @@ bool CSoundGen::ResetAudioDevice()
 		m_pVisualizerWnd->SetSampleRate(SampleRate);
 
 	m_csVisualizerWndLock.Unlock();
-
 	if (!m_pAPU->SetupSound(SampleRate, 1, (m_iMachineType == NTSC) ? MACHINE_NTSC : MACHINE_PAL))
 		return false;
 
@@ -793,6 +792,7 @@ bool CSoundGen::ResetAudioDevice()
 			(pSettings->ChipLevels.iLevelN163 + currN163LevelOffset) / 10.0f));
 		config.SetChipLevel(CHIP_LEVEL_S5B, float(pSettings->ChipLevels.iLevelS5B / 10.0f));
 		config.SetChipLevel(CHIP_LEVEL_AY8930, float(pSettings->ChipLevels.iLevelAY8930 / 10.0f));
+		config.SetChipLevel(CHIP_LEVEL_SAA1099, float(pSettings->ChipLevels.iLevelSAA1099 / 10.0f));
 
 		// Update blip-buffer filtering
 		config.SetupMixer(
@@ -1063,6 +1063,7 @@ int CSoundGen::ReadPeriodTable(int Index, int Table) const		// // //
 	case CDetuneTable::DETUNE_N163: return m_iNoteLookupTableN163[Index]; break;
 	case CDetuneTable::DETUNE_S5B:  return m_iNoteLookupTableNTSC[Index] + 1; break;
 	case CDetuneTable::DETUNE_AY8930:  return m_iNoteLookupTableNTSC[Index] + 1; break;
+	case CDetuneTable::DETUNE_SAA1099:  return m_iNoteLookupTableNTSC[Index] + 1; break;
 	default:
 		AfxDebugBreak(); return m_iNoteLookupTableNTSC[Index];
 	}

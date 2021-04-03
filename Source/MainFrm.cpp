@@ -201,6 +201,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_INSTRUMENT_ADD_N163, OnAddInstrumentN163)
 	ON_COMMAND(ID_INSTRUMENT_ADD_S5B, OnAddInstrumentS5B)
 	ON_COMMAND(ID_INSTRUMENT_ADD_AY8930, OnAddInstrumentAY8930)
+	ON_COMMAND(ID_INSTRUMENT_ADD_SAA1099, OnAddInstrumentSAA1099)
 	ON_COMMAND(ID_MODULE_MODULEPROPERTIES, OnModuleModuleproperties)
 	ON_COMMAND(ID_MODULE_CHANNELS, OnModuleChannels)
 	ON_COMMAND(ID_MODULE_COMMENTS, OnModuleComments)
@@ -1214,6 +1215,11 @@ void CMainFrame::OnAddInstrumentS5B()
 void CMainFrame::OnAddInstrumentAY8930()
 {
 	NewInstrument(SNDCHIP_AY8930);
+}
+
+void CMainFrame::OnAddInstrumentSAA1099()
+{
+	NewInstrument(SNDCHIP_SAA1099);
 }
 
 void CMainFrame::OnAddInstrument()
@@ -2692,6 +2698,8 @@ void CMainFrame::OnNewInstrumentMenu(NMHDR* pNotifyStruct, LRESULT* result)
 		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_S5B, _T("New Sunsoft instrument"));
 	if (Chip & SNDCHIP_AY8930)
 		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_AY8930, _T("New AY8930 instrument"));
+	if (Chip & SNDCHIP_SAA1099)
+		menu.AppendMenu(MF_STRING, ID_INSTRUMENT_ADD_SAA1099, _T("New SAA1099 instrument"));
 
 	switch (SelectedChip) {
 		case SNDCHIP_NONE:
@@ -2717,6 +2725,9 @@ void CMainFrame::OnNewInstrumentMenu(NMHDR* pNotifyStruct, LRESULT* result)
 			break;
 		case SNDCHIP_AY8930:
 			menu.SetDefaultItem(ID_INSTRUMENT_ADD_AY8930);
+			break;
+		case SNDCHIP_SAA1099:
+			menu.SetDefaultItem(ID_INSTRUMENT_ADD_SAA1099);
 			break;
 	}
 	

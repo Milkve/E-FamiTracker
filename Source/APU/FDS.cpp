@@ -76,7 +76,8 @@ void CFDS::UpdateFilter(blip_eq_t eq)
 	m_BlipFDS.bass_freq(0);
 
 	// Default cutoff frequency, will be overriden when UpdateFdsFilter() is called.
-	m_CutoffHz = 2000;
+	m_CutoffHz = eq.sample_rate;//theApp.GetSettings()->Emulation.iFDSLowpass;
+	//UpdateFdsFilter();
 	RecomputeFdsFilter();
 }
 
@@ -182,15 +183,16 @@ int CFDS::GetChannelLevelRange(int Channel) const
 		// This only occurs if the channel volume is set to 32
 		// (by placing 32 in the instrument and F in the pattern).
 		// Additionally, the master volume is 32 by default (the default value).
-		return 63;
+		return 63 * 1152;
 	}
 	return 0;
 }
 
 void CFDS::UpdateFdsFilter(int CutoffHz)
 {
-	m_CutoffHz = CutoffHz;
-	RecomputeFdsFilter();
+	
+	//m_CutoffHz = theApp.GetSettings()->Emulation.iFDSLowpass;//CutoffHz;
+	//RecomputeFdsFilter();
 }
 
 void CFDS::UpdateMixLevel(double v)

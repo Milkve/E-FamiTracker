@@ -133,6 +133,7 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 	case SNDCHIP_N163: Table = CDetuneTable::DETUNE_N163; break;
 	case SNDCHIP_S5B:  Table = CDetuneTable::DETUNE_S5B; break;
 	case SNDCHIP_AY8930:  Table = CDetuneTable::DETUNE_AY8930; break;
+	case SNDCHIP_SAA1099:  Table = CDetuneTable::DETUNE_SAA1099; break;
 	}
 	int Note = 0;
 	if (m_iRecordChannel == CHANID_NOISE) {

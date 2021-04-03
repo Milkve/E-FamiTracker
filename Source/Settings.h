@@ -247,6 +247,7 @@ public:
 		int		iLevelN163;
 		int		iLevelS5B;
 		int		iLevelAY8930;
+		int		iLevelSAA1099;
 	} ChipLevels;
 
 	struct {

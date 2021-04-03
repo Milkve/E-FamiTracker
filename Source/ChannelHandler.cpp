@@ -318,7 +318,7 @@ void CChannelHandler::WriteEchoBuffer(stChanNote *NoteData, int Pos, int EffColu
 		}
 		Value = std::max(std::min(Value, NOTE_COUNT - 1), 0);
 	}
-
+	
 	m_iEchoBuffer[Pos] = Value;
 }
 
@@ -635,6 +635,12 @@ bool CChannelHandler::HandleEffect(effect_t EffCmd, unsigned char EffParam)
 		break;
 	case EF_HARMONIC:
 		m_iHarmonic = EffParam;
+		break;
+	case EF_VOLUME_OFFSET:
+		if (((EffParam & 0xF0) >> 4) - (EffParam & 0x0F) + m_iVolume < 0)
+			m_iVolume = 0;
+		else 
+			m_iVolume = ((m_iVolume >> VOL_COLUMN_SHIFT) + ((EffParam & 0xF0) >> 4) - (EffParam & 0x0F)) << VOL_COLUMN_SHIFT;
 		break;
 //	case EF_TARGET_VOLUME_SLIDE:
 		// TODO implement

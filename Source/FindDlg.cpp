@@ -307,7 +307,7 @@ void CFindResultsBox::SelectItem(int Index)
 			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square "),
-			_T("AY8930 Pulse "), _T("SAA1099 Channel "),
+			_T("AY8930 Pulse "), _T("SAA Channel "),
 		};
 		static const int HEADER_ID[] = {
 			CHANID_SQUARE1, CHANID_TRIANGLE, CHANID_NOISE, CHANID_DPCM,
@@ -517,7 +517,7 @@ int CFindResultsBox::ChannelCompareFunc(LPARAM lParam1, LPARAM lParam2, LPARAM l
 			_T("Pulse "), _T("Triangle"), _T("Noise"), _T("DPCM"),
 			_T("VRC6 Pulse "), _T("Sawtooth"),
 			_T("MMC5 Pulse "), _T("Namco "), _T("FDS"), _T("FM Channel "), _T("5B Square "),
-			_T("AY8930 Pulse ")
+			_T("AY8930 Pulse "), _T("SAA Channel ")
 		};
 		int Pos = 0;
 		for (const auto &n : HEADER_STR) {

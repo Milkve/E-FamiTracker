@@ -5,6 +5,8 @@ E-FamiTracker is a fork of Dn-FamiTracker meant to make it a multi-system tracke
 ## Features
 
 - AY8930 soundchip
+- FDS waveform view
+- Oscilloscope triggering
 
 ---
 
@@ -35,13 +37,13 @@ By using this software, you agree to these terms.
  - [x] AY8930 soundchip
  - [x] AY8930 emulation
  - [x] AY8930 as its own soundchip
- - [ ] FDS waveform view in registers
+ - [x] FDS waveform view in registers
  - [ ] "Add chip" button beside the channels (displayed as a +)
  - [x] Reworked file encoding for more soundchips
  - [ ] New soundchip dialog (checklist of chips) in module properties
- - [ ] Oscilloscope rising edge detection
+ - [x] Oscilloscope rising edge detection
  - [ ] Stereo effect 8xy
- - [ ] SAA1099 soundchip
+ - [x] SAA1099 soundchip
  - [ ] SAA1099 emulation
  - [ ] SN76489 soundchip
  - [ ] T6W28 soundchip

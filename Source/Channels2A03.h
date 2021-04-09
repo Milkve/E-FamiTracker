@@ -80,7 +80,6 @@ public:
 	void	RefreshChannel() override;
 	void	ResetChannel() override;		// // //
 	int		GetChannelVolume() const override;		// // //
-	int   getDutyMax() const override;
 protected:
 	static const int MAX_DUTY;
 

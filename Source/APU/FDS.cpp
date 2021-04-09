@@ -76,8 +76,7 @@ void CFDS::UpdateFilter(blip_eq_t eq)
 	m_BlipFDS.bass_freq(0);
 
 	// Default cutoff frequency, will be overriden when UpdateFdsFilter() is called.
-	m_CutoffHz = eq.sample_rate;//theApp.GetSettings()->Emulation.iFDSLowpass;
-	//UpdateFdsFilter();
+	m_CutoffHz = 2000;
 	RecomputeFdsFilter();
 }
 
@@ -179,10 +178,12 @@ int CFDS::GetChannelLevelRange(int Channel) const
 {
 	ASSERT(Channel == 0);
 	if (Channel == 0) {
-		// The largest value I've seen coming out of Mesen's FDS emulator is 63.
-		// This only occurs if the channel volume is set to 32
-		// (by placing 32 in the instrument and F in the pattern).
-		// Additionally, the master volume is 32 by default (the default value).
+		// The highest possible FDS volume level is achievable
+		// by explicitly setting the instrument volume to 32, leaving channel volume at F,
+		// and using a waveform occupying the full range from 0 through 63.
+		// The resulting samples range from [0 .. 63*1152] inclusive.
+		//
+		// See CFDS::UpdateMixLevel() for more details.
 		return 63 * 1152;
 	}
 	return 0;
@@ -190,9 +191,8 @@ int CFDS::GetChannelLevelRange(int Channel) const
 
 void CFDS::UpdateFdsFilter(int CutoffHz)
 {
-	
-	//m_CutoffHz = theApp.GetSettings()->Emulation.iFDSLowpass;//CutoffHz;
-	//RecomputeFdsFilter();
+	m_CutoffHz = CutoffHz;
+	RecomputeFdsFilter();
 }
 
 void CFDS::UpdateMixLevel(double v)

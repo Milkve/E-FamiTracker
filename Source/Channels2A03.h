@@ -80,12 +80,16 @@ public:
 	void	RefreshChannel() override;
 	void	ResetChannel() override;		// // //
 	int		GetChannelVolume() const override;		// // //
+	int   getDutyMax() const override;
 protected:
+	static const int MAX_DUTY;
+
 	bool	HandleEffect(effect_t EffNum, unsigned char EffParam) override;		// // //
 	void	ClearRegisters() override;
 	CString	GetCustomEffectString() const override;		// // //
 private:
 	int m_iLinearCounter;
+
 };
 
 // Noise

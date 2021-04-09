@@ -204,13 +204,13 @@ void CS5B::WriteReg(uint8_t Port, uint8_t Value)
 	case 0x00: case 0x02: case 0x04:
 	{
 		auto pChan = m_pChannel[Port >> 1];
-		pChan->m_iPeriod = (pChan->m_iPeriod & 0xF000) | (Value << 4);
+		pChan->m_iPeriod = (pChan->m_iPeriod & 0x7800) | (Value << 3);
 	}
 		break;
 	case 0x01: case 0x03: case 0x05:
 	{
 		auto pChan = m_pChannel[Port >> 1];
-		pChan->m_iPeriod = (pChan->m_iPeriod & 0x0FF0) | ((Value & 0x0F) << 12);
+		pChan->m_iPeriod = (pChan->m_iPeriod & 0x07F8) | (Value << 11);
 	}
 		break;
 	case 0x06:

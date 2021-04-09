@@ -268,32 +268,32 @@ void CChannelHandlerSAA1099::RefreshChannel()
 	unsigned char LoPeriod = Period & 0xFF;
 	unsigned char HiPeriod = Period >> 8;
 	int Volume = CalculateVolume();
-	//unsigned char DutyCycle = m_iDutyPeriod & 0x0F;
+	unsigned char DutyCycle = m_iDutyPeriod & 0x0F;
 
-	//unsigned char Noise = (m_bGate && (m_iDutyPeriod & S5B_MODE_NOISE)) ? 0 : 1;
-	//unsigned char Square = (m_bGate && (m_iDutyPeriod & S5B_MODE_SQUARE)) ? 0 : 1;
-	//unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x20 : 0; // m_bEnvelopeEnabled ? 0x10 : 0;
+	unsigned char Noise = (m_bGate && (m_iDutyPeriod & S5B_MODE_NOISE)) ? 0 : 1;
+	unsigned char Square = (m_bGate && (m_iDutyPeriod & S5B_MODE_SQUARE)) ? 0 : 1;
+	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x20 : 0; // m_bEnvelopeEnabled ? 0x10 : 0;
 
-	//UpdateAutoEnvelope(Period);		// // // 050B
-	//SetMode(m_iChannelID, Square, Noise);
+	UpdateAutoEnvelope(Period);		// // // 050B
+	SetMode(m_iChannelID, Square, Noise);
 	
 	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) * 2    , LoPeriod);
 	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) * 2 + 1, HiPeriod);
-	//WriteReg((m_iChannelID - CHANID_SAA1099_CH1) + 8    , Volume | Envelope);
-	//WriteReg((m_iChannelID - CHANID_SAA1099_CH1) + 0x16 , m_iPulseWidth);
+	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) + 8    , Volume | Envelope);
+	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) + 0x16 , m_iPulseWidth);
 
 	unsigned int FreqAddr[3] = {0x0B, 0x10, 0x12};
 	unsigned int ModeAddr[3] = {0x0D, 0x14, 0x15};
-	//if (Envelope && (m_bTrigger || m_bUpdate))		// // // 050B
-	//	m_bEnvTrigger = true;
+	if (Envelope && (m_bTrigger || m_bUpdate))		// // // 050B
+		m_bEnvTrigger = true;
 	m_bUpdate = false;
-	//WriteReg(FreqAddr[m_iChannelID - CHANID_SAA1099_CH1], m_iEnvFreqLo);
-	//WriteReg(FreqAddr[m_iChannelID - CHANID_SAA1099_CH1] + 1, m_iEnvFreqHi);
-	//if (m_bEnvTrigger)		// // // 050B
-	//	WriteReg(ModeAddr[m_iChannelID - CHANID_SAA1099_CH1], m_iEnvType);
-	//m_bEnvTrigger = false;
+	WriteReg(FreqAddr[m_iChannelID - CHANID_SAA1099_CH1], m_iEnvFreqLo);
+	WriteReg(FreqAddr[m_iChannelID - CHANID_SAA1099_CH1] + 1, m_iEnvFreqHi);
+	if (m_bEnvTrigger)		// // // 050B
+		WriteReg(ModeAddr[m_iChannelID - CHANID_SAA1099_CH1], m_iEnvType);
+	m_bEnvTrigger = false;
 	
 
-	//if (m_iChannelID == CHANID_SAA1099_CH3)
-		//UpdateRegs();
+	if (m_iChannelID == CHANID_SAA1099_CH3)
+		UpdateRegs();
 }

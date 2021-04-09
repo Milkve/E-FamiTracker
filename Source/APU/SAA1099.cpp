@@ -243,18 +243,6 @@ double CSAA1099::GetFreq(int Channel) const		// // //
 		if (!(m_pChannel[0]->m_iEnvelopeShape & 0x08) || (m_pChannel[0]->m_iEnvelopeShape & 0x01))
 			return 0.;
 		return CAPU::BASE_FREQ_NTSC / ((m_pChannel[0]->m_iEnvelopeShape & 0x02) ? 64. : 32.) / m_pChannel[0]->m_iEnvelopePeriod;
-	case 4:
-		if (!m_pChannel[1]->m_iEnvelopePeriod)
-			return 0.;
-		if (!(m_pChannel[1]->m_iEnvelopeShape & 0x08) || (m_pChannel[1]->m_iEnvelopeShape & 0x01))
-			return 0.;
-		return CAPU::BASE_FREQ_NTSC / ((m_pChannel[1]->m_iEnvelopeShape & 0x02) ? 64. : 32.) / m_pChannel[1]->m_iEnvelopePeriod;
-	case 5:
-		if (!m_pChannel[2]->m_iEnvelopePeriod)
-			return 0.;
-		if (!(m_pChannel[2]->m_iEnvelopeShape & 0x08) || (m_pChannel[2]->m_iEnvelopeShape & 0x01))
-			return 0.;
-		return CAPU::BASE_FREQ_NTSC / ((m_pChannel[2]->m_iEnvelopeShape & 0x02) ? 64. : 32.) / m_pChannel[2]->m_iEnvelopePeriod;
 	//case 4: TODO noise refresh rate
 	}
 	return 0.;

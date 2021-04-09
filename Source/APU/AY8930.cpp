@@ -26,18 +26,7 @@
 #include "../RegisterState.h"
 
 // // // 050B
-// Sunsoft 5B channel class
-/*
-const int32_t EXP_VOLUME[32] = {
-	  0,   1,   1,   2,
-	  2,   3,   3,   4,
-	  5,   6,   7,   9,
-	 11,  13,  15,  18,
-	 22,  26,  31,  37,
-	 45,  53,  63,  76,
-	 90, 106, 127, 151,
-	180, 212, 255, 255
-};*/
+// AY8930 channel class
 const int32_t EXP_VOLUME[32] = {
 		1,   1,   1,   2,
 		2,   2,   3,   4,

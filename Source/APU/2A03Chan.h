@@ -27,7 +27,7 @@
 
 class C2A03Chan : public CChannel {		// // //
 public:
-	C2A03Chan(CMixer *pMixer, uint8_t Chip, uint8_t ID) : CChannel(pMixer, Chip, ID) { }
+	C2A03Chan(CMixer *pMixer, int Chip, uint8_t ID) : CChannel(pMixer, Chip, ID) { }
 
 	inline uint16_t GetPeriod() const {
 		return m_iPeriod;

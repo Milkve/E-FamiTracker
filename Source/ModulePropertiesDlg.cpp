@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CModulePropertiesDlg, CDialog)
 	ON_BN_CLICKED(IDC_EXPANSION_S5B, OnBnClickedExpansionS5B)
 	ON_BN_CLICKED(IDC_EXPANSION_AY8930, OnBnClickedExpansionAY8930)
 	ON_BN_CLICKED(IDC_EXPANSION_SAA1099, OnBnClickedExpansionSAA1099)
+	ON_BN_CLICKED(IDC_EXPANSION_5E01, OnBnClickedExpansion5E01)
 	ON_BN_CLICKED(IDC_EXPANSION_N163, OnBnClickedExpansionN163)
 	ON_EN_CHANGE(IDC_N163_OFFSET_EDIT, &CModulePropertiesDlg::OnEnChangeEditN163Offset)
 END_MESSAGE_MAP()
@@ -119,6 +120,7 @@ BOOL CModulePropertiesDlg::OnInitDialog()
 	((CButton*)GetDlgItem(IDC_EXPANSION_S5B))->SetCheck((m_iExpansions & SNDCHIP_S5B) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_AY8930))->SetCheck((m_iExpansions & SNDCHIP_AY8930) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_SAA1099))->SetCheck((m_iExpansions & SNDCHIP_SAA1099) != 0);
+	((CButton*)GetDlgItem(IDC_EXPANSION_5E01))->SetCheck((m_iExpansions & SNDCHIP_5E01) != 0);
 
 	// Namco channel count
 	CSliderCtrl *pChanSlider = static_cast<CSliderCtrl*>(GetDlgItem(IDC_CHANNELS));
@@ -167,6 +169,7 @@ void CModulePropertiesDlg::OnBnClickedOk()
 			case 5: str += _T("5B ");   break;
 			case 6: str += _T("AY8930 ");   break;
 			case 7: str += _T("SAA1099 ");   break;
+			case 8: str += _T("5E01 ");   break;
 			}
 			if (i == 4 && m_pDocument->ExpansionEnabled(SNDCHIP_N163)
 				&& (m_iExpansions & SNDCHIP_N163) && m_iN163Channels < m_pDocument->GetNamcoChannels()) {
@@ -425,6 +428,7 @@ void CModulePropertiesDlg::OnBnClickedSongImport()
 	((CButton*)GetDlgItem(IDC_EXPANSION_S5B))->SetCheck((m_iExpansions & SNDCHIP_S5B) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_AY8930))->SetCheck((m_iExpansions & SNDCHIP_AY8930) != 0);
 	((CButton*)GetDlgItem(IDC_EXPANSION_SAA1099))->SetCheck((m_iExpansions & SNDCHIP_SAA1099) != 0);
+	((CButton*)GetDlgItem(IDC_EXPANSION_5E01))->SetCheck((m_iExpansions & SNDCHIP_5E01) != 0);
 	m_pDocument->UpdateAllViews(NULL, UPDATE_PROPERTIES);
 }
 
@@ -556,6 +560,16 @@ void CModulePropertiesDlg::OnBnClickedExpansionSAA1099()
 		m_iExpansions |= SNDCHIP_SAA1099;
 	else
 		m_iExpansions &= ~SNDCHIP_SAA1099;		// // //
+}
+
+void CModulePropertiesDlg::OnBnClickedExpansion5E01()
+{
+	CButton* pCheckBox = (CButton*)GetDlgItem(IDC_EXPANSION_5E01);
+
+	if (pCheckBox->GetCheck() == BST_CHECKED)
+		m_iExpansions |= SNDCHIP_5E01;
+	else
+		m_iExpansions &= ~SNDCHIP_5E01;		// // //
 }
 
 void CModulePropertiesDlg::OnBnClickedExpansionN163()

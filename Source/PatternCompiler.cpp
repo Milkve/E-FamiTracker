@@ -312,6 +312,12 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 			  // TOFIX
 				NESNote = (NESNote & 0x1F) | 0x10;
 			}
+			else if (ChanID == CHANID_5E01_NOISE) {
+				// 2A03 Noise
+				NESNote = (Note - 1) + (Octave * NOTE_RANGE);
+				// TOFIX
+				NESNote = (NESNote & 0x1F);
+			}
 			else
 				// All other channels
 				NESNote = (Note - 1) + (Octave * NOTE_RANGE);
@@ -351,6 +357,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					switch (ChanID) {
 					case CHANID_SQUARE1: case CHANID_SQUARE2: case CHANID_TRIANGLE: case CHANID_NOISE:
 					case CHANID_MMC5_SQUARE1: case CHANID_MMC5_SQUARE2:
+					case CHANID_5E01_SQUARE1: case CHANID_5E01_SQUARE2: case CHANID_5E01_WAVEFORM: case CHANID_5E01_NOISE:
 						WriteData(Command(CMD_EFF_VOLUME));
 						if ((EffParam <= 0x1F) || (EffParam >= 0xE0 && EffParam <= 0xE3))
 							WriteData(EffParam & 0x9F);
@@ -372,7 +379,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
 							switch (ChipID) {		// // //
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099:
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099: case SNDCHIP_5E01:
 								if (!m_pDocument->GetLinearPitch()) {
 									WriteData(Command(CMD_EFF_PORTAUP));
 									break;
@@ -391,7 +398,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
 							switch (ChipID) {		// // //
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099:
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099: case SNDCHIP_5E01:
 								if (!m_pDocument->GetLinearPitch()) {
 									WriteData(Command(CMD_EFF_PORTADOWN));
 									break;
@@ -412,13 +419,13 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;*/
 				case EF_SWEEPUP:
-					if (ChanID < CHANID_TRIANGLE) {
+					if (ChanID < CHANID_TRIANGLE || ChanID == CHANID_5E01_SQUARE1 || ChanID == CHANID_5E01_SQUARE2) {
 						WriteData(Command(CMD_EFF_SWEEP));
 						WriteData(0x88 | (EffParam & 0x77));	// Calculate sweep
 					}
 					break;
 				case EF_SWEEPDOWN:
-					if (ChanID < CHANID_TRIANGLE) {
+					if (ChanID < CHANID_TRIANGLE || ChanID == CHANID_5E01_SQUARE1 || ChanID == CHANID_5E01_SQUARE2) {
 						WriteData(Command(CMD_EFF_SWEEP));
 						WriteData(0x80 | (EffParam & 0x77));	// Calculate sweep
 					}
@@ -453,7 +460,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 							WriteData(Command(CMD_EFF_RESET_PITCH));
 						else {
 							switch (ChipID) {
-							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930:		// // //
+							case SNDCHIP_NONE: case SNDCHIP_VRC6: case SNDCHIP_MMC5: case SNDCHIP_S5B: case SNDCHIP_AY8930: case SNDCHIP_SAA1099: case SNDCHIP_5E01:		// // //
 								if (!m_pDocument->GetLinearPitch()) break;
 							default:
 								EffParam = (char)(256 - (int)EffParam);
@@ -477,7 +484,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 						WriteData(Command(CMD_EFF_VRC7_PATCH));
 						WriteData(EffParam << 4);
 					}
-					else if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
+					else if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930 || ChipID == SNDCHIP_SAA1099) {
 						WriteData(Command(CMD_EFF_DUTY));
 						WriteData((EffParam << 6) | ((EffParam & 0x04) << 3));
 					}
@@ -607,7 +614,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					break;
 				// // // Sunsoft 5B
 				case EF_SUNSOFT_ENV_TYPE:
-					if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930) {
+					if (ChipID == SNDCHIP_S5B || ChipID == SNDCHIP_AY8930 || ChipID == SNDCHIP_SAA1099) {
 						WriteData(Command(CMD_EFF_S5B_ENV_TYPE));
 						WriteData(EffParam);
 					}

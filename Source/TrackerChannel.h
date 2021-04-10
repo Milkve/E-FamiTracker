@@ -42,7 +42,7 @@ public:
 	~CTrackerChannel(void);
 	LPCTSTR GetChannelName() const;
 	LPCTSTR GetShortName() const;		// // //
-	const char GetChip() const;
+	const int GetChip() const;
 	chan_id_t GetID() const;		// // //
 	const int GetColumnCount() const;
 	void SetColumnCount(int Count);

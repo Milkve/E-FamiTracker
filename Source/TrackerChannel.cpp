@@ -62,7 +62,7 @@ LPCTSTR CTrackerChannel::GetShortName() const
 	return m_pShortName;
 }
 
-const char CTrackerChannel::GetChip() const
+const int CTrackerChannel::GetChip() const
 {
 	return m_iChip;
 }
@@ -157,6 +157,7 @@ bool CTrackerChannel::IsInstrumentCompatible(int Instrument, inst_type_t Type) c
 		case SNDCHIP_SAA1099:
 		case SNDCHIP_VRC6:
 		case SNDCHIP_FDS:
+		case SNDCHIP_5E01:
 			switch (Type) {
 			case INST_2A03:
 			case INST_VRC6:
@@ -194,7 +195,7 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 		case EF_PORTAOFF:
 			return false;
 		case EF_SWEEPUP: case EF_SWEEPDOWN:
-			return m_iChannelID == CHANID_SQUARE1 || m_iChannelID == CHANID_SQUARE2;
+			return m_iChannelID == CHANID_SQUARE1 || m_iChannelID == CHANID_SQUARE2 || m_iChannelID == CHANID_5E01_SQUARE1 || m_iChannelID == CHANID_5E01_SQUARE2;
 		case EF_DAC: case EF_SAMPLE_OFFSET: case EF_RETRIGGER: case EF_DPCM_PITCH: {
 			// TODO move to virtual method of Effect subclasses.
 			if (m_iChannelID != CHANID_DPCM) return false;
@@ -230,8 +231,10 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 			return m_iChip == SNDCHIP_FDS && (EffParam <= 0x3F || EffParam >= 0x80);
 		case EF_FDS_MOD_SPEED_HI: case EF_FDS_MOD_SPEED_LO: case EF_FDS_MOD_BIAS:
 			return m_iChip == SNDCHIP_FDS;
-		case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI: case EF_SUNSOFT_ENV_TYPE:
-			return m_iChip == SNDCHIP_S5B || m_iChip == SNDCHIP_AY8930;
+		case EF_SUNSOFT_ENV_LO: case EF_SUNSOFT_ENV_HI:
+			return m_iChip == SNDCHIP_S5B || m_iChip == SNDCHIP_AY8930 || m_iChip == SNDCHIP_SAA1099;
+		case EF_SUNSOFT_ENV_TYPE:
+			return m_iChip == SNDCHIP_S5B || m_iChip == SNDCHIP_AY8930 || m_iChip == SNDCHIP_SAA1099;
 		case EF_SUNSOFT_NOISE:		// // // 050B
 			return (m_iChip == SNDCHIP_S5B && (EffParam <= 0x1F)) || (m_iChip == SNDCHIP_AY8930);
 		case EF_AY8930_AND_MASK: case EF_AY8930_OR_MASK:
@@ -253,6 +256,7 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 			if (m_iChip == SNDCHIP_VRC7) return false;
 			// 2A03 noise behaves strangely with Kxx.
 			if (m_iChannelID == CHANID_NOISE) return false;
+			if (m_iChannelID == CHANID_5E01_NOISE) return false;
 			// K00 (frequency *= 0) is invalid/undefined behavior,
 			// and not guaranteed to behave properly/consistently in the tracker or NSF.
 			if (EffParam <= 0) return false;

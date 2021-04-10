@@ -762,6 +762,18 @@
     <ClCompile Include="Source\APU\SAA1099.cpp">
       <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
     </ClCompile>
+    <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\5e01_apu.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\nsfplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\5e01_dmc.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\nsfplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\5E01.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Channels5E01.cpp">
+      <Filter>Source Files\Sound Driver\Channels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Exception.h">
@@ -1522,6 +1534,18 @@
     </ClInclude>
     <ClInclude Include="Source\APU\SAA1099.h">
       <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\nsfplay\xgm\devices\Sound\5e01_apu.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\nsfplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\nsfplay\xgm\devices\Sound\5e01_dmc.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\nsfplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\5E01.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Channels5E01.h">
+      <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

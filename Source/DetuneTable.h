@@ -38,7 +38,8 @@ public:
 		DETUNE_N163,
 		DETUNE_S5B,
 		DETUNE_AY8930,
-		DETUNE_SAA1099
+		DETUNE_SAA1099,
+		DETUNE_5E01
 	};
 
 protected:
@@ -165,4 +166,10 @@ class CDetuneSAA1099 : public CDetuneTable
 {
 public:
 	CDetuneSAA1099();
+};
+
+class CDetune5E01 : public CDetuneTable
+{
+public:
+	CDetune5E01();
 };

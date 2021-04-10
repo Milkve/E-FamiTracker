@@ -82,6 +82,7 @@ public:
 	afx_msg void OnBnClickedExpansionS5B();
 	afx_msg void OnBnClickedExpansionAY8930();
 	afx_msg void OnBnClickedExpansionSAA1099();
+	afx_msg void OnBnClickedExpansion5E01();
 	afx_msg void OnBnClickedExpansionN163();
 	void setN163NChannels(int nchan);
 	void updateN163GUI(bool renderText=true);

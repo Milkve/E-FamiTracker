@@ -59,6 +59,7 @@
 #include "APU.h"
 #include "2A03.h"
 #include "FDS.h"
+#include "5E01.h"
 #include "nsfplay/xgm/devices/Sound/legacy/emu2413.h"
 #include "utils/variadic_minmax.h"
 
@@ -83,6 +84,7 @@ CMixer::CMixer(CAPU * Parent)
 	m_fLevelS5B = 1.0f;		// // // 050B
 	m_fLevelAY8930 = 1.0f;		// // // 050B
 	m_fLevelSAA1099 = 1.0f;		// // // 050B
+	m_fLevel5E01 = 1.0f;		// // // 050B
 
 	m_iExternalChip = 0;
 	m_iSampleRate = 0;
@@ -127,7 +129,10 @@ void CMixer::SetChipLevel(chip_level_t Chip, float Level)
 			m_fLevelAY8930 = Level;
 			break;
 		case CHIP_LEVEL_SAA1099:		// // // 050B
-			m_fLevelAY8930 = Level;
+			m_fLevelSAA1099 = Level;
+			break;
+		case CHIP_LEVEL_5E01:		// // // 050B
+			m_fLevel5E01 = Level;
 			break;
 		case CHIP_LEVEL_VRC7: case CHIP_LEVEL_COUNT:
 			break;
@@ -144,6 +149,7 @@ float CMixer::GetAttenuation() const
 	const float ATTENUATION_S5B = 0.50f;		// // // 050B
 	const float ATTENUATION_AY8930  = 0.50f;		// // // 050B
 	const float ATTENUATION_SAA1099 = 0.50f;		// // // 050B
+	const float ATTENUATION_5E01 = 0.80f;		// // // 050B
 
 	float Attenuation = 1.0f;
 
@@ -172,6 +178,9 @@ float CMixer::GetAttenuation() const
 
 	if (m_iExternalChip & SNDCHIP_SAA1099)		// // // 050B
 		Attenuation *= ATTENUATION_SAA1099;
+
+	if (m_iExternalChip & SNDCHIP_5E01)		// // // 050B
+		Attenuation *= ATTENUATION_5E01;
 
 	return Attenuation;
 }
@@ -219,12 +228,15 @@ void CMixer::RecomputeMixing()
 	// Volume levels
 	auto & chip2A03 = *m_APU->m_p2A03;
 	auto & chipFDS = *m_APU->m_pFDS;
+	auto & chip5E01 = *m_APU->m_p5E01;
 
 	// Maybe the range argument, as well as the constant factor in the volume,
 	// should be supplied by the CSoundChip2 subclass rather than CMixer.
 	chip2A03.UpdateMixingAPU1(Volume * m_fLevelAPU1);
 	chip2A03.UpdateMixingAPU2(Volume * m_fLevelAPU2);
 	chipFDS.UpdateMixLevel(Volume * m_fLevelFDS);
+	chip5E01.UpdateMixingAPU1(Volume * m_fLevelAPU1);
+	chip5E01.UpdateMixingAPU2(Volume * m_fLevelAPU2);
 
 	chipFDS.UpdateFdsFilter(m_MixerConfig.FDSLowpass);
 
@@ -359,6 +371,11 @@ void CMixer::FinishBuffer(int t)
 
 	auto& chipFDS = *m_APU->m_pFDS;
 	StoreChannelLevel(CHANID_FDS, get_channel_level(chipFDS, 0));
+
+	auto& chip5E01 = *m_APU->m_p5E01;
+	for (int i = 0; i < 4; i++) {
+		StoreChannelLevel(CHANID_5E01_SQUARE1 + i, get_channel_level(chip5E01, i));
+	}
 
 	// Get channel levels for VRC7
 	for (int i = 0; i < 6; ++i)

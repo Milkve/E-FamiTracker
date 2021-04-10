@@ -36,6 +36,7 @@
 #include "S5B.h"
 #include "AY8930.h"
 #include "SAA1099.h"
+#include "5E01.h"
 #include "SoundChip.h"
 #include "SoundChip2.h"
 #include "../RegisterState.h"		// // //
@@ -62,6 +63,7 @@ CAPU::CAPU(IAudioCallback *pCallback) :		// // //
 	m_pMixer(new CMixer(this)),
 	m_p2A03(std::make_unique<C2A03>()),
 	m_pFDS(std::make_unique<CFDS>()),
+	m_p5E01(std::make_unique<C5E01>()),
 	m_iExternalSoundChips(0),
 	m_iCyclesToRun(0),
 	m_iSampleRate(44100)		// // //
@@ -139,6 +141,7 @@ void CAPU::StepSequence()		// // //
 	m_iSequencerNext = (uint64_t)BASE_FREQ_NTSC * (m_iSequencerCount + 1) / SEQUENCER_FREQUENCY;
 	m_p2A03->ClockSequence();
 	m_pMMC5->ClockSequence();		// // //
+	m_p5E01->ClockSequence();
 }
 
 // End of audio frame, flush the buffer if enough samples has been produced, and start a new frame
@@ -197,7 +200,7 @@ void CAPU::Reset()
 #endif
 }
 
-void CAPU::SetExternalSound(uint8_t Chip)
+void CAPU::SetExternalSound(int Chip)
 {
 	// Initialize list of active sound chips.
 	// Do this first because m_SoundChips2 is used by CMixer::ExternalSound() -> CMixer::UpdateMixing().
@@ -221,6 +224,8 @@ void CAPU::SetExternalSound(uint8_t Chip)
 		m_SoundChips.push_back(m_pAY8930);
 	if (Chip & SNDCHIP_SAA1099)
 		m_SoundChips.push_back(m_pSAA1099);
+	if (Chip & SNDCHIP_5E01)
+		m_SoundChips2.push_back(m_p5E01.get());		// // //
 
 	// Set (unused) bitfield of external sound chips enabled.
 	m_iExternalSoundChips = Chip;
@@ -251,6 +256,7 @@ void CAPU::ChangeMachineRate(int Machine, int FrameRate)		// // //
 	
 	uint32_t BaseFreq = (Machine == MACHINE_NTSC) ? BASE_FREQ_NTSC : BASE_FREQ_PAL;
 	m_p2A03->ChangeMachine(Machine);
+	m_p5E01->ChangeMachine(Machine);
 	m_pMixer->SetClockRate(BaseFreq);
 
 	m_pVRC7->SetSampleSpeed(m_iSampleRate, BaseFreq, FrameRate);
@@ -455,6 +461,7 @@ double CAPU::GetFreq(int Chip, int Chan) const
 	case SNDCHIP_S5B:  return PtrGetFreq(*m_pS5B);
 	case SNDCHIP_AY8930:  return PtrGetFreq(*m_pAY8930);
 	case SNDCHIP_SAA1099:  return PtrGetFreq(*m_pSAA1099);
+	case SNDCHIP_5E01: return PtrGetFreq(*m_p5E01);
 	default: AfxDebugBreak(); return 0.;
 	}
 }
@@ -475,6 +482,7 @@ CRegisterState *CAPU::GetRegState(int Chip, int Reg) const		// // //
 	case SNDCHIP_S5B:  return PtrGetRegState(*m_pS5B);
 	case SNDCHIP_AY8930:  return PtrGetRegState(*m_pAY8930);
 	case SNDCHIP_SAA1099:  return PtrGetRegState(*m_pSAA1099);
+	case SNDCHIP_5E01: return PtrGetRegState(*m_p5E01);
 	default: AfxDebugBreak(); return nullptr;
 	}
 }

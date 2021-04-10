@@ -34,6 +34,7 @@
 #include "ChannelsS5B.h"
 #include "ChannelsAY8930.h"
 #include "ChannelsSAA1099.h"
+#include "Channels5E01.h"
 
 // // // Default implementation for channel factory
 
@@ -94,4 +95,10 @@ CChannelFactory::CChannelFactory() : CFactory()
 	m_pMakeFunc[CHANID_SAA1099_CH4] = Func;
 	m_pMakeFunc[CHANID_SAA1099_CH5] = Func;
 	m_pMakeFunc[CHANID_SAA1099_CH6] = Func;
+
+	Func = MakeCtor<C5E01Square>();
+	m_pMakeFunc[CHANID_5E01_SQUARE1] = Func;
+	m_pMakeFunc[CHANID_5E01_SQUARE2] = Func;
+	AddProduct<C5E01WaveformChan>(CHANID_5E01_WAVEFORM);
+	AddProduct<C5E01NoiseChan>(CHANID_5E01_NOISE);
 }

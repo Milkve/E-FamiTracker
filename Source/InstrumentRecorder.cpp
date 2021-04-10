@@ -134,6 +134,7 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 	case SNDCHIP_S5B:  Table = CDetuneTable::DETUNE_S5B; break;
 	case SNDCHIP_AY8930:  Table = CDetuneTable::DETUNE_AY8930; break;
 	case SNDCHIP_SAA1099:  Table = CDetuneTable::DETUNE_SAA1099; break;
+	case SNDCHIP_5E01:  Table = CDetuneTable::DETUNE_5E01; break;
 	}
 	int Note = 0;
 	if (m_iRecordChannel == CHANID_NOISE) {
@@ -148,7 +149,7 @@ void CInstrumentRecorder::RecordInstrument(const unsigned Tick, CView *pView)		/
 
 	inst_type_t InstType = INST_NONE; // optimize this
 	switch (Chip) {
-	case SNDCHIP_NONE: case SNDCHIP_MMC5: InstType = INST_2A03; break;
+	case SNDCHIP_NONE: case SNDCHIP_MMC5: case SNDCHIP_5E01:  InstType = INST_2A03; break;
 	case SNDCHIP_VRC6: InstType = INST_VRC6; break;
 	// case SNDCHIP_VRC7: Type = INST_VRC7; break;
 	case SNDCHIP_FDS:  InstType = INST_FDS; break;

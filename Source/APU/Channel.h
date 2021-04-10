@@ -29,7 +29,7 @@ class CMixer;
 
 class CChannel {
 public:
-	CChannel(CMixer *pMixer, uint8_t Chip, uint8_t ID) :
+	CChannel(CMixer *pMixer, int Chip, uint8_t ID) :
 		m_pMixer(pMixer), m_iChip(Chip), m_iChanId(ID), m_iTime(0), m_iLastValue(0) 
 	{
 	}

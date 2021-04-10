@@ -244,6 +244,12 @@ void CSoundGen::CreateChannels()
 	AssignChannel(new CTrackerChannel(_T("SAA Channel 4"), _T("SA4"), SNDCHIP_SAA1099, CHANID_SAA1099_CH4));
 	AssignChannel(new CTrackerChannel(_T("SAA Channel 5"), _T("SA5"), SNDCHIP_SAA1099, CHANID_SAA1099_CH5));
 	AssignChannel(new CTrackerChannel(_T("SAA Channel 6"), _T("SA6"), SNDCHIP_SAA1099, CHANID_SAA1099_CH6));
+
+	// // // Eulous 5E01
+	AssignChannel(new CTrackerChannel(_T("5E01 Pulse 1"), _T("5E1"), SNDCHIP_5E01, CHANID_5E01_SQUARE1));
+	AssignChannel(new CTrackerChannel(_T("5E01 Pulse 2"), _T("5E2"), SNDCHIP_5E01, CHANID_5E01_SQUARE2));
+	AssignChannel(new CTrackerChannel(_T("5E01 Waveform"), _T("WAV"), SNDCHIP_5E01, CHANID_5E01_WAVEFORM));
+	AssignChannel(new CTrackerChannel(_T("5E01 Noise"), _T("5EN"), SNDCHIP_5E01, CHANID_5E01_NOISE));
 }
 
 void CSoundGen::AssignChannel(CTrackerChannel *pTrackerChannel)		// // //
@@ -450,6 +456,7 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 		const unsigned int *Table = nullptr;
 		switch (m_pTrackerChannels[i]->GetID()) {
 		case CHANID_SQUARE1: case CHANID_SQUARE2: case CHANID_TRIANGLE:
+		case CHANID_5E01_SQUARE1: case CHANID_5E01_SQUARE2: case CHANID_5E01_WAVEFORM:
 			Table = Machine == PAL ? m_iNoteLookupTablePAL : m_iNoteLookupTableNTSC; break;
 		case CHANID_VRC6_PULSE1: case CHANID_VRC6_PULSE2:
 		case CHANID_MMC5_SQUARE1: case CHANID_MMC5_SQUARE2:
@@ -1218,6 +1225,8 @@ static CString GetStateString(const stChannelState &State)
 
 	if ((State.ChannelIndex >= CHANID_SQUARE1 && State.ChannelIndex <= CHANID_SQUARE2) ||
 			State.ChannelIndex == CHANID_NOISE ||
+			(State.ChannelIndex >= CHANID_5E01_SQUARE1 && State.ChannelIndex <= CHANID_5E01_SQUARE2) ||
+			State.ChannelIndex == CHANID_5E01_NOISE ||
 		(State.ChannelIndex >= CHANID_MMC5_SQUARE1 && State.ChannelIndex <= CHANID_MMC5_SQUARE2))
 		for (const auto &x : {EF_VOLUME}) {
 			int p = State.Effect[x];
@@ -1259,6 +1268,12 @@ static CString GetStateString(const stChannelState &State)
 		}
 	else if (State.ChannelIndex >= CHANID_AY8930_CH1 && State.ChannelIndex <= CHANID_AY8930_CH3)
 		for (const auto &x : AY8930_EFFECTS) {
+			int p = State.Effect[x];
+			if (p < 0) continue;
+			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
+		}
+	else if (State.ChannelIndex >= CHANID_SAA1099_CH1 && State.ChannelIndex <= CHANID_SAA1099_CH6)
+		for (const auto &x : SAA1099_EFFECTS) {
 			int p = State.Effect[x];
 			if (p < 0) continue;
 			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
@@ -1416,6 +1431,8 @@ void CSoundGen::ResetAPU()
 	// Enable all channels
 	m_pAPU->Write(0x4015, 0x0F);
 	m_pAPU->Write(0x4017, 0x00);
+	m_pAPU->Write(0x4115, 0x0F);
+	m_pAPU->Write(0x4117, 0x00);
 	
 	// // // for VGM
 	WriteRegister(0x4015, 0x0F);

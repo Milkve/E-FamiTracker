@@ -55,6 +55,7 @@ void CChannelMap::SetupSoundChips()
 	AddChip(SNDCHIP_S5B,  INST_S5B, _T("Sunsoft 5B"));
 	AddChip(SNDCHIP_AY8930,  INST_S5B,  _T("Microchip AY8930"));
 	AddChip(SNDCHIP_SAA1099, INST_2A03, _T("Philips SAA1099"));
+	AddChip(SNDCHIP_5E01, INST_2A03, _T("5E01"));
 }
 
 void CChannelMap::AddChip(int Ident, inst_type_t Inst, LPCTSTR pName)

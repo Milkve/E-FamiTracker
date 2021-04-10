@@ -2058,7 +2058,7 @@ void CFamiTrackerView::InsertNote(int Note, int Octave, int Channel, int Velocit
 				Cell.Vol = (Velocity / 8);
 		}
 		if (Note != NONE && Note != ECHO) {		// // //
-			if (GetDocument()->GetChannelType(Channel) == CHANID_NOISE) {		// // //
+			if (GetDocument()->GetChannelType(Channel) == CHANID_NOISE || GetDocument()->GetChannelType(Channel) == CHANID_5E01_NOISE) {		// // //
 				unsigned int MidiNote = (MIDI_NOTE(Octave, Note) % 32) + 32;
 				Cell.Octave = Octave = GET_OCTAVE(MidiNote);
 				Cell.Note = Note = GET_NOTE(MidiNote);
@@ -2429,6 +2429,8 @@ void CFamiTrackerView::UpdateNoteQueues()		// // //
 			m_pNoteQueue->AddMap({ CHANID_AY8930_CH1, CHANID_AY8930_CH2, CHANID_AY8930_CH3 });
 		if (pDoc->ExpansionEnabled(SNDCHIP_SAA1099))
 			m_pNoteQueue->AddMap({ CHANID_SAA1099_CH1, CHANID_SAA1099_CH2, CHANID_SAA1099_CH3, CHANID_SAA1099_CH4, CHANID_SAA1099_CH5, CHANID_SAA1099_CH6 });
+		if (pDoc->ExpansionEnabled(SNDCHIP_5E01))
+			m_pNoteQueue->AddMap({ CHANID_5E01_SQUARE1, CHANID_5E01_SQUARE2, CHANID_5E01_WAVEFORM, CHANID_5E01_NOISE });
 	}
 
 //	for (int i = 0; i < Channels; ++i)
@@ -3268,7 +3270,7 @@ bool CFamiTrackerView::IsSplitEnabled(int MidiNote, int Channel) const
 	if (m_iSplitNote == -1)
 		return false;
 	if (const auto Chan = GetDocument()->GetChannel(Channel)) {
-		if (Chan->GetID() == CHANID_NOISE)
+		if (Chan->GetID() == CHANID_NOISE || Chan->GetID() == CHANID_5E01_NOISE)
 			return false;
 		return MidiNote <= m_iSplitNote;
 	}
@@ -3730,7 +3732,7 @@ void CFamiTrackerView::OnTrackerRecordToInst()		// // //
 	if (Chip != SNDCHIP_FDS) {
 		inst_type_t Type = INST_NONE;
 		switch (Chip) {
-		case SNDCHIP_NONE: case SNDCHIP_MMC5: case SNDCHIP_SAA1099: Type = INST_2A03; break;
+		case SNDCHIP_NONE: case SNDCHIP_MMC5: case SNDCHIP_SAA1099: case SNDCHIP_5E01: Type = INST_2A03; break;
 		case SNDCHIP_VRC6: Type = INST_VRC6; break;
 		case SNDCHIP_N163: Type = INST_N163; break;
 		case SNDCHIP_S5B: case SNDCHIP_AY8930: Type = INST_S5B; break;

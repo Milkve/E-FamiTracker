@@ -41,6 +41,8 @@ int			  CChannelHandlerSAA1099::s_iNoisePrev = -1;
 int			  CChannelHandlerSAA1099::s_iDefaultNoise = 0;		// // //
 int			  CChannelHandlerSAA1099::s_iNoiseANDMask = 0x00;		// // //
 int			  CChannelHandlerSAA1099::s_iNoiseORMask = 0xFF;		// // //
+int			  CChannelHandlerSAA1099::s_iEnvelopeAType = 0x00;		// // //
+int			  CChannelHandlerSAA1099::s_iEnvelopeBType = 0x00;		// // //
 int			  CChannelHandlerSAA1099::s_unused		= 0;		// // // 050B
 
 // Class functions
@@ -64,21 +66,6 @@ void CChannelHandlerSAA1099::SetMode(int Chan, int Square, int Noise)
 	s_iModes |= (Noise << (3 + Chan)) | (Square << Chan);
 }
 
-void CChannelHandlerSAA1099::UpdateAutoEnvelope(int Period)		// // // 050B
-{
-	if (m_bEnvelopeEnabled && m_iAutoEnvelopeShift) {
-		if (m_iAutoEnvelopeShift > 8) {
-			Period >>= m_iAutoEnvelopeShift - 8 - 1;		// // // round off
-			if (Period & 0x01) ++Period;
-			Period >>= 1;
-		}
-		else if (m_iAutoEnvelopeShift < 8)
-			Period <<= 8 - m_iAutoEnvelopeShift;
-		m_iEnvFreqLo = Period & 0xFF;
-		m_iEnvFreqHi = Period >> 8;
-	}
-}
-
 void CChannelHandlerSAA1099::UpdateRegs()		// // //
 {
 	// Done only once
@@ -92,7 +79,7 @@ void CChannelHandlerSAA1099::UpdateRegs()		// // //
 // Instance functions
 
 CChannelHandlerSAA1099::CChannelHandlerSAA1099() : 
-	CChannelHandler(0xFFFF, 0x1F),
+	CChannelHandler(0x7FF, 0x1F),
 	m_bEnvelopeEnabled(false),		// // // 050B
 	m_iAutoEnvelopeShift(0),		// // // 050B
 	m_iEnvFreqHi(0),		// // // 050B
@@ -124,11 +111,17 @@ bool CChannelHandlerSAA1099::HandleEffect(effect_t EffNum, EffParamT EffParam)
 {
 	switch (EffNum) {
 	case EF_SUNSOFT_ENV_TYPE: // H
-		m_bEnvTrigger = true;		// // // 050B
-		m_iEnvType = EffParam & 0x0F;
-		m_bUpdate = true;
-		m_bEnvelopeEnabled = EffParam != 0;
-		m_iAutoEnvelopeShift = EffParam >> 4;
+		//m_bEnvTrigger = true;		// // // 050B
+		//m_iEnvType = EffParam & 0x0F;
+		//m_bUpdate = true;
+		//m_bEnvelopeEnabled = EffParam != 0;
+		//m_iAutoEnvelopeShift = EffParam >> 4;
+		if (m_iChannelID <= CHANID_SAA1099_CH3) {
+			s_iEnvelopeAType = EffParam;
+		}
+		else {
+			s_iEnvelopeBType = EffParam;
+		}
 		break;
 	//case EF_STEREO:
 		//m_iExVolume = EffParam & 1;
@@ -224,15 +217,16 @@ void CChannelHandlerSAA1099::ResetChannel()
 	m_iEnvFreqHi = 0;
 	m_iEnvFreqLo = 0;
 	m_iEnvType = 0;
+	s_iEnvelopeAType = 0;
+	s_iEnvelopeBType = 0;
 	m_iPulseWidth = 0;
-	m_iExVolume = 0;
 	s_unused = 0;		// // // 050B
 	m_bEnvTrigger = false;
 }
 
 int CChannelHandlerSAA1099::CalculateVolume() const		// // //
 {
-	return LimitVolume((((m_iVolume >> VOL_COLUMN_SHIFT) - GetTremolo())*2 + m_iInstVolume - 31) | m_iExVolume);
+	return LimitVolume((m_iVolume >> VOL_COLUMN_SHIFT) - GetTremolo() + m_iInstVolume - 15);
 }
 
 int CChannelHandlerSAA1099::ConvertDuty(int Duty) const		// // //
@@ -254,10 +248,8 @@ CString CChannelHandlerSAA1099::GetCustomEffectString() const		// // //
 {
 	CString str = _T("");
 
-	if (m_iEnvType)
-		str.AppendFormat(_T(" J%02X"), m_iEnvType);
-	if (m_iExVolume)
-		str.AppendFormat(_T(" S%02X"), m_iExVolume);
+	if (s_iEnvelopeAType)
+		str.AppendFormat(_T(" J%02X"), s_iEnvelopeAType);
 
 	return str;
 }
@@ -266,34 +258,29 @@ void CChannelHandlerSAA1099::RefreshChannel()
 {
 	int Period = CalculatePeriod();
 	unsigned char LoPeriod = Period & 0xFF;
-	unsigned char HiPeriod = Period >> 8;
+	unsigned char HiPeriod = (Period >> 8) & 0x07;
 	int Volume = CalculateVolume();
-	unsigned char DutyCycle = m_iDutyPeriod & 0x0F;
 
 	unsigned char Noise = (m_bGate && (m_iDutyPeriod & S5B_MODE_NOISE)) ? 0 : 1;
 	unsigned char Square = (m_bGate && (m_iDutyPeriod & S5B_MODE_SQUARE)) ? 0 : 1;
-	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x20 : 0; // m_bEnvelopeEnabled ? 0x10 : 0;
+	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x10 : 0;
 
-	UpdateAutoEnvelope(Period);		// // // 050B
-	SetMode(m_iChannelID, Square, Noise);
-	
-	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) * 2    , LoPeriod);
-	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) * 2 + 1, HiPeriod);
-	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) + 8    , Volume | Envelope);
-	WriteReg((m_iChannelID - CHANID_SAA1099_CH1) + 0x16 , m_iPulseWidth);
+	unsigned int CurrHiPeriod = m_pAPU->GetReg(SNDCHIP_SAA1099, ((m_iChannelID - CHANID_SAA1099_CH1) >> 1) + 0x10);
+	CurrHiPeriod = ((m_iChannelID - CHANID_SAA1099_CH1) & 1) ? ((CurrHiPeriod & 0x0F) | (HiPeriod << 4)) : ((CurrHiPeriod & 0xF0) | HiPeriod);
 
-	unsigned int FreqAddr[3] = {0x0B, 0x10, 0x12};
-	unsigned int ModeAddr[3] = {0x0D, 0x14, 0x15};
-	if (Envelope && (m_bTrigger || m_bUpdate))		// // // 050B
-		m_bEnvTrigger = true;
-	m_bUpdate = false;
-	WriteReg(FreqAddr[m_iChannelID - CHANID_SAA1099_CH1], m_iEnvFreqLo);
-	WriteReg(FreqAddr[m_iChannelID - CHANID_SAA1099_CH1] + 1, m_iEnvFreqHi);
-	if (m_bEnvTrigger)		// // // 050B
-		WriteReg(ModeAddr[m_iChannelID - CHANID_SAA1099_CH1], m_iEnvType);
-	m_bEnvTrigger = false;
+	unsigned int CurrSquare = m_pAPU->GetReg(SNDCHIP_SAA1099, 0x14);
 	
 
-	if (m_iChannelID == CHANID_SAA1099_CH3)
-		UpdateRegs();
+	WriteReg((m_iChannelID - CHANID_SAA1099_CH1)               , Volume);
+	WriteReg((m_iChannelID - CHANID_SAA1099_CH1)        + 0x08 , LoPeriod);
+	WriteReg(((m_iChannelID - CHANID_SAA1099_CH1) >> 1) + 0x10 , CurrHiPeriod);
+
+	int mask = 1 << (m_iChannelID - CHANID_SAA1099_CH1);
+	WriteReg(0x14, (CurrSquare & ~mask) | (Square << (m_iChannelID - CHANID_SAA1099_CH1)));
+
+	if (m_iChannelID == CHANID_SAA1099_CH6) {
+		WriteReg(0x18 , s_iEnvelopeAType);
+		WriteReg(0x19 , s_iEnvelopeBType);
+	}
+
 }

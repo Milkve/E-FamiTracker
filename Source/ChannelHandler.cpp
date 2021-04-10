@@ -230,7 +230,7 @@ CString CChannelHandler::GetEffectString() const		// // //
 		str.AppendFormat(_T(" A%02X"), m_iVolSlide);
 	if (m_iFinePitch != 0x80)
 		str.AppendFormat(_T(" P%02X"), m_iFinePitch);
-	if ((m_iDefaultDuty && m_iChannelID < CHANID_S5B_CH1) || (m_iDefaultDuty != 0x40 && m_iChannelID >= CHANID_S5B_CH1 && m_iChannelID <= CHANID_AY8930_CH3))
+	if ((m_iDefaultDuty && (m_iChannelID < CHANID_S5B_CH1 || (m_iChannelID >= CHANID_5E01_SQUARE1 && m_iChannelID <= CHANID_5E01_NOISE))) || (m_iDefaultDuty != 0x40 && m_iChannelID >= CHANID_S5B_CH1 && m_iChannelID <= CHANID_SAA1099_CH6))
 		str.AppendFormat(_T(" V%02X"), m_iDefaultDuty);
 
 	// run-time effects

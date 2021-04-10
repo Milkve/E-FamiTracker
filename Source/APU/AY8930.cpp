@@ -368,7 +368,7 @@ void CAY8930Channel::RunEnvelope(uint32_t Time)
 */
 void CAY8930::RunNoise(uint32_t Time)
 {
-	m_iNoiseClock += (int)(Time * 2.33333);
+	m_iNoiseClock += (int)(Time * 2);
 	while (m_iNoiseClock >= m_iNoisePeriod) {
 		m_iNoiseClock -= m_iNoisePeriod;
 		if (m_iNoiseValue >= ((m_iNoiseState & 0xFF & m_iNoiseANDMask) | m_iNoiseORMask)) {

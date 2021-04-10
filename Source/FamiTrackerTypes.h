@@ -84,11 +84,11 @@ const int MAX_GROOVE = 32;
 const int ECHO_BUFFER_LENGTH = 3;
 
 // // // Number of chips
-const int CHIP_COUNT = 8;
+const int CHIP_COUNT = 9;
 
 // Number of available channels (max) TODO: should not be used anymore!
 // instead, check the channelsavailable variable and allocate dynamically
-const int MAX_CHANNELS	 = 5 + 3 + 2 + 6 + 1 + 8 + 3 + 3 + 6;
+const int MAX_CHANNELS	 = 5 + 3 + 2 + 6 + 1 + 8 + 3 + 3 + 6 + 5 + 4;
 
 const int CHANNELS_DEFAULT = 5;
 const int CHANNELS_VRC6	   = 3;
@@ -192,6 +192,7 @@ const effect_t FDS_EFFECTS[] = {EF_FDS_MOD_DEPTH, EF_FDS_MOD_SPEED_HI, EF_FDS_MO
 const effect_t N163_EFFECTS[] = {EF_N163_WAVE_BUFFER};
 const effect_t S5B_EFFECTS[] = { EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE };
 const effect_t AY8930_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE, EF_AY8930_PULSE_WIDTH, EF_AY8930_AND_MASK, EF_AY8930_OR_MASK, EF_AY8930_VOL};
+const effect_t SAA1099_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE};
 
 // Effect checking = bool CTrackerChannel::IsEffectCompatible
 

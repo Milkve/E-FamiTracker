@@ -626,6 +626,7 @@
 #define IDC_ICON_STATIC                 1493
 #define IDC_EXPANSION_AY8930            1494
 #define IDC_EXPANSION_SAA1099           1495
+#define IDC_EXPANSION_5E01              1496
 #define IDS_FIND_BEGIN                  9001
 #define IDS_FIND_END                    9002
 #define ID_TRACKER_PLAY                 32771
@@ -783,6 +784,7 @@
 #define ID_INSTRUMENT_ADD_VRC7          36870
 #define ID_INSTRUMENT_ADD_AY8930        36871
 #define ID_INSTRUMENT_ADD_SAA1099       36872
+#define ID_INSTRUMENT_ADD_5E01          36873
 #define ID_INDICATOR_CHIP               53248
 #define ID_INDICATOR_INSTRUMENT         53249
 #define ID_INDICATOR_OCTAVE             53250

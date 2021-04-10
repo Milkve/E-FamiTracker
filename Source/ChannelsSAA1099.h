@@ -54,7 +54,6 @@ protected:
 	// Static functions
 protected:	
 	static void SetMode(int Chan, int Square, int Noise);
-	void UpdateAutoEnvelope(int Period);		// // // 050B
 	void UpdateRegs();		// // //
 
 	// Static memebers
@@ -65,6 +64,8 @@ protected:
 	static int s_iDefaultNoise;		// // //
 	static int s_iNoiseANDMask;
 	static int s_iNoiseORMask;
+	static int s_iEnvelopeAType;
+	static int s_iEnvelopeBType;
 	static int s_unused;		// // // 050B, unused
 
 	// Instance members
@@ -74,7 +75,6 @@ protected:
 	unsigned char m_iEnvFreqHi;
 	unsigned char m_iEnvFreqLo;
 	unsigned char m_iPulseWidth;
-	int m_iExVolume;
 	bool m_bEnvTrigger;		// // // 050B
 	int m_iEnvType;
 	bool m_bUpdate;

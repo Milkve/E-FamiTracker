@@ -4208,6 +4208,10 @@ int CFamiTrackerDoc::GetChannelPosition(int Channel, unsigned int Chip)		// // /
 	unsigned int pos = Channel;
 	if (pos == CHANID_MMC5_VOICE) return -1;
 
+	if (!(Chip & SNDCHIP_5E01)) {
+		if (pos > CHANID_5E01_NOISE) pos -= 4;
+		else if (pos >= CHANID_5E01_SQUARE1) return -1;
+	}
 	if (!(Chip & SNDCHIP_SAA1099)) {
 		if (pos > CHANID_SAA1099_CH6) pos -= 6;
 		else if (pos >= CHANID_SAA1099_CH1) return -1;

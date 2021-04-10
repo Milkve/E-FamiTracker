@@ -187,3 +187,11 @@ CDetuneSAA1099::CDetuneSAA1099() :
 	SetFrequencyFunc([](double x) { return BASE_FREQ_NTSC / 16. / x; });
 	GenerateRegisters();
 }
+
+CDetune5E01::CDetune5E01() :
+	CDetuneTable(DETUNE_5E01, 0, 0xFFFF)
+{
+	SetGenerator([](double x) { return BASE_FREQ_NTSC / 16. / x; });
+	SetFrequencyFunc([](double x) { return BASE_FREQ_NTSC / 16. / x; });
+	GenerateRegisters();
+}

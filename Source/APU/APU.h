@@ -38,6 +38,7 @@
 
 // External classes
 class C2A03;		// // //
+class C5E01;		// // //
 class CVRC6;
 class CVRC7;
 class CFDS;
@@ -92,7 +93,7 @@ public:
 	void	SetNamcoMixing(bool bLinear);		// // //
 
 private:
-	void	SetExternalSound(uint8_t Chip);
+	void	SetExternalSound(int Chip);
 	// End configuration methods.
 
 public:
@@ -132,6 +133,7 @@ private:
 	CS5B    *m_pS5B;
 	CAY8930 *m_pAY8930;
 	CSAA1099* m_pSAA1099;
+	std::unique_ptr<C5E01> m_p5E01;
 
 	/// Bitfield of external sound chips enabled.
 	/// Never read, except for code hidden behind #ifdef LOGGING.
@@ -183,7 +185,7 @@ public:
 	{}
 
 	// Mutator methods
-	void SetExternalSound(uint8_t Chip) {
+	void SetExternalSound(int Chip) {
 		m_ExternalSound = Chip;
 	}
 
@@ -205,7 +207,7 @@ private:
 	int m_UncaughtExceptions;
 
 	// Mutations.
-	std::optional<uint8_t> m_ExternalSound;
+	std::optional<int> m_ExternalSound;
 	std::optional<float> m_ChipLevels[CHIP_LEVEL_COUNT];
 	std::optional<MixerConfig> m_MixerConfig;
 };

@@ -1460,6 +1460,13 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, '-', pColorInfo->Note);
 						DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, '#', pColorInfo->Note);
 					}
+					else if (pTrackerChannel->GetID() == CHANID_5E01_NOISE) {
+						// Noise
+						char NoiseFreq = (pNoteData->Note - 1 + pNoteData->Octave * 12) & 0x1F;
+						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[(NoiseFreq & 0x10) >> 4], pColorInfo->Note);		// // //
+						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[NoiseFreq & 0x0F], pColorInfo->Note);
+						DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, '#', pColorInfo->Note);
+					}
 					else {
 						// The rest
 						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, NOTES_A[pNoteData->Note - 1], pColorInfo->Note);		// // //
@@ -1764,7 +1771,8 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		m_pDocument->ExpansionEnabled(SNDCHIP_VRC7) * 9 +
 		m_pDocument->ExpansionEnabled(SNDCHIP_S5B) * 8 +
 		m_pDocument->ExpansionEnabled(SNDCHIP_AY8930) * 12 +
-		m_pDocument->ExpansionEnabled(SNDCHIP_SAA1099) * 12);		// // //
+		m_pDocument->ExpansionEnabled(SNDCHIP_SAA1099) * 12 +
+		m_pDocument->ExpansionEnabled(SNDCHIP_5E01) * 8);		// // //
 	int vis_line = 0;
 
 	const auto DrawHeaderFunc = [&] (CString Text) {
@@ -2167,6 +2175,45 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 
 	if (m_pDocument->ExpansionEnabled(SNDCHIP_SAA1099)) {		// // //
 		DrawHeaderFunc(_T("SAA1099 (incomplete)"));		// // //
+		for (int i = 0; i < 4; ++i) {
+			GetRegsFunc(SNDCHIP_SAA1099, [&](int x) { return i * 8 + x; }, 8);
+			text.Format(_T("$%02X:"), i * 8);
+			DrawRegFunc(text, 8);
+		}
+
+	}
+
+	if (m_pDocument->ExpansionEnabled(SNDCHIP_5E01)) {		// // //
+		DrawHeaderFunc(_T("5E01"));		// // //
+		for (int i = 0; i < 4; ++i) {
+			GetRegsFunc(SNDCHIP_5E01, [&](int x) { return 0x4100 + i * 4 + x; }, 4);
+			text.Format(_T("$%02X:"), 0x4000 + i * 4);
+			DrawRegFunc(text, 4);
+
+			int period, vol;
+			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
+
+			LPCTSTR waveNames[4] = { _T("tri"),_T("saw"),_T("squ"),_T("sin") };
+
+			switch (i) {
+			case 0: case 1:
+				period = reg[2] | ((reg[3] & 7) << 8);
+				vol = reg[0] & 0x0F;
+				text.Format(_T("%s, vol = %02i, duty = %i"), GetPitchTextFunc(3, period, freq), vol, reg[0] >> 6); break;
+			case 2:
+				period = reg[2] | ((reg[3] & 7) << 8);
+				vol = reg[0] ? 15 : 0;
+				text.Format(_T("%s, shape = %i (%s)"), GetPitchTextFunc(3, period, freq), reg[1], waveNames[reg[1]]); break;
+			case 3:
+				period = reg[2] & 0x1F;
+				vol = reg[0] & 0x0F;
+				text.Format(_T("pitch = $%02X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
+				period = (period << 4) | ((reg[2] & 0x80) >> 4);
+				freq /= 32; break; // for display
+			}
+			DrawTextFunc(180, text);
+			DrawVolFunc(freq, vol << 4);
+		}
 
 	}
 
@@ -4043,7 +4090,7 @@ void CPatternEditor::GetSelectionAsText(CString &str) const		// // //
 		line.AppendFormat(_T("ROW %0*X"), HexLength, Row++);
 		for (int i = it.first.m_iChannel; i <= it.second.m_iChannel; ++i) {
 			it.first.Get(i, &NoteData);
-			CString Row = CTextExport::ExportCellText(NoteData, m_pDocument->GetEffColumns(Track, i) + 1, i == CHANID_NOISE);
+			CString Row = CTextExport::ExportCellText(NoteData, m_pDocument->GetEffColumns(Track, i) + 1, i == CHANID_NOISE || i == CHANID_5E01_NOISE);
 			if (i == it.first.m_iChannel) for (unsigned c = 0; c < BegCol; ++c)
 				for (int j = 0; j < COLUMN_CHAR_LEN[c]; ++j) Row.SetAt(COLUMN_CHAR_POS[c] + j, ' ');
 			if (i == it.second.m_iChannel && EndCol < COLUMN_EFF4)

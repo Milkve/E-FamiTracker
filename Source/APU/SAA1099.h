@@ -35,12 +35,11 @@ public:
 
 	CSAA1099Channel(CMixer *pMixer, uint8_t ID);
 	
-	void Process(uint32_t Time);
-	void RunEnvelope(uint32_t Time);
+	void Process(uint32_t Time, uint8_t& m_iEnvelopeALevel, uint8_t& m_iEnvelopeBLevel);
 	void Reset();
 
 	uint32_t GetTime();
-	void Output(uint32_t Noise);
+	void Output(uint32_t Noise, uint8_t LevelA, uint8_t LevelB);
 
 	double GetFrequency() const;
 
@@ -56,10 +55,7 @@ private:
 	bool m_bSquareDisable;
 	bool m_bNoiseDisable;
 
-	uint32_t m_iEnvelopePeriod;
-	uint32_t m_iEnvelopeClock;
-	char m_iEnvelopeLevel;
-	char m_iEnvelopeShape;
+
 	bool m_bEnvelopeHold;
 };
 
@@ -98,5 +94,15 @@ private:
 
 	uint32_t m_iNoiseANDMask;
 	uint32_t m_iNoiseORMask;
+
+
+	uint8_t m_iEnvelopeAMode;
+	uint8_t m_iEnvelopeABits;
+	uint8_t m_iEnvelopeAEnable;
+	uint8_t m_iEnvelopeALevel;
+	uint8_t m_iEnvelopeBMode;
+	uint8_t m_iEnvelopeBBits;
+	uint8_t m_iEnvelopeBEnable;
+	uint8_t m_iEnvelopeBLevel;
 
 };

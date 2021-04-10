@@ -2191,7 +2191,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 			DrawRegFunc(text, 4);
 
 			int period, vol;
-			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
+			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_5E01, i);		// // //
 
 			LPCTSTR waveNames[4] = { _T("tri"),_T("saw"),_T("squ"),_T("sin") };
 

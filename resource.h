@@ -627,6 +627,10 @@
 #define IDC_EXPANSION_AY8930            1494
 #define IDC_EXPANSION_SAA1099           1495
 #define IDC_EXPANSION_5E01              1496
+
+#define IDC_SOUNDCHIPS                  4001
+#define IDD_CHIPS                       4002
+
 #define IDS_FIND_BEGIN                  9001
 #define IDS_FIND_END                    9002
 #define ID_TRACKER_PLAY                 32771

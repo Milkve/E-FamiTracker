@@ -269,6 +269,7 @@ int CChannelHandlerAY8930::ConvertDuty(int Duty)		// // //
 void CChannelHandlerAY8930::ClearRegisters()
 {
 	WriteReg(8 + m_iChannelID - CHANID_AY8930_CH1, 0);		// Clear volume
+	WriteReg(0x16 + m_iChannelID - CHANID_AY8930_CH1, 0); // Clear duty
 }
 
 CString CChannelHandlerAY8930::GetCustomEffectString() const		// // //

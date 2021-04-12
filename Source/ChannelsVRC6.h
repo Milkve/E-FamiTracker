@@ -51,7 +51,7 @@ public:
 protected:
 	static const char MAX_DUTY;		// TODO remove class constant, move to .cpp file
 
-	int		ConvertDuty(int Duty) const override;		// // //
+	int		ConvertDuty(int Duty) override;		// // //
 };
 
 class CVRC6Sawtooth : public CChannelHandlerVRC6 {

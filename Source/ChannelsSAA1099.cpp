@@ -88,7 +88,7 @@ CChannelHandlerSAA1099::CChannelHandlerSAA1099() :
   m_iEnvType(0),		// // // 050B
 	m_bUpdate(false)
 {
-	m_iDefaultDuty = S5B_MODE_SQUARE;		// // //
+	m_iDefaultDuty = AY8930_MODE_SQUARE;		// // //
 	s_iDefaultNoise = 0;		// // //
 }
 
@@ -229,11 +229,11 @@ int CChannelHandlerSAA1099::CalculateVolume() const		// // //
 	return LimitVolume((m_iVolume >> VOL_COLUMN_SHIFT) - GetTremolo() + m_iInstVolume - 15);
 }
 
-int CChannelHandlerSAA1099::ConvertDuty(int Duty) const		// // //
+int CChannelHandlerSAA1099::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_2A03: case INST_VRC6: case INST_N163:
-		return S5B_MODE_SQUARE;
+		return AY8930_MODE_SQUARE;
 	default:
 		return Duty;
 	}

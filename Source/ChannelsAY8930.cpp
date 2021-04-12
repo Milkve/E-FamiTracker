@@ -218,7 +218,7 @@ bool CChannelHandlerAY8930::CreateInstHandler(inst_type_t Type)
 		switch (m_iInstTypeCurrent) {
 		case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS: break;
 		default:
-			m_pInstHandler.reset(new CSeqInstHandlerS5B(this, 0x1F, 0x1F, Type == INST_S5B ? 0x40 : 0));
+			m_pInstHandler.reset(new CSeqInstHandlerS5B(this, 0x1F, 0x1F, Type == INST_S5B ? 0x40 : 0x08));
 			return true;
 		}
 	}
@@ -256,7 +256,7 @@ int CChannelHandlerAY8930::CalculateVolume() const		// // //
 	return LimitVolume((((m_iVolume >> VOL_COLUMN_SHIFT) - GetTremolo())*2 + m_iInstVolume - 31) | m_iExVolume);
 }
 
-int CChannelHandlerAY8930::ConvertDuty(int Duty) const		// // //
+int CChannelHandlerAY8930::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_2A03: case INST_VRC6: case INST_N163:
@@ -339,5 +339,13 @@ void CChannelHandlerAY8930::SetNoiseFreq(int Pitch)		// // //
 
 void CChannelHandlerAY8930::SetExtra(int Value)		// // //
 {
-	m_iPulseWidth = Value;
+
+	switch (m_iInstTypeCurrent) {
+	case INST_2A03:
+		m_iPulseWidth = DUTY_AY8930_FROM_2A03[Value & 0x03];
+		break;
+	case INST_VRC6:
+		m_iPulseWidth = DUTY_AY8930_FROM_VRC6[Value & 0x07];
+		break;
+	}
 }

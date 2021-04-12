@@ -50,7 +50,7 @@ protected:
 	void	HandleNote(int Note, int Octave) override;
 	bool	CreateInstHandler(inst_type_t Type) override;		// // //
 	void	SetupSlide() override;		// // //
-	int		ConvertDuty(int Duty) const override;		// // //
+	int		ConvertDuty(int Duty) override;		// // //
 	void	ClearRegisters() override;
 	int		CalculatePeriod(bool MultiplyByHarmonic = true) const override;		// // //
 	CString	GetSlideEffectString() const override;		// // //

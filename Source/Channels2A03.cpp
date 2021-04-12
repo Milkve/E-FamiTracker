@@ -198,7 +198,7 @@ void C2A03Square::SetChannelID(int ID)		// // //
 	m_iChannel = ID - CHANID_SQUARE1;
 }
 
-int C2A03Square::ConvertDuty(int Duty) const		// // //
+int C2A03Square::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_VRC6:	return DUTY_2A03_FROM_VRC6[Duty & 0x07];

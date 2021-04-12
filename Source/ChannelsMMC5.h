@@ -41,7 +41,7 @@ protected:
 	void	HandleCut() override;
 	void	HandleRelease() override;
 	bool	CreateInstHandler(inst_type_t Type) override;		// // //
-	int		ConvertDuty(int Duty) const override;		// // //
+	int		ConvertDuty(int Duty) override;		// // //
 	void	ClearRegisters() override;
 	CString	GetCustomEffectString() const override;		// // //
 

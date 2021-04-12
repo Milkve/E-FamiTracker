@@ -241,7 +241,7 @@ int CChannelHandlerS5B::CalculateVolume() const		// // //
 	return LimitVolume((m_iVolume >> VOL_COLUMN_SHIFT) + m_iInstVolume - 15 - GetTremolo());
 }
 
-int CChannelHandlerS5B::ConvertDuty(int Duty) const		// // //
+int CChannelHandlerS5B::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_2A03: case INST_VRC6: case INST_N163:

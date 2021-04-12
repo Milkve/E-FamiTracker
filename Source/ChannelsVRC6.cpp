@@ -138,7 +138,7 @@ void CVRC6Square::RefreshChannel()
 	WriteRegister(Address + 2, 0x80 | LoFreq);
 }
 
-int CVRC6Square::ConvertDuty(int Duty) const		// // //
+int CVRC6Square::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_2A03:	return DUTY_VRC6_FROM_2A03[Duty & 0x03];

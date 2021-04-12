@@ -57,7 +57,7 @@ public:
 protected:
 	static const char MAX_DUTY;
 
-	int		ConvertDuty(int Duty) const override;		// // //
+	int		ConvertDuty(int Duty) override;		// // //
 	void	ClearRegisters() override;
 
 	void	HandleNoteData(stChanNote *pNoteData, int EffColumns) override;

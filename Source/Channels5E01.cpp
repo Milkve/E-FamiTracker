@@ -197,7 +197,7 @@ void C5E01Square::SetChannelID(int ID)		// // //
 	m_iChannel = ID - CHANID_5E01_SQUARE1;
 }
 
-int C5E01Square::ConvertDuty(int Duty) const		// // //
+int C5E01Square::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_VRC6:	return DUTY_5E01_FROM_VRC6[Duty & 0x07];

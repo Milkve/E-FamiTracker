@@ -44,7 +44,7 @@ protected:
 	bool	CreateInstHandler(inst_type_t Type) override;		// // //
 	
 	int		CalculateVolume() const override;		// // //
-	int		ConvertDuty(int Duty) const override;		// // //
+	int		ConvertDuty(int Duty) override;		// // //
 	void	ClearRegisters() override;
 	CString	GetCustomEffectString() const override;		// // //
 

@@ -35,6 +35,9 @@ bool CSeqInstHandlerS5B::ProcessSequence(int Index, unsigned Setting, int Value)
 			if (Value & S5B_MODE_NOISE) {
 				pChan->SetNoiseFreq(Value & 0x1F);
 			}
+
+			m_pInterface->SetExtra(Value);
+			
 			
 			return true;
 			

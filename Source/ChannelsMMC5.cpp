@@ -149,7 +149,7 @@ void CChannelHandlerMMC5::RefreshChannel()		// // //
 	m_bResetEnvelope = false;
 }
 
-int CChannelHandlerMMC5::ConvertDuty(int Duty) const		// // //
+int CChannelHandlerMMC5::ConvertDuty(int Duty)		// // //
 {
 	switch (m_iInstTypeCurrent) {
 	case INST_VRC6:	return DUTY_2A03_FROM_VRC6[Duty & 0x07];

@@ -162,36 +162,10 @@ void CDetuneN163::SetChannelCount(unsigned Count) // special
 	m_iChannelCount = Count;
 }
 
-
 CDetuneS5B::CDetuneS5B() :
 	CDetuneTable(DETUNE_S5B, 0, 0xFFF)
 {
-	SetGenerator([](double x) { return BASE_FREQ_NTSC / 16. / x; });
-	SetFrequencyFunc([](double x) { return BASE_FREQ_NTSC / 16. / x; });
-	GenerateRegisters();
-}
-
-
-CDetuneAY8930::CDetuneAY8930() :
-	CDetuneTable(DETUNE_AY8930, 0, 0xFFFF)
-{
 	SetGenerator([] (double x) { return BASE_FREQ_NTSC / 16. / x; });
 	SetFrequencyFunc([] (double x) { return BASE_FREQ_NTSC / 16. / x; });
-	GenerateRegisters();
-}
-
-CDetuneSAA1099::CDetuneSAA1099() :
-	CDetuneTable(DETUNE_SAA1099, 0, 0xFFFF)
-{
-	SetGenerator([](double x) { return BASE_FREQ_NTSC / 16. / x; });
-	SetFrequencyFunc([](double x) { return BASE_FREQ_NTSC / 16. / x; });
-	GenerateRegisters();
-}
-
-CDetune5E01::CDetune5E01() :
-	CDetuneTable(DETUNE_5E01, 0, 0xFFFF)
-{
-	SetGenerator([](double x) { return BASE_FREQ_NTSC / 16. / x; });
-	SetFrequencyFunc([](double x) { return BASE_FREQ_NTSC / 16. / x; });
 	GenerateRegisters();
 }

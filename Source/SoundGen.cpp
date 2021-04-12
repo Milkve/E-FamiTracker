@@ -420,7 +420,6 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 		Pitch = (clock_ntsc / Freq) - 0.5;
 		m_iNoteLookupTableNTSC[i] = (unsigned int)(Pitch - pDocument->GetDetuneOffset(0, i));		// // //
 		m_iNoteLookupTableS5B[i] = m_iNoteLookupTableNTSC[i] + 1;		// correction
-		m_iNoteLookupTableAY8930[i] = m_iNoteLookupTableNTSC[i] + 1;		// correction
 
 		// VRC6 Saw
 		Pitch = ((clock_ntsc * 16.0) / (Freq * 14.0)) - 0.5;
@@ -474,7 +473,7 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 		case CHANID_S5B_CH1: case CHANID_S5B_CH2: case CHANID_S5B_CH3:
 			Table = m_iNoteLookupTableS5B; break;
 		case CHANID_AY8930_CH1: case CHANID_AY8930_CH2: case CHANID_AY8930_CH3:
-			Table = m_iNoteLookupTableAY8930; break;
+			Table = m_iNoteLookupTableS5B; break;
 		case CHANID_SAA1099_CH1: case CHANID_SAA1099_CH2: case CHANID_SAA1099_CH3:
 		case CHANID_SAA1099_CH4: case CHANID_SAA1099_CH5: case CHANID_SAA1099_CH6:
 			Table = m_iNoteLookupTableNTSC; break;
@@ -1069,8 +1068,6 @@ int CSoundGen::ReadPeriodTable(int Index, int Table) const		// // //
 	case CDetuneTable::DETUNE_FDS:  return m_iNoteLookupTableFDS[Index]; break;
 	case CDetuneTable::DETUNE_N163: return m_iNoteLookupTableN163[Index]; break;
 	case CDetuneTable::DETUNE_S5B:  return m_iNoteLookupTableNTSC[Index] + 1; break;
-	case CDetuneTable::DETUNE_AY8930:  return m_iNoteLookupTableNTSC[Index] + 1; break;
-	case CDetuneTable::DETUNE_SAA1099:  return m_iNoteLookupTableNTSC[Index] + 1; break;
 	default:
 		AfxDebugBreak(); return m_iNoteLookupTableNTSC[Index];
 	}

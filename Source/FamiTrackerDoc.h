@@ -542,7 +542,8 @@ private:
 	//
 
 	// Thread synchronization
-private:
+//private:
+public:
 	mutable CMutex			 m_csDocumentLock;
 
 // Operations

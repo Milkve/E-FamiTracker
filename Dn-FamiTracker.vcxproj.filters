@@ -774,6 +774,9 @@
     <ClCompile Include="Source\Channels5E01.cpp">
       <Filter>Source Files\Sound Driver\Channels</Filter>
     </ClCompile>
+    <ClCompile Include="ScaleEditorDlg.cpp">
+      <Filter>Source Files\Dialog Boxes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Exception.h">
@@ -1546,6 +1549,9 @@
     </ClInclude>
     <ClInclude Include="Source\Channels5E01.h">
       <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleEditorDlg.h">
+      <Filter>Header Files\Dialog Boxes Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

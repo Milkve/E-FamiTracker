@@ -31,6 +31,7 @@
 #include "CreateWaveDlg.h"
 #include "InstrumentEditDlg.h"
 #include "ModulePropertiesDlg.h"
+#include "ScaleEditorDlg.h"
 #include "ChannelsDlg.h"
 #include "VisualizerWnd.h"
 #include "TextExporter.h"
@@ -221,6 +222,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_TRACKER_KILLSOUND, OnTrackerKillsound)
 	ON_COMMAND(ID_TRACKER_SWITCHTOTRACKINSTRUMENT, OnTrackerSwitchToInstrument)
 	// // //
+	ON_COMMAND(ID_TRACKER_SCALEEDITOR, OnTrackerScaleEditor)
 	ON_COMMAND(ID_TRACKER_DISPLAYREGISTERSTATE, OnTrackerDisplayRegisterState)
 	ON_COMMAND(ID_VIEW_CONTROLPANEL, OnViewControlpanel)
 	ON_COMMAND(ID_HELP, CFrameWnd::OnHelp)
@@ -2210,6 +2212,13 @@ void CMainFrame::OnUpdateTrackerSwitchToInstrument(CCmdUI *pCmdUI)
 {
 	CFamiTrackerView *pView	= static_cast<CFamiTrackerView*>(GetActiveView());
 	pCmdUI->SetCheck(pView->SwitchToInstrument() ? 1 : 0);
+}
+
+void CMainFrame::OnTrackerScaleEditor()
+{
+	// Display module properties dialog
+	CScaleEditorDlg propertiesDlg;
+	propertiesDlg.DoModal();
 }
 
 void CMainFrame::OnModuleModuleproperties()

@@ -126,6 +126,7 @@ const std::vector<stAccelEntry> CAccelerator::DEFAULT_TABLE {
 	{_T("Find previous"),				MOD_NONE,		0,				ID_FIND_PREVIOUS},					// // //
 	{_T("Recall channel state"),		MOD_NONE,		0,				ID_RECALL_CHANNEL_STATE},			// // //
 	{_T("Compact View"),				MOD_NONE,		0,				IDC_COMPACT_TOGGLE},				// // //
+	{_T("Remove frame"),				MOD_NONE,		0,				ID_TRACKER_SCALEEDITOR},
 };
 
 const int CAccelerator::ACCEL_COUNT = DEFAULT_TABLE.size();

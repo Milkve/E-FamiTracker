@@ -1321,11 +1321,11 @@ static const int HEIGHT_OFFSET = 6;
 void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Channel, bool bInvert, stChanNote *pNoteData, RowColorInfo_t *pColorInfo) const
 {
 	// Sharps
-	static const char NOTES_A_SHARP[] = {'C', 'C', 'D', 'D', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'};
-	static const char NOTES_B_SHARP[] = {'-', '#', '-', '#', '-', '-', '#', '-', '#', '-', '#', '-'};
+	//static const char NOTES_A_SHARP[] = {'C', 'C', 'D', 'D', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'};
+	//static const char NOTES_B_SHARP[] = {'-', '#', '-', '#', '-', '-', '#', '-', '#', '-', '#', '-'};
 	// Flats
-	static const char NOTES_A_FLAT[] = {'C', 'D', 'D', 'E', 'E', 'F', 'G', 'G', 'A', 'A', 'B', 'B'};
-	static const char NOTES_B_FLAT[] = {'-', 'b', '-', 'b', '-', '-', 'b', '-', 'b', '-', 'b', '-'};
+	//static const char NOTES_A_FLAT[] = {'C', 'D', 'D', 'E', 'E', 'F', 'G', 'G', 'A', 'A', 'B', 'B'};
+	//static const char NOTES_B_FLAT[] = {'-', 'b', '-', 'b', '-', '-', 'b', '-', 'b', '-', 'b', '-'};
 	// Octaves
 	static const char NOTES_C[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	// Hex numbers
@@ -1333,8 +1333,21 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 
 	const bool m_bDisplayFlat = theApp.GetSettings()->Appearance.bDisplayFlats;		// // //
 
-	const char *NOTES_A = m_bDisplayFlat ? NOTES_A_FLAT : NOTES_A_SHARP;
-	const char *NOTES_B = m_bDisplayFlat ? NOTES_B_FLAT : NOTES_B_SHARP;
+	char NOTES_A[] = {'C', 'C', 'D', 'D', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'};
+	char NOTES_B[] = {'-', '#', '-', '#', '-', '-', '#', '-', '#', '-', '#', '-'};
+	
+	NOTES_A[1]  = m_pDocument->GetFlat(1) ? 'D' : 'C';
+	NOTES_B[1]  = m_pDocument->GetFlat(1) ? 'b' : '#';
+	NOTES_A[3]  = m_pDocument->GetFlat(2) ? 'E' : 'D';
+	NOTES_B[3]  = m_pDocument->GetFlat(2) ? 'b' : '#';
+	NOTES_A[6]  = m_pDocument->GetFlat(3) ? 'G' : 'F';
+	NOTES_B[6]  = m_pDocument->GetFlat(3) ? 'b' : '#';
+	NOTES_A[8]  = m_pDocument->GetFlat(4) ? 'A' : 'G';
+	NOTES_B[8]  = m_pDocument->GetFlat(4) ? 'b' : '#';
+	NOTES_A[10] = m_pDocument->GetFlat(0) ? 'B' : 'A';
+	NOTES_B[10] = m_pDocument->GetFlat(0) ? 'b' : '#';
+
+
 
 	const CTrackerChannel *pTrackerChannel = m_pDocument->GetChannel(Channel);
 
@@ -1720,13 +1733,14 @@ static double NoteFromFreq(double Freq)
 	return 45.0 + 12.0 * (std::log(Freq / 440.0) / log(2.0));
 }
 
-static CString NoteToStr(int Note)
+static CString NoteToStr(int Note, bool Flat)
 {
 	int Octave = GET_OCTAVE(Note) + 1;		// // //
 	int Index = GET_NOTE(Note) - 1;
 
 	CString str;
-	if (theApp.GetSettings()->Appearance.bDisplayFlats)
+
+	if (Flat)
 		str = stChanNote::NOTE_NAME_FLAT[Index];
 	else
 		str = stChanNote::NOTE_NAME[Index];
@@ -1826,7 +1840,18 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		}
 	};
 
-	const auto GetPitchTextFunc = [] (int digits, int period, double freq) {
+
+
+	bool Flats[] = {
+		false, m_pDocument->GetFlat(1),
+		false, m_pDocument->GetFlat(2),
+		false,
+		false, m_pDocument->GetFlat(3),
+		false, m_pDocument->GetFlat(4),
+		false, m_pDocument->GetFlat(0)
+	};
+
+	const auto GetPitchTextFunc = [&] (int digits, int period, double freq) {
 		const CString fmt = _T("pitch = $%0*X (%7.2fHz %s %+03i)");
 		const double note = NoteFromFreq(freq);
 		const int note_conv = note >= 0 ? int(note + 0.5) : int(note - 0.5);
@@ -1834,7 +1859,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		
 		CString str;
 		if (freq != 0.)
-			str.Format(fmt, digits, period, freq, NoteToStr(note_conv), cents);
+			str.Format(fmt, digits, period, freq, NoteToStr(note_conv, Flats[GET_NOTE(note_conv) - 1]), cents);
 		else
 			str.Format(fmt, digits, period, 0., _T("---"), 0);
 		return str;

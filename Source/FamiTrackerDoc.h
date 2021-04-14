@@ -215,6 +215,9 @@ public:
 	int				GetNamcoChannels() const;
 	void			SetNamcoChannels(int Channels, bool Move = false);		// // //
 
+	void			SetFlat(char index, bool value); // // //
+	bool      GetFlat(char index); // // //
+
 	// Todo: remove this, use getchannelcount instead
 	unsigned int	GetAvailableChannels()	const { return m_iChannelsAvailable; };
 
@@ -519,6 +522,10 @@ private:
 	unsigned int	m_iSpeedSplitPoint;							// Speed/tempo split-point
 	int				m_iDetuneTable[6][96];						// // // Detune tables
 	int				m_iDetuneSemitone, m_iDetuneCent;			// // // 050B tuning
+
+
+	bool	m_iFlats[5];
+
 
 	// NSF info
 	char			m_strName[32];								// Song name

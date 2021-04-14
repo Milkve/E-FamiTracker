@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Dn-FamiTracker.rc
+// Used by E-FamiTracker.rc
 //
 #define ID_MANIFEST                     1
 #define IDAPPLY                         3
@@ -219,6 +219,7 @@
 #define IDR_HTML1                       361
 #define IDD_VERSION_CHECKER             369
 #define IDB_ABOUT                       376
+#define IDD_SCALE_EDITOR                377
 #define IDC_INSTRUMENTS                 1001
 #define IDC_INSTSETTINGS                1002
 #define IDC_IMPORT_DETUNE               1002
@@ -614,6 +615,7 @@
 #define IDC_IDLE_REFRESH_T              1476
 #define IDC_COMBO1                      1478
 #define IDC_COMBO_FDS_EMULATOR          1478
+#define IDC_SCALE_KEY                   1478
 #define IDC_CHECK1                      1482
 #define IDC_N163_MULTIPLEXER            1482
 #define IDC_UPDATE_REMIND               1482
@@ -627,10 +629,20 @@
 #define IDC_EXPANSION_AY8930            1494
 #define IDC_EXPANSION_SAA1099           1495
 #define IDC_EXPANSION_5E01              1496
-
+#define IDC_SCALE_TEXT_AB               1501
+#define IDC_SCALE_TEXT_CD               1502
+#define IDC_SCALE_BUTTON_AB             1503
+#define IDC_SCALE_BUTTON_CD             1504
+#define IDC_SCALE_BUTTON_DE             1505
+#define IDC_SCALE_TEXT_DE               1506
+#define IDC_SCALE_BUTTON_FG             1507
+#define IDC_SCALE_BUTTON_GA             1508
+#define IDC_SCALE_TEXT_FG               1509
+#define IDC_SCALE_TEXT_GA               1510
+#define IDC_SCALE_SCALE                 1511
+#define IDC_CHECK3                      1516
 #define IDC_SOUNDCHIPS                  4001
 #define IDD_CHIPS                       4002
-
 #define IDS_FIND_BEGIN                  9001
 #define IDS_FIND_END                    9002
 #define ID_TRACKER_PLAY                 32771
@@ -779,6 +791,7 @@
 #define ID_CONTROLPANEL_LEFT            33212
 #define ID_CONTROLPANEL_RIGHT           33213
 #define ID_CONTROLPANEL_POPUP           33214
+#define ID_TRACKER_SCALEEDITOR          33215
 #define ID_INSTRUMENT_ADD_2A03          36864
 #define ID_INSTRUMENT_ADD_FDS           36865
 #define ID_INSTRUMENT_ADD_MMC5          36866
@@ -804,9 +817,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        377
+#define _APS_NEXT_RESOURCE_VALUE        381
 #define _APS_NEXT_COMMAND_VALUE         33215
-#define _APS_NEXT_CONTROL_VALUE         1495
+#define _APS_NEXT_CONTROL_VALUE         1516
 #define _APS_NEXT_SYMED_VALUE           179
 #endif
 #endif

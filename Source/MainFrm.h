@@ -325,6 +325,7 @@ public:
 	afx_msg void OnPrevSong();
 	afx_msg void OnTrackerSwitchToInstrument();
 	afx_msg void OnUpdateTrackerSwitchToInstrument(CCmdUI *pCmdUI);
+	afx_msg void OnTrackerScaleEditor();
 	afx_msg void OnClickedFollow();
 	afx_msg void OnToggleFollow();
 	afx_msg void OnViewControlpanel();

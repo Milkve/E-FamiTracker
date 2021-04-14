@@ -198,7 +198,8 @@ CFamiTrackerDoc::CFamiTrackerDoc() :
 	m_pBookmarkManager(new CBookmarkManager(MAX_TRACKS))
 {
 	// Initialize document object
-
+	for (int i = 0; i < 5; i++)
+		m_iFlats[i] = 0;
 	ResetDetuneTables();		// // //
 
 	// Clear pointer arrays
@@ -470,6 +471,9 @@ void CFamiTrackerDoc::CreateEmpty()
 
 	m_iNamcoChannels = 0;		// // //
 
+	for (int i = 0; i < 5; i++)
+		m_iFlats[i] = 0;
+
 	// and select 2A03 only
 	SelectExpansionChip(SNDCHIP_NONE);
 
@@ -734,7 +738,7 @@ bool CFamiTrackerDoc::WriteBlocks(CDocumentFile *pDocFile) const
 		7, 1, 3, 6, 6, 3, 4, 1, 1,
 #endif
 		6, 1, 1,					// expansion
-		2, 1, 1, 1,					// 0cc-ft
+		3, 1, 1, 1,					// 0cc-ft
 		1							// json
 	};
 
@@ -2609,16 +2613,27 @@ void CFamiTrackerDoc::ReadBlock_ParamsExtra(CDocumentFile *pDocFile, const int V
 		m_iDetuneSemitone = AssertRange(pDocFile->GetBlockChar(), -12, 12, "Global semitone tuning");
 		m_iDetuneCent = AssertRange(pDocFile->GetBlockChar(), -100, 100, "Global cent tuning");
 	}
+	if (Version >= 3) {
+		unsigned char Flats = AssertRange(pDocFile->GetBlockChar(), 0, 31, "Sharps and flats");
+		for (char i = 0; i < 5; i++)
+			m_iFlats[i] = (bool)((Flats >> i) & 0x1);
+	}
 }
 
 bool CFamiTrackerDoc::WriteBlock_ParamsExtra(CDocumentFile *pDocFile, const int Version) const
 {
-	if (!m_bLinearPitch && !m_iDetuneSemitone && !m_iDetuneCent) return true;
+	//if (!m_bLinearPitch && !m_iDetuneSemitone && !m_iDetuneCent) return true;
 	pDocFile->CreateBlock(FILE_BLOCK_PARAMS_EXTRA, Version);
 	pDocFile->WriteBlockInt(m_bLinearPitch);
 	if (Version >= 2) {
 		pDocFile->WriteBlockChar(m_iDetuneSemitone);
 		pDocFile->WriteBlockChar(m_iDetuneCent);
+	}
+	if (Version >= 3) {
+		unsigned char Flats = 0;
+		for (char i = 0; i < 5; i++)
+			Flats = (Flats << 1) | (char)(m_iFlats[i]);
+		pDocFile->WriteBlockChar(Flats);
 	}
 	return pDocFile->FlushBlock();
 }
@@ -4117,6 +4132,18 @@ int CFamiTrackerDoc::GetNamcoChannels() const
 	if (!ExpansionEnabled(SNDCHIP_N163)) return 0;		// // //
 	return m_iNamcoChannels;
 }
+
+
+void CFamiTrackerDoc::SetFlat(char index, bool value)
+{
+	m_iFlats[index] = value;
+}
+
+bool CFamiTrackerDoc::GetFlat(char index)
+{
+	return m_iFlats[index];
+}
+
 
 void CFamiTrackerDoc::ConvertSequence(stSequence *pOldSequence, CSequence *pNewSequence, int Type)
 {

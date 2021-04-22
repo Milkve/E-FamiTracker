@@ -114,6 +114,8 @@ enum command_t {
 	CMD_EFF_AY8930_OR_MASK,			// // // 050B
 	CMD_EFF_AY8930_VOL,			// // // 050B
 
+	CMD_EFF_SAA_NOISE_MODE,
+
 	CMD_EFF_PWM,
 	CMD_EFF_VOLUME_OFFSET,
 };
@@ -659,6 +661,12 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					if (ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_AY8930_VOL));
 						WriteData(EffParam & 0x01);
+					}
+					break;
+				case EF_SAA_NOISE_MODE:		// // // 050B
+					if (ChipID == SNDCHIP_SAA1099) {
+						WriteData(Command(CMD_EFF_SAA_NOISE_MODE));
+						WriteData(EffParam & 0x03);
 					}
 					break;
 				// // // N163

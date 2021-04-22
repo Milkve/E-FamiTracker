@@ -124,6 +124,7 @@ const CString EFFECT_TEXTS[] = {		// // //
 	_T("Kxx - Multiply frequency by XX, does not affect FDS Ixy modulator"),
 	_T("Nxx - PWM (incomplete)"),
 	_T("9xy - Volume shift, X = amount to increase, Y = amount to decrease"),
+	_T("Wxx - SAA1099 noise mode, 00-02 = pitch, 03 = frequency generator"),
 };
 
 // OLE copy and mix
@@ -1205,7 +1206,9 @@ void CFamiTrackerView::OnTrackerPlayrow()
 	for (int i = 0; i < Channels; ++i) {
 		stChanNote Note;
 		pDoc->GetNoteData(Track, Frame, i, Row, &Note);
-		if (!m_bMuteChannels[i])
+		if (m_bMuteChannels[i]) // E-FT Experiment
+			Note.Vol = 0;
+		if (!(m_bMuteChannels[i] && i == CHANID_DPCM))
 			theApp.GetSoundGenerator()->QueueNote(i, Note, NOTE_PRIO_1);
 	}
 
@@ -1563,8 +1566,20 @@ bool CFamiTrackerView::PlayerGetNote(int Track, int Frame, int Channel, int Row,
 	bool ValidCommand = false;
 
 	pDoc->GetNoteData(Track, Frame, Channel, Row, &NoteData);
-	
-	if (!IsChannelMuted(Channel)) {
+
+	bool Play = true;
+	if (IsChannelMuted(Channel)) {
+		NoteData.Vol = 0;
+		if (Channel == CHANID_DPCM)
+			Play = false;
+	}
+	// Let view know what is about to play
+	if (Play) {
+		PlayerPlayNote(Channel, &NoteData);
+		ValidCommand = true;
+	}
+
+	/*if (!IsChannelMuted(Channel)) {
 		// Let view know what is about to play
 		PlayerPlayNote(Channel, &NoteData);
 		ValidCommand = true;
@@ -1589,7 +1604,7 @@ bool CFamiTrackerView::PlayerGetNote(int Track, int Frame, int Channel, int Row,
 			if (Clear)
 				NoteData.EffNumber[j] = EF_NONE;
 		}
-	}
+	}*/
 
 	return ValidCommand;
 }

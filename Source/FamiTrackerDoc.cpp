@@ -164,13 +164,13 @@ std::pair<EffTable, EffTable> MakeEffectConversion(std::initializer_list<std::pa
 static const auto EFF_CONVERSION_050 = MakeEffectConversion({
 //	{EF_SUNSOFT_ENV_LO,		EF_SUNSOFT_ENV_TYPE},
 //	{EF_SUNSOFT_ENV_TYPE,	EF_SUNSOFT_ENV_LO},
-//	{EF_SUNSOFT_NOISE,		EF_NOTE_RELEASE},
+	{EF_SUNSOFT_NOISE,		EF_NOTE_RELEASE},
 	{EF_VRC7_PORT,			EF_GROOVE},
 	{EF_VRC7_WRITE,			EF_TRANSPOSE},
-//	{EF_NOTE_RELEASE,		EF_N163_WAVE_BUFFER},
+	{EF_NOTE_RELEASE,		EF_N163_WAVE_BUFFER},
 	{EF_GROOVE,				EF_FDS_VOLUME},
 	{EF_TRANSPOSE,			EF_FDS_MOD_BIAS},
-//	{EF_N163_WAVE_BUFFER,	EF_SUNSOFT_NOISE},
+	{EF_N163_WAVE_BUFFER,	EF_SUNSOFT_NOISE},
 	{EF_FDS_VOLUME,			EF_VRC7_PORT},
 	{EF_FDS_MOD_BIAS,		EF_VRC7_WRITE},
 });
@@ -1215,7 +1215,7 @@ bool CFamiTrackerDoc::WriteBlock_Patterns(CDocumentFile *pDocFile, const int Ver
 							int EffColumns = (m_pTracks[t]->GetEffectColumnCount(i) + 1);
 
 							for (int n = 0; n < EffColumns; n++) {
-								pDocFile->WriteBlockChar(EFF_CONVERSION_050.second[Note->EffNumber[n]]);		// // // 050B
+								pDocFile->WriteBlockChar(Note->EffNumber[n]);		// // // 050B
 								pDocFile->WriteBlockChar(Note->EffParam[n]);
 							}
 						}
@@ -1503,7 +1503,7 @@ BOOL CFamiTrackerDoc::OpenDocumentOld(CFile *pOpenFile)
 							if (Note->Vol == 0)
 								Note->Vol = MAX_VOLUME;
 							if (Note->EffNumber[0] < EF_COUNT)		// // //
-								Note->EffNumber[0] = EFF_CONVERSION_050.first[Note->EffNumber[0]];
+								Note->EffNumber[0] = Note->EffNumber[0];
 						}
 					}
 				}
@@ -2309,7 +2309,7 @@ void CFamiTrackerDoc::ReadBlock_Patterns(CDocumentFile *pDocFile, const int Vers
 						}
 					}
 				}
-
+				
 				if (m_iFileVersion < 0x450) {		// // // 050B
 					for (auto &x : Note->EffNumber)
 						if (x < EF_COUNT)
@@ -5040,6 +5040,7 @@ stFullState *CFamiTrackerDoc::RetrieveSoundState(unsigned int Track, unsigned in
 				case EF_AY8930_VOL:
 				case EF_N163_WAVE_BUFFER:
 				case EF_VRC7_PORT:
+				case EF_SAA_NOISE_MODE:
 					if (!ch->IsEffectCompatible(fx, xy)) continue;
 				case EF_DUTY_CYCLE:
 					if (ch->GetChip() == SNDCHIP_VRC7) continue;		// // // 050B

@@ -34,12 +34,12 @@ public:
 	friend class CSAA1099;
 
 	CSAA1099Channel(CMixer *pMixer, uint8_t ID);
-	
-	void Process(uint32_t Time, uint8_t& m_iEnvelopeALevel, uint8_t& m_iEnvelopeBLevel);
+
+	void Process(uint32_t Time, uint8_t& m_iEnvelopeALevel, uint8_t m_iEnvelopeABits, uint8_t& m_iEnvelopeBLevel, uint8_t m_iEnvelopeBBits);
 	void Reset();
 
 	uint32_t GetTime();
-	void Output(uint32_t Noise, uint8_t LevelA, uint8_t LevelB);
+	void Output(uint32_t NoiseA, uint32_t NoiseB, uint8_t LevelA, uint8_t LevelB);
 
 	double GetFrequency() const;
 
@@ -47,6 +47,9 @@ private:
 	uint8_t m_iVolume;
 	uint32_t m_iPeriod;
 	uint32_t m_iPeriodClock;
+
+	uint8_t m_iOctave;
+	uint8_t m_iOffset;
 
 	uint8_t m_iDutyCycleCounter;
 	uint8_t m_iDutyCycle;
@@ -77,7 +80,9 @@ public:
 
 private:
 	void	WriteReg(uint8_t Port, uint8_t Value);
-	void  RunNoise(uint32_t Time);
+	void  RunNoiseA(uint32_t Time);
+	void  RunNoiseB(uint32_t Time);
+	uint32_t CalcPeriod(uint8_t m_iOctave, uint8_t m_iOffset);
 
 private:
 	CSAA1099Channel *m_pChannel[6];
@@ -86,14 +91,12 @@ private:
 
 	int m_iCounter;
 
-	uint32_t m_iNoisePeriod;
-	uint32_t m_iNoiseClock;
-	uint32_t m_iNoiseState;
-	uint32_t m_iNoiseValue;
-	uint32_t m_iNoiseLatch;
-
-	uint32_t m_iNoiseANDMask;
-	uint32_t m_iNoiseORMask;
+	uint32_t m_iNoiseAState;
+	uint32_t m_iNoiseAClock;
+	uint8_t  m_iNoiseAMode;
+	uint32_t m_iNoiseBState;
+	uint32_t m_iNoiseBClock;
+	uint8_t  m_iNoiseBMode;
 
 
 	uint8_t m_iEnvelopeAMode;

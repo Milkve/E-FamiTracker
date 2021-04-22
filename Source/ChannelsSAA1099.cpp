@@ -39,10 +39,10 @@ int			  CChannelHandlerSAA1099::s_iModes		= 0;
 int			  CChannelHandlerSAA1099::s_iNoiseFreq = 0;
 int			  CChannelHandlerSAA1099::s_iNoisePrev = -1;
 int			  CChannelHandlerSAA1099::s_iDefaultNoise = 0;		// // //
-int			  CChannelHandlerSAA1099::s_iNoiseANDMask = 0x00;		// // //
-int			  CChannelHandlerSAA1099::s_iNoiseORMask = 0xFF;		// // //
 int			  CChannelHandlerSAA1099::s_iEnvelopeAType = 0x00;		// // //
 int			  CChannelHandlerSAA1099::s_iEnvelopeBType = 0x00;		// // //
+int			  CChannelHandlerSAA1099::s_iNoiseAMode = 0x00;		// // //
+int			  CChannelHandlerSAA1099::s_iNoiseBMode = 0x00;		// // //
 int			  CChannelHandlerSAA1099::s_unused		= 0;		// // // 050B
 
 // Class functions
@@ -72,8 +72,6 @@ void CChannelHandlerSAA1099::UpdateRegs()		// // //
 	if (s_iNoiseFreq != s_iNoisePrev)		// // //
 		WriteReg(0x06, (s_iNoisePrev = s_iNoiseFreq) ^ 0xFF);
 	WriteReg(0x07, s_iModes);
-	WriteReg(0x19, s_iNoiseANDMask);
-	WriteReg(0x1A, s_iNoiseORMask);
 }
 
 // Instance functions
@@ -117,10 +115,18 @@ bool CChannelHandlerSAA1099::HandleEffect(effect_t EffNum, EffParamT EffParam)
 		//m_bEnvelopeEnabled = EffParam != 0;
 		//m_iAutoEnvelopeShift = EffParam >> 4;
 		if (m_iChannelID <= CHANID_SAA1099_CH3) {
-			s_iEnvelopeAType = EffParam;
+			s_iEnvelopeAType = EffParam & 0xF;
 		}
 		else {
-			s_iEnvelopeBType = EffParam;
+			s_iEnvelopeBType = EffParam & 0xF;
+		}
+		break;
+	case EF_SAA_NOISE_MODE: // W
+		if (m_iChannelID <= CHANID_SAA1099_CH3) {
+			s_iNoiseAMode = EffParam & 0x3;
+		}
+		else {
+			s_iNoiseBMode = EffParam & 0x3;
 		}
 		break;
 	//case EF_STEREO:
@@ -163,7 +169,6 @@ void CChannelHandlerSAA1099::HandleNote(int Note, int Octave)		// // //
 		initialized yet (instruments are handled after notes) which is bad.
 	https://docs.google.com/document/d/e/2PACX-1vQ8osh6mm4c4Ay_gVMIJCH8eRB5gBE180Xyeda1T5U6owG7BbKM-yNKVB8azg27HUD9QZ9Vf88crplE/pub
 	*/
-	
 }
 
 void CChannelHandlerSAA1099::HandleEmptyNote()
@@ -209,8 +214,8 @@ void CChannelHandlerSAA1099::ResetChannel()
 
 	m_iDefaultDuty = m_iDutyPeriod = S5B_MODE_SQUARE;
 	s_iDefaultNoise = s_iNoiseFreq = 0;		// // //
-	s_iNoiseORMask = 0x00;		// // //
-	s_iNoiseANDMask = 0x0F;   // // //
+	s_iNoiseAMode = 0x00;
+	s_iNoiseBMode = 0x00;
 	s_iNoisePrev = -1;		// // //
 	m_bEnvelopeEnabled = false;
 	m_iAutoEnvelopeShift = 0;
@@ -263,12 +268,11 @@ void CChannelHandlerSAA1099::RefreshChannel()
 
 	unsigned char Noise = (m_bGate && (m_iDutyPeriod & S5B_MODE_NOISE)) ? 0 : 1;
 	unsigned char Square = (m_bGate && (m_iDutyPeriod & S5B_MODE_SQUARE)) ? 0 : 1;
-	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x10 : 0;
+	unsigned char Envelope = (m_bGate && (m_iDutyPeriod & S5B_MODE_ENVELOPE)) ? 0x80 : 0;
 
 	unsigned int CurrHiPeriod = m_pAPU->GetReg(SNDCHIP_SAA1099, ((m_iChannelID - CHANID_SAA1099_CH1) >> 1) + 0x10);
 	CurrHiPeriod = ((m_iChannelID - CHANID_SAA1099_CH1) & 1) ? ((CurrHiPeriod & 0x0F) | (HiPeriod << 4)) : ((CurrHiPeriod & 0xF0) | HiPeriod);
 
-	unsigned int CurrSquare = m_pAPU->GetReg(SNDCHIP_SAA1099, 0x14);
 	
 
 	WriteReg((m_iChannelID - CHANID_SAA1099_CH1)               , Volume);
@@ -276,11 +280,17 @@ void CChannelHandlerSAA1099::RefreshChannel()
 	WriteReg(((m_iChannelID - CHANID_SAA1099_CH1) >> 1) + 0x10 , CurrHiPeriod);
 
 	int mask = 1 << (m_iChannelID - CHANID_SAA1099_CH1);
+	uint8_t CurrSquare = m_pAPU->GetReg(SNDCHIP_SAA1099, 0x14);
 	WriteReg(0x14, (CurrSquare & ~mask) | (Square << (m_iChannelID - CHANID_SAA1099_CH1)));
 
+	uint8_t CurrNoise = m_pAPU->GetReg(SNDCHIP_SAA1099, 0x15);
+	WriteReg(0x15, (CurrNoise & ~mask) | (Noise << (m_iChannelID - CHANID_SAA1099_CH1)));
+
+	if (m_iChannelID == CHANID_SAA1099_CH3)
+		WriteReg(0x18, ((s_iEnvelopeAType & 0x0F) << 1) | Envelope);
 	if (m_iChannelID == CHANID_SAA1099_CH6) {
-		WriteReg(0x18 , s_iEnvelopeAType);
-		WriteReg(0x19 , s_iEnvelopeBType);
+		WriteReg(0x16, ((s_iNoiseBMode & 0x0F) << 4) | (s_iNoiseAMode & 0x0F));
+		WriteReg(0x19, ((s_iEnvelopeBType & 0x0F) << 1) | Envelope);
 	}
 
 }

@@ -1832,6 +1832,30 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		pDC->TextOut(x + DPI::SX(xOffsNoDPI), y, text);
 	};
 
+
+	// // //
+	const auto DrawChanCompactFunc = [&](CString text, int chanid) {
+		++line; y += LINE_HEIGHT;
+		pDC->SetBkColor(m_colEmptyBg);
+		pDC->SetTextColor(0xFFAFAF);
+		pDC->SetTextAlign(TA_UPDATECP);
+		pDC->MoveTo(x, y);
+
+		auto ChanName = m_pDocument->GetChannel(chanid)->GetShortName();
+		pDC->TextOut(0, 0, ChanName);
+
+		DrawTextFunc(120, text);
+
+	};
+
+	// // //
+	const auto DrawChanWaveform = [&](int chanID) {
+		int PointList[32] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		
+		for (int i=0; i<32; i++)
+			pDC->FillSolidRect(x + 20 + i, y + i, 1, 1, 0xC0C0C0FF);
+	};
+
 	const auto GetRegsFunc = [&] (unsigned Chip, std::function<int(int)> F, int Count) {
 		for (int j = 0; j < Count; j++) {
 			auto pState = pSoundGen->GetRegState(Chip, F(j));		// // //
@@ -1865,51 +1889,105 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		return str;
 	};
 
+	const auto GetPitchTextFuncCompact = [&](int digits, int period, double freq) {
+		const CString fmt = _T("$%0*X (%s %+03i)");
+		const double note = NoteFromFreq(freq);
+		const int note_conv = note >= 0 ? int(note + 0.5) : int(note - 0.5);
+		const int cents = int((note - double(note_conv)) * 100.0);
+
+		CString str;
+		if (freq != 0.)
+			str.Format(fmt, digits, period, NoteToStr(note_conv, Flats[GET_NOTE(note_conv) - 1]), cents);
+		else
+			str.Format(fmt, digits, period, _T("---"), 0);
+		return str;
+	};
+
 	// 2A03
+	
+	
 	DrawHeaderFunc(_T("2A03"));		// // //
 
-	for (int i = 0; i < 5; ++i) {
-		GetRegsFunc(SNDCHIP_NONE, [&] (int x) { return 0x4000 + i * 4 + x; }, 4);
-		text.Format(_T("$%04X:"), 0x4000 + i * 4);		// // //
-		DrawRegFunc(text, 4);
+	bool CompactMode = false;
 
-		int period, vol;
-		double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
-//		pDC->FillSolidRect(x + 200, y, x + 400, y + 18, m_colEmptyBg);
+	if (!CompactMode) {
+		for (int i = 0; i < 5; ++i) {
+			GetRegsFunc(SNDCHIP_NONE, [&](int x) { return 0x4000 + i * 4 + x; }, 4);
+			text.Format(_T("$%04X:"), 0x4000 + i * 4);		// // //
+			DrawRegFunc(text, 4);
 
-		switch (i) {
-		case 0: case 1:
-			period = reg[2] | ((reg[3] & 7) << 8);
-			vol = reg[0] & 0x0F;
-			text.Format(_T("%s, vol = %02i, duty = %i"), GetPitchTextFunc(3, period, freq), vol, reg[0] >> 6); break;
-		case 2:
-			period = reg[2] | ((reg[3] & 7) << 8);
-			vol = reg[0] ? 15 : 0;
-			text.Format(_T("%s"), GetPitchTextFunc(3, period, freq)); break;
-		case 3:
-			period = reg[2] & 0x1F;
-			vol = reg[0] & 0x0F;
-			text.Format(_T("pitch = $%01X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
-			period = (period << 4) | ((reg[2] & 0x80) >> 4);
-			freq /= 32; break; // for display
-		case 4:
-			period = reg[0] & 0x0F;
-			vol = 15 * !pSoundGen->PreviewDone();
-			text.Format(_T("%s, %s, size = %i byte%c"), GetPitchTextFunc(1, period & 0x0F, freq),
-				(reg[0] & 0x40) ? _T("looped") : _T("once"), (reg[3] << 4) | 1, reg[3] ? 's' : ' ');
-			freq /= 16; break; // for display
+			int period, vol;
+			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
+	//		pDC->FillSolidRect(x + 200, y, x + 400, y + 18, m_colEmptyBg);
+
+			switch (i) {
+			case 0: case 1:
+				period = reg[2] | ((reg[3] & 7) << 8);
+				vol = reg[0] & 0x0F;
+				text.Format(_T("%s, vol = %02i, duty = %i"), GetPitchTextFunc(3, period, freq), vol, reg[0] >> 6); break;
+			case 2:
+				period = reg[2] | ((reg[3] & 7) << 8);
+				vol = reg[0] ? 15 : 0;
+				text.Format(_T("%s"), GetPitchTextFunc(3, period, freq)); break;
+			case 3:
+				period = reg[2] & 0x1F;
+				vol = reg[0] & 0x0F;
+				text.Format(_T("pitch = $%01X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
+				period = (period << 4) | ((reg[2] & 0x80) >> 4);
+				freq /= 32; break; // for display
+			case 4:
+				period = reg[0] & 0x0F;
+				vol = 15 * !pSoundGen->PreviewDone();
+				text.Format(_T("%s, %s, size = %i byte%c"), GetPitchTextFunc(1, period & 0x0F, freq),
+					(reg[0] & 0x40) ? _T("looped") : _T("once"), (reg[3] << 4) | 1, reg[3] ? 's' : ' ');
+				freq /= 16; break; // for display
+			}
+			/*
+					pDC->FillSolidRect(250 + i * 30, 0, 20, m_iWinHeight - HEADER_CHAN_HEIGHT, 0);
+					pDC->FillSolidRect(250 + i * 30, (period >> 1), 20, 5, RGB(vol << 4, vol << 4, vol << 4));
+			*/
+			DrawTextFunc(180, text);
+			DrawVolFunc(freq, vol << 4);
 		}
-/*
-		pDC->FillSolidRect(250 + i * 30, 0, 20, m_iWinHeight - HEADER_CHAN_HEIGHT, 0);
-		pDC->FillSolidRect(250 + i * 30, (period >> 1), 20, 5, RGB(vol << 4, vol << 4, vol << 4));
-*/
-		DrawTextFunc(180, text);
-		DrawVolFunc(freq, vol << 4);
-	}
 
-	text.Format(_T("position: %02i, delta = $%02X"), m_DPCMState.SamplePos, m_DPCMState.DeltaCntr);		// // //
-	++line; y += LINE_HEIGHT;		// // //
-	DrawTextFunc(180, text);
+		text.Format(_T("position: %02i, delta = $%02X"), m_DPCMState.SamplePos, m_DPCMState.DeltaCntr);		// // //
+		++line; y += LINE_HEIGHT;		// // //
+		DrawTextFunc(180, text);
+	}
+	else {
+		for (int i = 0; i < 5; ++i) {
+			GetRegsFunc(SNDCHIP_NONE, [&](int x) { return 0x4000 + i * 4 + x; }, 4);
+
+			int period, vol;
+			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);
+
+			switch (i) {
+			case 0: case 1:
+				period = reg[2] | ((reg[3] & 7) << 8);
+				vol = reg[0] & 0x0F;
+				text.Format(_T("pitch=%s, vol=%02i"), GetPitchTextFuncCompact(3, period, freq), vol, reg[0] >> 6); break;
+			case 2:
+				period = reg[2] | ((reg[3] & 7) << 8);
+				vol = reg[0] ? 15 : 0;
+				text.Format(_T("pitch=%s"), GetPitchTextFuncCompact(3, period, freq)); break;
+			case 3:
+				period = reg[2] & 0x1F;
+				vol = reg[0] & 0x0F;
+				text.Format(_T("pitch=$%01X, vol=%02i, mode=%i"), period, vol, reg[2] >> 7);
+				period = (period << 4) | ((reg[2] & 0x80) >> 4);
+				freq /= 32; break; // for display
+			case 4:
+				period = reg[0] & 0x0F;
+				vol = 15 * !pSoundGen->PreviewDone();
+				text.Format(_T("pitch=%s, %s, size=%iB"), GetPitchTextFuncCompact(1, period & 0x0F, freq),
+					(reg[0] & 0x40) ? _T("L") : _T("-"), (reg[3] << 4) | 1);
+				freq /= 16; break; // for display
+			}
+
+			DrawChanCompactFunc(text, i);
+			DrawVolFunc(freq, vol << 4);
+		}
+	}
 
 	if (m_pDocument->ExpansionEnabled(SNDCHIP_VRC6)) {
 		DrawHeaderFunc(_T("VRC6"));		// // //
@@ -2014,10 +2092,6 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 	if (m_pDocument->ExpansionEnabled(SNDCHIP_FDS)) {
 		DrawHeaderFunc(_T("FDS"));		// // //
 		
-
-		//////////////
-
-
 		const int wave_x = x + DPI::SX(180);
 
 		// // // FDS wave
@@ -2041,9 +2115,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		}
 		y -= 36;
 
-
-		/////////////////
-
+		// other
 		int period = (pSoundGen->GetReg(SNDCHIP_FDS, 0x4082) & 0xFF) | ((pSoundGen->GetReg(SNDCHIP_FDS, 0x4083) & 0x0F) << 8);
 		int vol = (pSoundGen->GetReg(SNDCHIP_FDS, 0x4080) & 0x3F);
 		double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_FDS, 0);		// // //

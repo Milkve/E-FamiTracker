@@ -177,6 +177,7 @@ enum effect_t : unsigned char {
 	EF_HARMONIC,  // Multiply the note pitch by an integer
 	EF_PWM,								// // // Pulse width modulation effect
 	EF_VOLUME_OFFSET,     // // // Relative volume change
+	EF_SAA_NOISE_MODE,    // // // SAA1099 noise mode
 
 	EF_COUNT
 };
@@ -192,7 +193,7 @@ const effect_t FDS_EFFECTS[] = {EF_FDS_MOD_DEPTH, EF_FDS_MOD_SPEED_HI, EF_FDS_MO
 const effect_t N163_EFFECTS[] = {EF_N163_WAVE_BUFFER};
 const effect_t S5B_EFFECTS[] = { EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE };
 const effect_t AY8930_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE, EF_AY8930_PULSE_WIDTH, EF_AY8930_AND_MASK, EF_AY8930_OR_MASK, EF_AY8930_VOL};
-const effect_t SAA1099_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE};
+const effect_t SAA1099_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SAA_NOISE_MODE};
 
 // Effect checking = bool CTrackerChannel::IsEffectCompatible
 
@@ -248,6 +249,7 @@ const char EFF_CHAR[] = {
 	'K',	// EF_HARMONIC,
 	'N',  // EF_PWM,
 	'9',  // EF_VOLUME_OFFSET
+	'W',  // EF_SAA_NOISE_MODE
 };
 
 struct Effect {

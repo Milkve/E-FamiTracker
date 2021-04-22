@@ -62,8 +62,8 @@ protected:
 	static int s_iNoiseFreq;
 	static int s_iNoisePrev;		// // //
 	static int s_iDefaultNoise;		// // //
-	static int s_iNoiseANDMask;
-	static int s_iNoiseORMask;
+	static int s_iNoiseAMode;		// // //
+	static int s_iNoiseBMode;		// // //
 	static int s_iEnvelopeAType;
 	static int s_iEnvelopeBType;
 	static int s_unused;		// // // 050B, unused

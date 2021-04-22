@@ -32,29 +32,28 @@ By using this software, you agree to these terms.
 
 ### To-do
 
- - [x] Unique file type (.eft)
- - [ ] Add 2A03 chip back (removing 5E01)
- - [x] AY8930 soundchip
- - [x] AY8930 emulation
- - [x] AY8930 as its own soundchip
- - [x] FDS waveform view in registers
- - [ ] "Add chip" button beside the channels (displayed as a +)
- - [x] Reworked file encoding for more soundchips
- - [ ] New soundchip dialog (checklist of chips) in module properties
- - [x] Oscilloscope rising edge detection
- - [ ] Stereo effect 8xy
  - [x] SAA1099 soundchip
  - [ ] SAA1099 emulation
+ - [ ] SAA1099 effect names
+ - [ ] SAA1099 note tables
  - [ ] SN76489 soundchip
  - [ ] T6W28 soundchip
+ - [ ] VT02 soundchip
  - [ ] AY-3-8910 soundchip
  - [ ] TIA soundchip
- - [ ] Option for disabling 2A03
+ - [ ] POKEY soundchip
+ - [ ] 5E01 DPCM
+ - [ ] AY8930 pulse width macro
+ - [ ] SAA1099 phase reset effect =xx
+ - [ ] Stereo effect 8xy
+ - [ ] New soundchip dialog (checklist of chips) in module properties
+ - [ ] Option for disabling 2A03 channels
  - [ ] Rework how channels/chips are handled to un-hardcode many things.
  - [ ] Panning macro in instrument editor
  - [ ] NSF export
  - [ ] NSF import
  - [ ] VGM export
+ - [ ] "Add chip" button beside the channels (displayed as a +)
  - [ ] Multiple audio export options
  - [ ] Other tracker module imports
  - [ ] Help and documentation

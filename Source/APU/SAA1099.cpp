@@ -123,6 +123,7 @@ void CSAA1099Channel::Reset()
 	m_iPeriodClock = 0;
 	m_iOctave = 0;
 	m_iOffset = 0;
+	m_iDutyCycle = 0;
 	m_bSquareHigh = false;
 	m_bSquareDisable = true;
 	m_bNoiseDisable = true;
@@ -160,7 +161,7 @@ double CSAA1099Channel::GetFrequency() const		// // //
 
 
 
-// Sunsoft 5B chip class
+// SAA1099 chip class
 
 CSAA1099::CSAA1099(CMixer *pMixer) : CSoundChip(pMixer),
 	m_cPort(0),

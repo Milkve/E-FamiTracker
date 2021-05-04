@@ -407,6 +407,8 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 	double clock_ntsc = CAPU::BASE_FREQ_NTSC / 16.0;
 	double clock_pal = CAPU::BASE_FREQ_PAL / 16.0;
 
+	int SAANotes[12] = {33, 60, 85, 109, 132, 153, 173, 192, 210, 227, 243, 261};
+
 	for (int i = 0; i < NOTE_COUNT; ++i) {
 		// Frequency (in Hz)
 		double Freq = 440. * pow(2.0, double(i - A440_NOTE) / 12.);
@@ -424,6 +426,9 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 		// VRC6 Saw
 		Pitch = ((clock_ntsc * 16.0) / (Freq * 14.0)) - 0.5;
 		m_iNoteLookupTableSaw[i] = (unsigned int)(Pitch - pDocument->GetDetuneOffset(2, i));		// // //
+
+		// SAA1099
+		m_iNoteLookupTableSAA1099[i] = 256 * (int)(i / NOTE_RANGE) + SAANotes[i % NOTE_RANGE];
 
 		// FDS
 #ifdef TRANSPOSE_FDS
@@ -476,7 +481,7 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 			Table = m_iNoteLookupTableS5B; break;
 		case CHANID_SAA1099_CH1: case CHANID_SAA1099_CH2: case CHANID_SAA1099_CH3:
 		case CHANID_SAA1099_CH4: case CHANID_SAA1099_CH5: case CHANID_SAA1099_CH6:
-			Table = m_iNoteLookupTableNTSC; break;
+			Table = m_iNoteLookupTableSAA1099; break;
 		default: continue;
 		}
 		m_pChannels[i]->SetNoteTable(Table);

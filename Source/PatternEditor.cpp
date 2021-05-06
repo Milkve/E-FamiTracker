@@ -41,6 +41,9 @@
 #include "TextExporter.h"		// // //
 #include "APU/APU.h"
 #include "RegisterState.h"		// // //
+#include "DSample.h"
+#include "SeqInstrument.h"
+#include "Instrument2A03.h"
 
 /*
  * CPatternEditor
@@ -1480,6 +1483,35 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[NoiseFreq & 0x0F], pColorInfo->Note);
 						DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, '#', pColorInfo->Note);
 					}
+					else if (pTrackerChannel->GetID() == CHANID_DPCM) {
+						// DPCM
+						const char* pSampleName;
+						char pNameLength = 0;
+						if (pNoteData->Instrument != MAX_INSTRUMENTS &&
+							pNoteData->Instrument != HOLD_INSTRUMENT) {
+							auto pDPCMInst = std::dynamic_pointer_cast<const CInstrument2A03>(m_pDocument->GetInstrument(pNoteData->Instrument));
+							if (pDPCMInst) {
+								auto pDSample = pDPCMInst->GetDSample(pNoteData->Octave, pNoteData->Note-1);
+								if (pDSample) {
+									pSampleName = pDSample->GetName();
+									pNameLength = (char)strlen(pSampleName);
+									if (strstr(pSampleName, ".dmc") && pNameLength == 7) {
+										pNameLength = 3;
+									}
+								}
+							}
+						}
+						if (pNameLength == 3) {
+							DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, pSampleName[0], pColorInfo->Note);		// // //
+							DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, pSampleName[1], pColorInfo->Note);
+							DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, pSampleName[2], pColorInfo->Note);
+						}
+						else {
+							DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, NOTES_A[pNoteData->Note - 1], pColorInfo->Note);		// // //
+							DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, NOTES_B[pNoteData->Note - 1], pColorInfo->Note);
+							DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, NOTES_C[pNoteData->Octave], pColorInfo->Note);
+						}
+					}
 					else {
 						// The rest
 						DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, NOTES_A[pNoteData->Note - 1], pColorInfo->Note);		// // //
@@ -1507,13 +1539,20 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 			else
 				DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[pNoteData->Instrument & 0x0F], InstColor);		// // //
 			break;
-		case C_VOLUME: 
+		case C_VOLUME: {
 			// Volume
 			if (pNoteData->Vol == MAX_VOLUME || pTrackerChannel->GetID() == CHANID_DPCM)
 				BAR(PosX);
-			else 
-				DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[pNoteData->Vol & 0x0F], pColorInfo->Volume);		// // //
+			else {
+				// get color 
+				unsigned char pVol = pNoteData->Vol & 0x0F; WORD pHue = 0, pLightness = 0, pSaturation = 0;
+				ColorRGBToHLS(pColorInfo->Volume, &pHue, &pLightness, &pSaturation);
+				COLORREF pColor = ColorHLSToRGB(pHue, (WORD)((double)(pLightness)*(double)(0.375+0.625*pVol/15)), (WORD)((double)(pSaturation)*(double)(pVol*pVol)/225)+1);
+				// draw
+				DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, HEX[pNoteData->Vol & 0x0F], pColor);		// // //
+			}
 			break;
+		}
 		case C_EFF1_NUM: case C_EFF2_NUM: case C_EFF3_NUM: case C_EFF4_NUM:
 			// Effect type
 			if (EffNumber == 0)
@@ -1683,6 +1722,7 @@ void CPatternEditor::DrawMeters(CDC *pDC)
 	if (colors[0] == 0) {
 		for (int i = 0; i < 15; ++i) {
 			// Cache colors
+		  
 			colors[i] = BLEND(COL_LIGHT, 0x00F0F0, (100 - (i * i) / 3));
 			colors_shadow[i] = DIM(colors[i], 60);
 			colors_dim[i] = DIM(colors[i], 90);

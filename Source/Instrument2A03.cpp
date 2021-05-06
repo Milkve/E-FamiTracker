@@ -378,7 +378,7 @@ bool CInstrument2A03::AssignedSamples() const
 
 const CDSample *CInstrument2A03::GetDSample(int Octave, int Note) const		// // //
 {
-	if (!m_pInstManager) return nullptr;
+ 	if (!m_pInstManager) return nullptr;
 	char Index = GetSampleIndex(Octave, Note);
 	if (!Index) return nullptr;
 	return m_pInstManager->GetDSample(Index - 1);

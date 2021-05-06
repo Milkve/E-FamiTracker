@@ -199,6 +199,7 @@ void CInstrumentEditorDPCM::BuildKeyList()
 void CInstrumentEditorDPCM::UpdateCurrentKey()		// // //
 {
 	UpdateKey(MIDI_NOTE(m_iOctave, m_iSelectedKey + 1));
+	GetDocument()->UpdateAllViews(NULL, UPDATE_PATTERN);
 }
 
 void CInstrumentEditorDPCM::UpdateKey(int Index)

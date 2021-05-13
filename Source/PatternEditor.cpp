@@ -44,6 +44,8 @@
 #include "DSample.h"
 #include "SeqInstrument.h"
 #include "Instrument2A03.h"
+#include "BookmarkManager.h"
+#include "BookmarkCollection.h"
 
 /*
  * CPatternEditor
@@ -693,6 +695,9 @@ bool CPatternEditor::CalculatePatternLayout()
 			break;
 		}
 	}
+	if (!theApp.GetSettings()->Display.bRegisterState) {
+		m_iPatternWidth = WinWidth;
+	}
 
 	if (HiddenChannels) {
 		m_iChannelsVisible = LastChannel - m_iFirstChannel;
@@ -881,14 +886,13 @@ void CPatternEditor::DrawUnbufferedArea(CDC *pDC)
 		// pDC->Draw3dRect(m_iPatternWidth + m_iRowColumnWidth, HEADER_CHAN_START, Width, HEADER_HEIGHT, STATIC_COLOR_SCHEME.FRAME_LIGHT, STATIC_COLOR_SCHEME.FRAME_DARK);
 
 		// The big empty area
-		pDC->FillSolidRect(m_iPatternWidth + m_iRowColumnWidth, HEADER_HEIGHT, Width, m_iWinHeight - HEADER_HEIGHT, m_colEmptyBg);	
+		//pDC->FillSolidRect(m_iPatternWidth + m_iRowColumnWidth, HEADER_HEIGHT, Width, m_iWinHeight - HEADER_HEIGHT, m_colEmptyBg);	
 	}
 }
 
 void CPatternEditor::PerformFullRedraw(CDC *pDC)
 {
 	// Draw entire pattern area
-	
 	const int Channels = GetChannelCount();
 	const int FrameCount = GetFrameCount();		// // //
 	int Row = m_iCenterRow - m_iLinesVisible / 2;
@@ -896,6 +900,11 @@ void CPatternEditor::PerformFullRedraw(CDC *pDC)
 	CFont *pOldFont = pDC->SelectObject(&m_fontPattern);
 
 	pDC->SetBkMode(TRANSPARENT);
+
+	int Offset = m_iChannelWidths[m_iFirstChannel];
+	for (int i = m_iFirstChannel; i < Channels; ++i)
+		Offset += m_iChannelWidths[i + 1];
+	pDC->FillSolidRect(Offset+m_iRowColumnWidth, 0, m_iWinWidth, m_iWinHeight, m_colEmptyBg);		// // //
 
 	for (int i = 0; i < m_iLinesVisible; ++i)
 		PrintRow(pDC, Row++, i, m_cpCursorPos.m_iFrame);		// // //
@@ -906,7 +915,7 @@ void CPatternEditor::PerformFullRedraw(CDC *pDC)
 	pDC->SetWindowOrg(-m_iRowColumnWidth, 0);
 
 	// Lines between channels
-	int Offset = m_iChannelWidths[m_iFirstChannel];
+	Offset = m_iChannelWidths[m_iFirstChannel];
 	
 	for (int i = m_iFirstChannel; i < Channels; ++i) {
 		pDC->FillSolidRect(Offset - 1, 0, 1, m_iPatternHeight, m_colSeparator);
@@ -926,6 +935,11 @@ void CPatternEditor::PerformFullRedraw(CDC *pDC)
 void CPatternEditor::PerformQuickRedraw(CDC *pDC)
 {
 	// Draw specific parts of pattern area
+
+	//int Offset = m_iChannelWidths[m_iFirstChannel];
+	//for (int i = m_iFirstChannel; i < GetChannelCount(); ++i)
+	//	Offset += m_iChannelWidths[i + 1];
+	//pDC->FillSolidRect(Offset+m_iRowColumnWidth, 0, m_iWinWidth, m_iWinHeight, m_colEmptyBg);		// // //
 	ASSERT(m_cpCursorPos.m_iFrame == m_iLastFrame);
 
 	// Number of rows that has changed
@@ -934,6 +948,12 @@ void CPatternEditor::PerformQuickRedraw(CDC *pDC)
 	CFont *pOldFont = pDC->SelectObject(&m_fontPattern);
 
 	ScrollPatternArea(pDC, DiffRows);
+
+	//auto Bookmarks = m_pDocument->GetBookmarkManager()->GetCollection(GetSelectedTrack());
+	//for (int i = 0;i < (signed)(Bookmarks->GetCount());++i) {
+	//	auto Bookmark = Bookmarks->GetBookmark(i);
+	//	PrintRow(pDC, Bookmark->m_iRow, RowToLine(Bookmark->m_iRow), Bookmark->m_iFrame);
+	//}
 
 	// Play cursor
 	if (theApp.IsPlaying() && !m_bFollowMode) {
@@ -1068,6 +1088,8 @@ void CPatternEditor::ClearRow(CDC *pDC, int Line) const
 		pDC->FillSolidRect(Offset, Line * m_iRowHeight, m_iChannelWidths[i] - 1, m_iRowHeight, m_colEmptyBg);
 		Offset += m_iChannelWidths[i];
 	}
+	if (!theApp.GetSettings()->Display.bRegisterState)
+		pDC->FillSolidRect(Offset, Line * m_iRowHeight, m_iWinWidth-Offset, m_iRowHeight, m_colEmptyBg);
 
 	// Row number
 	pDC->FillSolidRect(1, Line * m_iRowHeight, m_iRowColumnWidth - 2, m_iRowHeight, m_colEmptyBg);
@@ -1184,6 +1206,22 @@ void CPatternEditor::DrawRow(CDC *pDC, int Row, int Line, int Frame, bool bPrevi
 		DrawChar(pDC, m_iRowColumnWidth / 2				  , (Line + 1) * m_iRowHeight - m_iRowHeight / 8, Text[1], TextColor);
 		DrawChar(pDC, m_iRowColumnWidth / 2 + m_iCharWidth, (Line + 1) * m_iRowHeight - m_iRowHeight / 8, Text[2], TextColor);
 	}
+
+	// bookmark names
+	
+	for (int i = m_iFirstChannel; i < GetChannelCount(); ++i)
+		OffsetX += m_iChannelWidths[i];
+	if (!theApp.GetSettings()->Display.bRegisterState) {
+		const auto Bookmark = m_pDocument->GetBookmarkAt(Track, Frame, Row);
+		pDC->SetWindowOrg(-OffsetX, 0);
+		pDC->FillSolidRect(1, Line * m_iRowHeight, m_iWinWidth, m_iRowHeight, ColBg);
+		if (Bookmark)
+			if (Bookmark->m_iFrame == Frame && Bookmark->m_iRow == Row)
+				for (int i = 0;i < (signed)(Bookmark->m_sName.length());++i)
+					DrawChar(pDC, (i + 1) * m_iCharWidth, (Line + 1) * m_iRowHeight - m_iRowHeight / 8, Bookmark->m_sName[i], TextColor);
+	}
+	OffsetX = m_iRowColumnWidth;
+
 
 	pDC->SetTextAlign(TA_LEFT);		// // //
 
@@ -1495,17 +1533,17 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 								if (pDSample) {
 									pSampleName = pDSample->GetName();
 									pNameLength = (char)strlen(pSampleName);
-									if (strstr(pSampleName, ".dmc") && pNameLength == 7) {
-										pNameLength = 3;
+									if (strstr(pSampleName, ".dmc") && pNameLength <= 7 && pNameLength > 3) {
+										pNameLength -= 4;
 									}
 								}
 							}
 						}
-						if (pNameLength == 3) {
-							DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, pSampleName[0], pColorInfo->Note);		// // //
-							DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, pSampleName[1], pColorInfo->Note);
-							DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, pSampleName[2], pColorInfo->Note);
-						}
+						if (pNameLength <= 3 && pNameLength > 0)
+							for (int i=0; i<pNameLength; ++i)
+								DrawChar(pDC, PosX + m_iCharWidth * (2*i+4-pNameLength) /2, PosY, pSampleName[i], pColorInfo->Note);		// // //
+							//DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, pSampleName[1], pColorInfo->Note);
+							//DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, pSampleName[2], pColorInfo->Note);
 						else {
 							DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, NOTES_A[pNoteData->Note - 1], pColorInfo->Note);		// // //
 							DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, NOTES_B[pNoteData->Note - 1], pColorInfo->Note);
@@ -1693,17 +1731,17 @@ void CPatternEditor::DrawHeader(CDC *pDC)
 	pDC->SelectObject(pOldFont);
 }
 
-void CPatternEditor::DrawMeters(CDC *pDC)
+void CPatternEditor::DrawMeters(CDC* pDC)
 {
-	const COLORREF COL_DARK			= 0x989C98;
-	const COLORREF COL_LIGHT		= 0x20F040;
-	const COLORREF COL_DARK_SHADOW  = DIM(COL_DARK, 80);
+	const COLORREF COL_DARK = 0x989C98;
+	const COLORREF COL_LIGHT = 0x20F040;
+	const COLORREF COL_DARK_SHADOW = DIM(COL_DARK, 80);
 	const COLORREF DPCM_STATE_COLOR = 0x00404040;
 
-	const int BAR_TOP	 = DPI::SY(5 + 18 + HEADER_CHAN_START);
-	const int BAR_SIZE	 = m_bCompactMode ? (GetColumnSpace(C_NOTE) - 2) / 16 : (GetChannelWidth(0) - 6) / 16;		// // //
-	const int BAR_LEFT	 = m_bCompactMode ? m_iRowColumnWidth + (GetColumnSpace(C_NOTE) - 16 * BAR_SIZE + 3) / 2 : m_iRowColumnWidth + 7;
-	const int BAR_SPACE	 = 1;
+	const int BAR_TOP = DPI::SY(5 + 18 + HEADER_CHAN_START);
+	const int BAR_SIZE = m_bCompactMode ? (GetColumnSpace(C_NOTE) - 2) / 16 : (GetChannelWidth(0) - 6) / 16;		// // //
+	const int BAR_LEFT = m_bCompactMode ? m_iRowColumnWidth + (GetColumnSpace(C_NOTE) - 16 * BAR_SIZE + 3) / 2 : m_iRowColumnWidth + 7;
+	const int BAR_SPACE = 1;
 	const int BAR_HEIGHT = DPI::SY(5);
 
 	static COLORREF colors[15];
@@ -1717,12 +1755,12 @@ void CPatternEditor::DrawMeters(CDC *pDC)
 
 	int Offset = BAR_LEFT;
 
-	CFont *pOldFont = pDC->SelectObject(&m_fontHeader);
+	CFont* pOldFont = pDC->SelectObject(&m_fontHeader);
 
 	if (colors[0] == 0) {
 		for (int i = 0; i < 15; ++i) {
 			// Cache colors
-		  
+
 			colors[i] = BLEND(COL_LIGHT, 0x00F0F0, (100 - (i * i) / 3));
 			colors_shadow[i] = DIM(colors[i], 60);
 			colors_dim[i] = DIM(colors[i], 90);
@@ -1731,7 +1769,7 @@ void CPatternEditor::DrawMeters(CDC *pDC)
 
 	for (int i = 0; i < m_iChannelsVisible; ++i) {
 		int Channel = i + m_iFirstChannel;
-		CTrackerChannel *pChannel = m_pDocument->GetChannel(Channel);
+		CTrackerChannel* pChannel = m_pDocument->GetChannel(Channel);
 		int level = pChannel->GetVolumeMeter();
 
 		for (int j = 0; j < 15; ++j) {
@@ -1763,7 +1801,6 @@ void CPatternEditor::DrawMeters(CDC *pDC)
 	const int iBlitWidth = m_iPatternWidth + m_iRowColumnWidth;
 	pDC->BitBlt(iBlitWidth, HEADER_HEIGHT, m_iWinWidth - iBlitWidth, iBlitHeight, m_pRegisterDC, 0, 0, SRCCOPY);
 #endif /* DRAW_REGS */
-
 	pDC->SelectObject(pOldFont);
 }
 
@@ -1806,6 +1843,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		pDC->SelectObject(pOldFont);
 		return;
 	}
+
 
 	pDC->SetBkMode(TRANSPARENT);		// // //
 

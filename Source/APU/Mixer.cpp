@@ -373,7 +373,7 @@ void CMixer::FinishBuffer(int t)
 	StoreChannelLevel(CHANID_FDS, get_channel_level(chipFDS, 0));
 
 	auto& chip5E01 = *m_APU->m_p5E01;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		StoreChannelLevel(CHANID_5E01_SQUARE1 + i, get_channel_level(chip5E01, i));
 	}
 

@@ -1202,13 +1202,14 @@ void CFamiTrackerView::OnTrackerPlayrow()
 	const int Frame = m_pPatternEditor->GetFrame();
 	const int Row = m_pPatternEditor->GetRow();
 	const int Channels = pDoc->GetAvailableChannels();
+	
 
 	for (int i = 0; i < Channels; ++i) {
 		stChanNote Note;
 		pDoc->GetNoteData(Track, Frame, i, Row, &Note);
 		if (m_bMuteChannels[i]) // E-FT Experiment
 			Note.Vol = 0;
-		if (!(m_bMuteChannels[i] && i == CHANID_DPCM))
+		if (!(m_bMuteChannels[i] && (i == CHANID_DPCM || i == pDoc->GetChannelIndex(CHANID_5E01_DPCM))))
 			theApp.GetSoundGenerator()->QueueNote(i, Note, NOTE_PRIO_1);
 	}
 
@@ -1567,19 +1568,19 @@ bool CFamiTrackerView::PlayerGetNote(int Track, int Frame, int Channel, int Row,
 
 	pDoc->GetNoteData(Track, Frame, Channel, Row, &NoteData);
 
-	bool Play = true;
-	if (IsChannelMuted(Channel)) {
-		NoteData.Vol = 0;
-		if (Channel == CHANID_DPCM)
-			Play = false;
-	}
+	//bool Play = true;
+	//if (IsChannelMuted(Channel)) {
+		//NoteData.Note = NOTE_;
+		//if (Channel == CHANID_DPCM || Channel == pDoc->GetChannelIndex(CHANID_5E01_DPCM))
+			//Play = false;
+	//}
 	// Let view know what is about to play
-	if (Play) {
-		PlayerPlayNote(Channel, &NoteData);
-		ValidCommand = true;
-	}
+	//if (Play) {
+	//	PlayerPlayNote(Channel, &NoteData);
+	//	ValidCommand = true;
+	//}
 
-	/*if (!IsChannelMuted(Channel)) {
+	if (!IsChannelMuted(Channel)) {
 		// Let view know what is about to play
 		PlayerPlayNote(Channel, &NoteData);
 		ValidCommand = true;
@@ -1604,7 +1605,7 @@ bool CFamiTrackerView::PlayerGetNote(int Track, int Frame, int Channel, int Row,
 			if (Clear)
 				NoteData.EffNumber[j] = EF_NONE;
 		}
-	}*/
+	}
 
 	return ValidCommand;
 }
@@ -2445,7 +2446,7 @@ void CFamiTrackerView::UpdateNoteQueues()		// // //
 		if (pDoc->ExpansionEnabled(SNDCHIP_SAA1099))
 			m_pNoteQueue->AddMap({ CHANID_SAA1099_CH1, CHANID_SAA1099_CH2, CHANID_SAA1099_CH3, CHANID_SAA1099_CH4, CHANID_SAA1099_CH5, CHANID_SAA1099_CH6 });
 		if (pDoc->ExpansionEnabled(SNDCHIP_5E01))
-			m_pNoteQueue->AddMap({ CHANID_5E01_SQUARE1, CHANID_5E01_SQUARE2, CHANID_5E01_WAVEFORM, CHANID_5E01_NOISE });
+			m_pNoteQueue->AddMap({ CHANID_5E01_SQUARE1, CHANID_5E01_SQUARE2, CHANID_5E01_WAVEFORM, CHANID_5E01_NOISE, CHANID_5E01_DPCM });
 	}
 
 //	for (int i = 0; i < Channels; ++i)

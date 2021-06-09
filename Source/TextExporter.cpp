@@ -723,7 +723,7 @@ const CString& CTextExport::ImportFile(LPCTSTR FileName, CFamiTrackerDoc *pDoc)
 				CHECK(t.ReadEOL(&sResult));
 				break;
 			case CT_EXPANSION:
-				CHECK(t.ReadInt(i,0,255,&sResult));
+				CHECK(t.ReadInt(i,0,0x7FFFFFFF,&sResult));
 				pDoc->SelectExpansionChip(i);
 				CHECK(t.ReadEOL(&sResult));
 				break;

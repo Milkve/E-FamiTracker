@@ -87,6 +87,7 @@ enum chan_id_t {
 	CHANID_5E01_SQUARE2,
 	CHANID_5E01_WAVEFORM,
 	CHANID_5E01_NOISE,
+	CHANID_5E01_DPCM,
 
 	CHANNELS		/* Total number of channels */
 };

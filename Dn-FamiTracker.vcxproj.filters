@@ -774,6 +774,9 @@
     <ClCompile Include="Source\Channels5E01.cpp">
       <Filter>Source Files\Sound Driver\Channels</Filter>
     </ClCompile>
+    <ClCompile Include="ChipSelectDlg.cpp">
+      <Filter>Source Files\Dialog Boxes</Filter>
+    </ClCompile>
     <ClCompile Include="ScaleEditorDlg.cpp">
       <Filter>Source Files\Dialog Boxes</Filter>
     </ClCompile>
@@ -1550,8 +1553,14 @@
     <ClInclude Include="Source\Channels5E01.h">
       <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ChipSelectDlg.h">
+      <Filter>Header Files\Dialog Boxes Headers</Filter>
+    </ClInclude>
     <ClInclude Include="ScaleEditorDlg.h">
       <Filter>Header Files\Dialog Boxes Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1678,10 +1687,29 @@
     <Image Include="res\Application.ico">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="resource.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
+    <Image Include="res\System_NES.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\System_Famicom.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Sys_NES.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Sys_Famicom.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Sys_Commodore.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Sys_Atari.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Sys_GI.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Sys_E.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

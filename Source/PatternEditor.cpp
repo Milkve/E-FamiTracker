@@ -44,8 +44,6 @@
 #include "DSample.h"
 #include "SeqInstrument.h"
 #include "Instrument2A03.h"
-#include "BookmarkManager.h"
-#include "BookmarkCollection.h"
 
 /*
  * CPatternEditor
@@ -695,9 +693,6 @@ bool CPatternEditor::CalculatePatternLayout()
 			break;
 		}
 	}
-	if (!theApp.GetSettings()->Display.bRegisterState) {
-		m_iPatternWidth = WinWidth;
-	}
 
 	if (HiddenChannels) {
 		m_iChannelsVisible = LastChannel - m_iFirstChannel;
@@ -901,11 +896,6 @@ void CPatternEditor::PerformFullRedraw(CDC *pDC)
 
 	pDC->SetBkMode(TRANSPARENT);
 
-	int Offset = m_iChannelWidths[m_iFirstChannel];
-	for (int i = m_iFirstChannel; i < Channels; ++i)
-		Offset += m_iChannelWidths[i + 1];
-	pDC->FillSolidRect(Offset+m_iRowColumnWidth, 0, m_iWinWidth, m_iWinHeight, m_colEmptyBg);		// // //
-
 	for (int i = 0; i < m_iLinesVisible; ++i)
 		PrintRow(pDC, Row++, i, m_cpCursorPos.m_iFrame);		// // //
 
@@ -915,7 +905,7 @@ void CPatternEditor::PerformFullRedraw(CDC *pDC)
 	pDC->SetWindowOrg(-m_iRowColumnWidth, 0);
 
 	// Lines between channels
-	Offset = m_iChannelWidths[m_iFirstChannel];
+	int Offset = m_iChannelWidths[m_iFirstChannel];
 	
 	for (int i = m_iFirstChannel; i < Channels; ++i) {
 		pDC->FillSolidRect(Offset - 1, 0, 1, m_iPatternHeight, m_colSeparator);
@@ -936,10 +926,6 @@ void CPatternEditor::PerformQuickRedraw(CDC *pDC)
 {
 	// Draw specific parts of pattern area
 
-	//int Offset = m_iChannelWidths[m_iFirstChannel];
-	//for (int i = m_iFirstChannel; i < GetChannelCount(); ++i)
-	//	Offset += m_iChannelWidths[i + 1];
-	//pDC->FillSolidRect(Offset+m_iRowColumnWidth, 0, m_iWinWidth, m_iWinHeight, m_colEmptyBg);		// // //
 	ASSERT(m_cpCursorPos.m_iFrame == m_iLastFrame);
 
 	// Number of rows that has changed
@@ -948,12 +934,6 @@ void CPatternEditor::PerformQuickRedraw(CDC *pDC)
 	CFont *pOldFont = pDC->SelectObject(&m_fontPattern);
 
 	ScrollPatternArea(pDC, DiffRows);
-
-	//auto Bookmarks = m_pDocument->GetBookmarkManager()->GetCollection(GetSelectedTrack());
-	//for (int i = 0;i < (signed)(Bookmarks->GetCount());++i) {
-	//	auto Bookmark = Bookmarks->GetBookmark(i);
-	//	PrintRow(pDC, Bookmark->m_iRow, RowToLine(Bookmark->m_iRow), Bookmark->m_iFrame);
-	//}
 
 	// Play cursor
 	if (theApp.IsPlaying() && !m_bFollowMode) {
@@ -1088,8 +1068,6 @@ void CPatternEditor::ClearRow(CDC *pDC, int Line) const
 		pDC->FillSolidRect(Offset, Line * m_iRowHeight, m_iChannelWidths[i] - 1, m_iRowHeight, m_colEmptyBg);
 		Offset += m_iChannelWidths[i];
 	}
-	if (!theApp.GetSettings()->Display.bRegisterState)
-		pDC->FillSolidRect(Offset, Line * m_iRowHeight, m_iWinWidth-Offset, m_iRowHeight, m_colEmptyBg);
 
 	// Row number
 	pDC->FillSolidRect(1, Line * m_iRowHeight, m_iRowColumnWidth - 2, m_iRowHeight, m_colEmptyBg);
@@ -1206,21 +1184,6 @@ void CPatternEditor::DrawRow(CDC *pDC, int Row, int Line, int Frame, bool bPrevi
 		DrawChar(pDC, m_iRowColumnWidth / 2				  , (Line + 1) * m_iRowHeight - m_iRowHeight / 8, Text[1], TextColor);
 		DrawChar(pDC, m_iRowColumnWidth / 2 + m_iCharWidth, (Line + 1) * m_iRowHeight - m_iRowHeight / 8, Text[2], TextColor);
 	}
-
-	// bookmark names
-	
-	for (int i = m_iFirstChannel; i < GetChannelCount(); ++i)
-		OffsetX += m_iChannelWidths[i];
-	if (!theApp.GetSettings()->Display.bRegisterState) {
-		const auto Bookmark = m_pDocument->GetBookmarkAt(Track, Frame, Row);
-		pDC->SetWindowOrg(-OffsetX, 0);
-		pDC->FillSolidRect(1, Line * m_iRowHeight, m_iWinWidth, m_iRowHeight, ColBg);
-		if (Bookmark)
-			if (Bookmark->m_iFrame == Frame && Bookmark->m_iRow == Row)
-				for (int i = 0;i < (signed)(Bookmark->m_sName.length());++i)
-					DrawChar(pDC, (i + 1) * m_iCharWidth, (Line + 1) * m_iRowHeight - m_iRowHeight / 8, Bookmark->m_sName[i], TextColor);
-	}
-	OffsetX = m_iRowColumnWidth;
 
 
 	pDC->SetTextAlign(TA_LEFT);		// // //
@@ -1361,12 +1324,6 @@ static const int HEIGHT_OFFSET = 6;
 
 void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Channel, bool bInvert, stChanNote *pNoteData, RowColorInfo_t *pColorInfo) const
 {
-	// Sharps
-	//static const char NOTES_A_SHARP[] = {'C', 'C', 'D', 'D', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'};
-	//static const char NOTES_B_SHARP[] = {'-', '#', '-', '#', '-', '-', '#', '-', '#', '-', '#', '-'};
-	// Flats
-	//static const char NOTES_A_FLAT[] = {'C', 'D', 'D', 'E', 'E', 'F', 'G', 'G', 'A', 'A', 'B', 'B'};
-	//static const char NOTES_B_FLAT[] = {'-', 'b', '-', 'b', '-', '-', 'b', '-', 'b', '-', 'b', '-'};
 	// Octaves
 	static const char NOTES_C[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	// Hex numbers
@@ -1521,7 +1478,7 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 						DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, HEX[NoiseFreq & 0x0F], pColorInfo->Note);
 						DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, '#', pColorInfo->Note);
 					}
-					else if (pTrackerChannel->GetID() == CHANID_DPCM) {
+					else if (pTrackerChannel->GetID() == CHANID_DPCM || pTrackerChannel->GetID() == CHANID_5E01_DPCM) {
 						// DPCM
 						const char* pSampleName;
 						char pNameLength = 0;
@@ -1542,8 +1499,6 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 						if (pNameLength <= 3 && pNameLength > 0)
 							for (int i=0; i<pNameLength; ++i)
 								DrawChar(pDC, PosX + m_iCharWidth * (2*i+4-pNameLength) /2, PosY, pSampleName[i], pColorInfo->Note);		// // //
-							//DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, pSampleName[1], pColorInfo->Note);
-							//DrawChar(pDC, PosX + m_iCharWidth * 5 / 2, PosY, pSampleName[2], pColorInfo->Note);
 						else {
 							DrawChar(pDC, PosX + m_iCharWidth / 2, PosY, NOTES_A[pNoteData->Note - 1], pColorInfo->Note);		// // //
 							DrawChar(pDC, PosX + m_iCharWidth * 3 / 2, PosY, NOTES_B[pNoteData->Note - 1], pColorInfo->Note);
@@ -1579,7 +1534,7 @@ void CPatternEditor::DrawCell(CDC *pDC, int PosX, cursor_column_t Column, int Ch
 			break;
 		case C_VOLUME: {
 			// Volume
-			if (pNoteData->Vol == MAX_VOLUME || pTrackerChannel->GetID() == CHANID_DPCM)
+			if (pNoteData->Vol == MAX_VOLUME || pTrackerChannel->GetID() == CHANID_DPCM || pTrackerChannel->GetID() == CHANID_5E01_DPCM)
 				BAR(PosX);
 			else {
 				// get color 
@@ -1910,30 +1865,6 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		pDC->TextOut(x + DPI::SX(xOffsNoDPI), y, text);
 	};
 
-
-	// // //
-	const auto DrawChanCompactFunc = [&](CString text, int chanid) {
-		++line; y += LINE_HEIGHT;
-		pDC->SetBkColor(m_colEmptyBg);
-		pDC->SetTextColor(0xFFAFAF);
-		pDC->SetTextAlign(TA_UPDATECP);
-		pDC->MoveTo(x, y);
-
-		auto ChanName = m_pDocument->GetChannel(chanid)->GetShortName();
-		pDC->TextOut(0, 0, ChanName);
-
-		DrawTextFunc(120, text);
-
-	};
-
-	// // //
-	const auto DrawChanWaveform = [&](int chanID) {
-		int PointList[32] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		
-		for (int i=0; i<32; i++)
-			pDC->FillSolidRect(x + 20 + i, y + i, 1, 1, 0xC0C0C0FF);
-	};
-
 	const auto GetRegsFunc = [&] (unsigned Chip, std::function<int(int)> F, int Count) {
 		for (int j = 0; j < Count; j++) {
 			auto pState = pSoundGen->GetRegState(Chip, F(j));		// // //
@@ -1985,87 +1916,48 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 	
 	
 	DrawHeaderFunc(_T("2A03"));		// // //
+	for (int i = 0; i < 5; ++i) {
+		GetRegsFunc(SNDCHIP_NONE, [&](int x) { return 0x4000 + i * 4 + x; }, 4);
+		text.Format(_T("$%04X:"), 0x4000 + i * 4);		// // //
+		DrawRegFunc(text, 4);
 
-	bool CompactMode = false;
-
-	if (!CompactMode) {
-		for (int i = 0; i < 5; ++i) {
-			GetRegsFunc(SNDCHIP_NONE, [&](int x) { return 0x4000 + i * 4 + x; }, 4);
-			text.Format(_T("$%04X:"), 0x4000 + i * 4);		// // //
-			DrawRegFunc(text, 4);
-
-			int period, vol;
-			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
+		int period, vol;
+		double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);		// // //
 	//		pDC->FillSolidRect(x + 200, y, x + 400, y + 18, m_colEmptyBg);
 
-			switch (i) {
-			case 0: case 1:
-				period = reg[2] | ((reg[3] & 7) << 8);
-				vol = reg[0] & 0x0F;
-				text.Format(_T("%s, vol = %02i, duty = %i"), GetPitchTextFunc(3, period, freq), vol, reg[0] >> 6); break;
-			case 2:
-				period = reg[2] | ((reg[3] & 7) << 8);
-				vol = reg[0] ? 15 : 0;
-				text.Format(_T("%s"), GetPitchTextFunc(3, period, freq)); break;
-			case 3:
-				period = reg[2] & 0x1F;
-				vol = reg[0] & 0x0F;
-				text.Format(_T("pitch = $%01X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
-				period = (period << 4) | ((reg[2] & 0x80) >> 4);
-				freq /= 32; break; // for display
-			case 4:
-				period = reg[0] & 0x0F;
-				vol = 15 * !pSoundGen->PreviewDone();
-				text.Format(_T("%s, %s, size = %i byte%c"), GetPitchTextFunc(1, period & 0x0F, freq),
-					(reg[0] & 0x40) ? _T("looped") : _T("once"), (reg[3] << 4) | 1, reg[3] ? 's' : ' ');
-				freq /= 16; break; // for display
-			}
-			/*
-					pDC->FillSolidRect(250 + i * 30, 0, 20, m_iWinHeight - HEADER_CHAN_HEIGHT, 0);
-					pDC->FillSolidRect(250 + i * 30, (period >> 1), 20, 5, RGB(vol << 4, vol << 4, vol << 4));
-			*/
-			DrawTextFunc(180, text);
-			DrawVolFunc(freq, vol << 4);
+		switch (i) {
+		case 0: case 1:
+			period = reg[2] | ((reg[3] & 7) << 8);
+			vol = reg[0] & 0x0F;
+			text.Format(_T("%s, vol = %02i, duty = %i"), GetPitchTextFunc(3, period, freq), vol, reg[0] >> 6); break;
+		case 2:
+			period = reg[2] | ((reg[3] & 7) << 8);
+			vol = reg[0] ? 15 : 0;
+			text.Format(_T("%s"), GetPitchTextFunc(3, period, freq)); break;
+		case 3:
+			period = reg[2] & 0x1F;
+			vol = reg[0] & 0x0F;
+			text.Format(_T("pitch = $%01X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
+			period = (period << 4) | ((reg[2] & 0x80) >> 4);
+			freq /= 32; break; // for display
+		case 4:
+			period = reg[0] & 0x0F;
+			vol = 15 * !pSoundGen->PreviewDone();
+			text.Format(_T("%s, %s, size = %i byte%c"), GetPitchTextFunc(1, period & 0x0F, freq),
+				(reg[0] & 0x40) ? _T("looped") : _T("once"), (reg[3] << 4) | 1, reg[3] ? 's' : ' ');
+			freq /= 16; break; // for display
 		}
-
-		text.Format(_T("position: %02i, delta = $%02X"), m_DPCMState.SamplePos, m_DPCMState.DeltaCntr);		// // //
-		++line; y += LINE_HEIGHT;		// // //
+		/*
+				pDC->FillSolidRect(250 + i * 30, 0, 20, m_iWinHeight - HEADER_CHAN_HEIGHT, 0);
+				pDC->FillSolidRect(250 + i * 30, (period >> 1), 20, 5, RGB(vol << 4, vol << 4, vol << 4));
+		*/
 		DrawTextFunc(180, text);
+		DrawVolFunc(freq, vol << 4);
 	}
-	else {
-		for (int i = 0; i < 5; ++i) {
-			GetRegsFunc(SNDCHIP_NONE, [&](int x) { return 0x4000 + i * 4 + x; }, 4);
 
-			int period, vol;
-			double freq = theApp.GetSoundGenerator()->GetChannelFrequency(SNDCHIP_NONE, i);
-
-			switch (i) {
-			case 0: case 1:
-				period = reg[2] | ((reg[3] & 7) << 8);
-				vol = reg[0] & 0x0F;
-				text.Format(_T("pitch=%s, vol=%02i"), GetPitchTextFuncCompact(3, period, freq), vol, reg[0] >> 6); break;
-			case 2:
-				period = reg[2] | ((reg[3] & 7) << 8);
-				vol = reg[0] ? 15 : 0;
-				text.Format(_T("pitch=%s"), GetPitchTextFuncCompact(3, period, freq)); break;
-			case 3:
-				period = reg[2] & 0x1F;
-				vol = reg[0] & 0x0F;
-				text.Format(_T("pitch=$%01X, vol=%02i, mode=%i"), period, vol, reg[2] >> 7);
-				period = (period << 4) | ((reg[2] & 0x80) >> 4);
-				freq /= 32; break; // for display
-			case 4:
-				period = reg[0] & 0x0F;
-				vol = 15 * !pSoundGen->PreviewDone();
-				text.Format(_T("pitch=%s, %s, size=%iB"), GetPitchTextFuncCompact(1, period & 0x0F, freq),
-					(reg[0] & 0x40) ? _T("L") : _T("-"), (reg[3] << 4) | 1);
-				freq /= 16; break; // for display
-			}
-
-			DrawChanCompactFunc(text, i);
-			DrawVolFunc(freq, vol << 4);
-		}
-	}
+	text.Format(_T("position: %02i, delta = $%02X"), m_DPCMState.SamplePos, m_DPCMState.DeltaCntr);		// // //
+	++line; y += LINE_HEIGHT;		// // //
+	DrawTextFunc(180, text);
 
 	if (m_pDocument->ExpansionEnabled(SNDCHIP_VRC6)) {
 		DrawHeaderFunc(_T("VRC6"));		// // //
@@ -2360,7 +2252,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 
 	if (m_pDocument->ExpansionEnabled(SNDCHIP_5E01)) {		// // //
 		DrawHeaderFunc(_T("5E01"));		// // //
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 5; ++i) {
 			GetRegsFunc(SNDCHIP_5E01, [&](int x) { return 0x4100 + i * 4 + x; }, 4);
 			text.Format(_T("$%02X:"), 0x4000 + i * 4);
 			DrawRegFunc(text, 4);
@@ -2385,6 +2277,12 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 				text.Format(_T("pitch = $%02X, vol = %02i, mode = %i"), period, vol, reg[2] >> 7);
 				period = (period << 4) | ((reg[2] & 0x80) >> 4);
 				freq /= 32; break; // for display
+			case 4:
+				period = reg[0] & 0x0F;
+				vol = 15 * !pSoundGen->PreviewDone();
+				text.Format(_T("%s, %s, size = %i byte%c"), GetPitchTextFunc(1, period & 0x0F, freq),
+					(reg[0] & 0x40) ? _T("looped") : _T("once"), (reg[3] << 4) | 1, reg[3] ? 's' : ' ');
+				freq /= 16; break; // for display
 			}
 			DrawTextFunc(180, text);
 			DrawVolFunc(freq, vol << 4);

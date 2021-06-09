@@ -81,6 +81,12 @@ public:
 	bool	DPCMPlaying() const;
 	void	WriteSample(const char *pBuf, int Size);		// // //
 	void	ClearSample();		// // //
+	
+	uint8_t	Get5E01SamplePos() const;
+	uint8_t	Get5E01DeltaCounter() const;
+	bool	DPCM5E01Playing() const;
+	void	Write5E01Sample(const char* pBuf, int Size);		// // //
+	void	Clear5E01Sample();		// // //
 
 	// Configuration methods:
 	/// it's a config method which should be dependency-tracked by CAPUConfig,

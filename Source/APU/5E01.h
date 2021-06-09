@@ -30,6 +30,57 @@
 #include "APU/nsfplay/xgm/devices/Sound/5e01_dmc.h"
 #include "APU/nsfplay/xgm/devices/device.h"
 
+
+// class for simulating CPU memory, used by the DPCM channel
+class C5E01SampleMem : public xgm::IDevice
+{
+public:
+	C5E01SampleMem() : m_pMemory(0), m_iMemSize(0) {
+	};
+
+	uint8_t Read(uint16_t Address) const {
+		if (!m_pMemory)
+			return 0;
+		uint16_t Addr = (Address - 0xC000);// % m_iMemSize;
+		if (Addr >= m_iMemSize)
+			return 0;
+		return m_pMemory[Addr];
+	};
+
+	void SetMem(const char* pPtr, int Size) {
+		m_pMemory = (uint8_t*)pPtr;
+		m_iMemSize = Size;
+	};
+
+	void Clear() {
+		m_pMemory = 0;
+		m_iMemSize = 0;
+	}
+
+	// impl xgm::IDevice
+
+		// CSampleMem as IDevice is only used by NES_DMC.
+		// It only calls Read(adr, val, id=0) and ignores the return value.
+
+		// not called, don't care
+	void Reset() override {}
+
+	// not called, don't care
+	bool Write(UINT32 adr, UINT32 val, UINT32 id) override {
+		return false;
+	}
+
+	bool Read(UINT32 adr, UINT32& val, UINT32 id) override {
+		val = Read((uint16_t)adr);
+		return true;
+	}
+
+private:
+	const uint8_t* m_pMemory;
+	uint16_t m_iMemSize;
+};
+
+
 class C5E01 : public CSoundChip2
 {
 public:
@@ -55,14 +106,14 @@ public:
 	
 	void	ChangeMachine(int Machine);
 	
-	//CSampleMem *GetSampleMemory();		// // //
-	//uint8_t	GetSamplePos() const;
-	//uint8_t	GetDeltaCounter() const;
-	//bool	DPCMPlaying() const;
+	C5E01SampleMem *GetSampleMemory();		// // //
+	uint8_t	GetSamplePos() const;
+	uint8_t	GetDeltaCounter() const;
+	bool	DPCMPlaying() const;
 
 private:
 	/// Referenced by m_Apu2.
-	//CSampleMem m_SampleMem;
+	C5E01SampleMem m_SampleMem;
 
 	xgm::I5E01_APU m_Apu1;
 	xgm::I5E01_DMC m_Apu2;

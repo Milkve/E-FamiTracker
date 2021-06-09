@@ -191,14 +191,14 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 		case EF_PORTAMENTO: case EF_ARPEGGIO: case EF_VIBRATO: case EF_TREMOLO:
 		case EF_PITCH: case EF_PORTA_UP: case EF_PORTA_DOWN: case EF_SLIDE_UP: case EF_SLIDE_DOWN:
 		case EF_VOLUME_SLIDE: case EF_DELAYED_VOLUME: case EF_TRANSPOSE: case EF_PWM: case EF_VOLUME_OFFSET:
-			return m_iChannelID != CHANID_DPCM;
+			return (m_iChannelID != CHANID_DPCM && m_iChannelID != CHANID_5E01_DPCM);
 		case EF_PORTAOFF:
 			return false;
 		case EF_SWEEPUP: case EF_SWEEPDOWN:
 			return m_iChannelID == CHANID_SQUARE1 || m_iChannelID == CHANID_SQUARE2 || m_iChannelID == CHANID_5E01_SQUARE1 || m_iChannelID == CHANID_5E01_SQUARE2;
 		case EF_DAC: case EF_SAMPLE_OFFSET: case EF_RETRIGGER: case EF_DPCM_PITCH: {
 			// TODO move to virtual method of Effect subclasses.
-			if (m_iChannelID != CHANID_DPCM) return false;
+			if (m_iChannelID != CHANID_DPCM || m_iChannelID != CHANID_5E01_DPCM) return false;
 
 			int limit;
 			switch (EffNumber) {

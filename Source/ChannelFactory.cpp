@@ -101,4 +101,5 @@ CChannelFactory::CChannelFactory() : CFactory()
 	m_pMakeFunc[CHANID_5E01_SQUARE2] = Func;
 	AddProduct<C5E01WaveformChan>(CHANID_5E01_WAVEFORM);
 	AddProduct<C5E01NoiseChan>(CHANID_5E01_NOISE);
+	AddProduct<C5E01DPCMChan>(CHANID_5E01_DPCM);
 }

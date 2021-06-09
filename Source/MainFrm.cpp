@@ -32,6 +32,7 @@
 #include "InstrumentEditDlg.h"
 #include "ModulePropertiesDlg.h"
 #include "ScaleEditorDlg.h"
+#include "ChipSelectDlg.h"
 #include "ChannelsDlg.h"
 #include "VisualizerWnd.h"
 #include "TextExporter.h"
@@ -2217,7 +2218,8 @@ void CMainFrame::OnUpdateTrackerSwitchToInstrument(CCmdUI *pCmdUI)
 void CMainFrame::OnTrackerScaleEditor()
 {
 	// Display module properties dialog
-	CScaleEditorDlg propertiesDlg;
+  //CScaleEditorDlg propertiesDlg;
+	CChipSelectDlg propertiesDlg;
 	propertiesDlg.DoModal();
 }
 

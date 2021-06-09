@@ -171,8 +171,8 @@ namespace xgm
 
     if (s == 0 && (frame_sequence_steps == 4))
     {
-      //if (frame_irq_enable) frame_irq = true;
-      //cpu->UpdateIRQ(I5E01_CPU::IRQD_FRAME, frame_irq & frame_irq_enable);
+      if (frame_irq_enable) frame_irq = true;
+      cpu->UpdateIRQ(NES_CPU::IRQD_FRAME, frame_irq & frame_irq_enable);
     }
 
     // 240hz clock
@@ -359,7 +359,7 @@ namespace xgm
         if (dlength > 0)
         {
           memory->Read(daddress, data);
-          //cpu->StealCycles(4); // DMC read takes 3 or 4 CPU cycles, usually 4
+          cpu->StealCycles(4); // DMC read takes 3 or 4 CPU cycles, usually 4
           // (checking for the 3-cycle case would require sub-instruction emulation)
           data &= 0xFF; // read 8 bits
           if (option[OPT_DPCM_REVERSE]) data = BITREVERSE[data];
@@ -376,8 +376,8 @@ namespace xgm
             }
             else if (mode & 2) // IRQ and not looped
             {
-              //irq = true;
-              //cpu->UpdateIRQ(I5E01_CPU::IRQD_DMC, true);
+              irq = true;
+              cpu->UpdateIRQ(NES_CPU::IRQD_DMC, true);
             }
           }
         }
@@ -619,7 +619,7 @@ namespace xgm
     frame_sequence_count = 0;
     frame_sequence_steps = 4;
     frame_sequence_step = 0;
-    //cpu->UpdateIRQ(I5E01_CPU::IRQD_FRAME, false);
+    cpu->UpdateIRQ(NES_CPU::IRQD_FRAME, false);
 
     for (i = 0; i < 0x0F; i++)
       Write(0x4108 + i, 0);
@@ -629,7 +629,7 @@ namespace xgm
     Write(0x4115, 0x00);
     if (option[OPT_UNMUTE_ON_RESET])
       Write(0x4115, 0x0f);
-    //cpu->UpdateIRQ(I5E01_CPU::IRQD_DMC, false);
+    cpu->UpdateIRQ(NES_CPU::IRQD_DMC, false);
 
     out[0] = out[1] = out[2] = 0;
     damp = 0;
@@ -720,8 +720,8 @@ namespace xgm
         dlength = 0;
       }
 
-      //irq = false;
-      //cpu->UpdateIRQ(I5E01_CPU::IRQD_DMC, false);
+      irq = false;
+      cpu->UpdateIRQ(NES_CPU::IRQD_DMC, false);
 
       reg[adr - 0x4108] = val;
       return true;
@@ -731,8 +731,8 @@ namespace xgm
     {
       //DEBUG_OUT("4017 = %02X\n", val);
       frame_irq_enable = ((val & 0x40) != 0x40);
-      //if (frame_irq_enable) frame_irq = false;
-      //cpu->UpdateIRQ(I5E01_CPU::IRQD_FRAME, false);
+      if (frame_irq_enable) frame_irq = false;
+      cpu->UpdateIRQ(NES_CPU::IRQD_FRAME, false);
 
       frame_sequence_count = 0;
       if (val & 0x80)
@@ -818,7 +818,7 @@ namespace xgm
       if (!(mode & 2))
       {
         irq = false;
-        //cpu->UpdateIRQ(I5E01_CPU::IRQD_DMC, false);
+        cpu->UpdateIRQ(NES_CPU::IRQD_DMC, false);
       }
       dfreq = freq_table[pal][val & 15];
       break;
@@ -861,7 +861,7 @@ namespace xgm
         ;
 
       frame_irq = false;
-      //cpu->UpdateIRQ(I5E01_CPU::IRQD_FRAME, false);
+      cpu->UpdateIRQ(NES_CPU::IRQD_FRAME, false);
       return true;
     }
     else if (0x4108 <= adr && adr <= 0x4114)
@@ -874,8 +874,8 @@ namespace xgm
   }
 
   // IRQ support requires CPU read access
-  //void I5E01_DMC::SetCPU(I5E01_CPU* cpu_)
-  //{
-  //  cpu = cpu_;
-  //}
+  void I5E01_DMC::SetCPU(NES_CPU* cpu_)
+  {
+    cpu = cpu_;
+  }
 } // namespace

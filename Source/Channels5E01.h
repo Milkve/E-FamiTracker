@@ -110,3 +110,44 @@ protected:
 
 	int		TriggerNote(int Note) override;
 };
+
+class CDSample;		// // //
+
+// DPCM
+class C5E01DPCMChan : public CChannelHandler, public CChannelHandlerInterfaceDPCM {		// // //
+public:
+	C5E01DPCMChan();		// // //
+	void	RefreshChannel() override;
+	int		GetChannelVolume() const override;		// // //
+
+	void WriteDCOffset(unsigned char Delta);		// // //
+	void SetLoopOffset(unsigned char Loop);		// // //
+	void PlaySample(const CDSample* pSamp, int Pitch);		// // //
+protected:
+	void	HandleNoteData(stChanNote* pNoteData, int EffColumns) override;
+	bool	HandleEffect(effect_t EffNum, unsigned char EffParam) override;		// // //
+	void	HandleEmptyNote() override;
+	void	HandleCut() override;
+	void	HandleRelease() override;
+	void	HandleNote(int Note, int Octave) override;
+	bool	CreateInstHandler(inst_type_t Type) override;		// // //
+
+	void triggerSample();
+	void queueSample();
+
+	void	ClearRegisters() override;
+	CString	GetCustomEffectString() const override;		// // //
+private:
+	// DPCM variables
+	unsigned char m_cDAC;
+	unsigned char m_iLoop;
+	unsigned char m_iOffset;
+	unsigned char m_iSampleLength;
+	unsigned char m_iLoopOffset;
+	unsigned char m_iLoopLength;
+	int mRetriggerPeriod;	// If zero, DPCM will not retrigger.
+	int mRetriggerCtr;		// Time until next DPCM retrigger (frames)
+	int m_iCustomPitch;
+	bool mTriggerSample;		// // //
+	bool mEnabled;
+};

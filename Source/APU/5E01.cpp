@@ -50,7 +50,7 @@ C5E01::C5E01() {
 void C5E01::Reset()
 {
 	m_Apu2.SetAPU(&m_Apu1);
-	//m_Apu2.SetMemory(&m_SampleMem);
+	m_Apu2.SetMemory(&m_SampleMem);
 
 	m_Apu1.Reset();
 	m_Apu2.Reset();
@@ -227,4 +227,24 @@ void C5E01::ChangeMachine(int Machine)
 			m_Apu2.SetPal(true);
 			break;
 	}
+}
+
+C5E01SampleMem* C5E01::GetSampleMemory()		// // //
+{
+	return &m_SampleMem;
+}
+
+uint8_t C5E01::GetSamplePos() const
+{
+	return m_Apu2.GetSamplePos();
+}
+
+uint8_t C5E01::GetDeltaCounter() const
+{
+	return m_Apu2.GetDeltaCounter();
+}
+
+bool C5E01::DPCMPlaying() const
+{
+	return m_Apu2.IsPlaying();
 }

@@ -245,7 +245,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 				LastInstrument = Instrument;
 				// Write instrument change command
 				//if (Channel < InstrChannels) {
-				if (ChanID != CHANID_DPCM) {		// Skip DPCM
+				if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {		// Skip DPCM
 					WriteDuration();
 #ifdef PACKED_INST_CHANGE
 					if (Instrument < 0x10)
@@ -264,14 +264,14 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					DPCMInst = ChanNote.Instrument;
 				}
 			}
-			if (Instrument == HOLD_INSTRUMENT && ChanID != CHANID_DPCM) {		// // // 050B
+			if (Instrument == HOLD_INSTRUMENT && ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {		// // // 050B
 				WriteDuration();
 				WriteData(Command(CMD_HOLD));
 				Action = true;
 			}
 #ifdef OPTIMIZE_DURATIONS
 			if (Instrument == LastInstrument && Instrument < MAX_INSTRUMENTS) {		// // //
-				if (ChanID != CHANID_DPCM) {
+				if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 					WriteDuration();
 					Action = true;
 				}
@@ -292,7 +292,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 			NESNote = 0x6F + Octave;
 		}
 		else {
-			if (ChanID == CHANID_DPCM) {
+			if (ChanID == CHANID_DPCM || ChanID == CHANID_5E01_DPCM) {
 				// 2A03 DPCM
 				int LookUp = FindSample(DPCMInst, Octave, Note);
 				if (LookUp > 0) {
@@ -366,7 +366,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_PORTAMENTO:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						if (EffParam == 0)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
@@ -376,7 +376,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_PORTA_UP:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						if (EffParam == 0)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
@@ -395,7 +395,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_PORTA_DOWN:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						if (EffParam == 0)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
@@ -433,7 +433,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_ARPEGGIO:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						if (EffParam == 0)
 							WriteData(Command(CMD_EFF_CLEAR));
 						else {
@@ -443,21 +443,21 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_VIBRATO:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_VIBRATO));
 						//WriteData(EffParam);
 						WriteData((EffParam & 0xF) << 4 | (EffParam >> 4));
 					}
 					break;
 				case EF_TREMOLO:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_TREMOLO));
 //						WriteData(EffParam & 0xF7);
 						WriteData((EffParam & 0xF) << 4 | (EffParam >> 4));
 					}
 					break;
 				case EF_PITCH:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						if (EffParam == 0x80)
 							WriteData(Command(CMD_EFF_RESET_PITCH));
 						else {
@@ -476,7 +476,7 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_DAC:
-					if (ChanID == CHANID_DPCM) {
+					if (ChanID == CHANID_DPCM || ChanID == CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_DAC));
 						WriteData(EffParam & 0x7F);
 					}
@@ -490,31 +490,31 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 						WriteData(Command(CMD_EFF_DUTY));
 						WriteData((EffParam << 6) | ((EffParam & 0x04) << 3));
 					}
-					else if (ChanID != CHANID_TRIANGLE && ChanID != CHANID_DPCM) {	// Not triangle and dpcm
+					else if (ChanID != CHANID_TRIANGLE && ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {	// Not triangle and dpcm
 						WriteData(Command(CMD_EFF_DUTY));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_SAMPLE_OFFSET:
-					if (ChanID == CHANID_DPCM) {	// DPCM
+					if (ChanID == CHANID_DPCM || ChanID == CHANID_5E01_DPCM) {	// DPCM
 						WriteData(Command(CMD_EFF_OFFSET));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_SLIDE_UP:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_SLIDE_UP));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_SLIDE_DOWN:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_SLIDE_DOWN));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_VOLUME_SLIDE:
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_VOL_SLIDE));
 						WriteData(EffParam);
 					}
@@ -530,13 +530,13 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_RETRIGGER:
-					if (ChanID == CHANID_DPCM) {
+					if (ChanID == CHANID_DPCM || ChanID == CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_RETRIGGER));
 						WriteData(EffParam + 1);
 					}
 					break;
 				case EF_DPCM_PITCH:
-					if (ChanID == CHANID_DPCM) {
+					if (ChanID == CHANID_DPCM || ChanID == CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_DPCM_PITCH));
 						WriteData(EffParam);
 					}
@@ -559,13 +559,13 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					}
 					break;
 				case EF_DELAYED_VOLUME:		// // //
-					if (ChanID != CHANID_DPCM && (EffParam >> 4) && (EffParam & 0x0F)) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM && (EffParam >> 4) && (EffParam & 0x0F)) {
 						WriteData(Command(CMD_EFF_DELAYED_VOLUME));
 						WriteData(EffParam);
 					}
 					break;
 				case EF_TRANSPOSE:			// // //
-					if (ChanID != CHANID_DPCM) {
+					if (ChanID != CHANID_DPCM && ChanID != CHANID_5E01_DPCM) {
 						WriteData(Command(CMD_EFF_TRANSPOSE));
 						WriteData(EffParam);
 					}

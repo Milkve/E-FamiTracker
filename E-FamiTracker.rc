@@ -42,6 +42,18 @@ IDB_TOOLBAR_INST_256    BITMAP                  "res/InstrumentToolbar-256.bmp"
 
 IDB_ABOUT               BITMAP                  "res/About.bmp"
 
+IDB_SYS_NES             BITMAP                  "res\\Sys_NES.bmp"
+
+IDB_SYS_FAMICOM         BITMAP                  "res\\Sys_Famicom.bmp"
+
+IDB_SYS_COMMODORE       BITMAP                  "res\\Sys_Commodore.bmp"
+
+IDB_SYS_ATARI           BITMAP                  "res\\Sys_Atari.bmp"
+
+IDB_SYS_GI              BITMAP                  "res\\Sys_GI.bmp"
+
+IDB_SYS_E               BITMAP                  "res\\Sys_E.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1050,6 +1062,18 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 187
     END
+
+    IDD_CHIP_SELECT, DIALOG
+    BEGIN
+        VERTGUIDE, 6
+        VERTGUIDE, 12
+        VERTGUIDE, 66
+        VERTGUIDE, 72
+        VERTGUIDE, 78
+        VERTGUIDE, 90
+        VERTGUIDE, 138
+        TOPMARGIN, 6
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -2041,6 +2065,61 @@ BEGIN
     COMBOBOX        IDC_SCALE_SCALE,42,174,72,12,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
+IDD_CHIP_SELECT DIALOGEX 0, 0, 154, 223
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CLIENTEDGE
+CAPTION "Chip Selection"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Famicom/NES",IDC_STATIC,6,31,132,114,BS_BITMAP
+    GROUPBOX        "Commodore/MOS Technology",IDC_STATIC,6,145,132,72,BS_BITMAP | WS_DISABLED
+    CONTROL         "Ricoh 2A03",IDC_CHIP_2A03,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,43,48,8
+    CONTROL         "Ricoh 2A07",IDC_CHIP_2A07,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,55,52,8
+    CONTROL         "Konami VRC6",IDC_CHIP_VRC6,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,66,43,54,8
+    CONTROL         "Konami VRC7",IDC_CHIP_VRC7,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,66,55,54,8
+    CONTROL         "Famicom Disk System (Ricoh 2C33)",IDC_CHIP_2C33,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,67,124,8
+    CONTROL         "Nintendo MMC5",IDC_CHIP_MMC5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,103,66,8
+    CONTROL         "Sunsoft 5B",IDC_CHIP_S5B,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,78,103,48,8
+    CONTROL         "Namco 163",IDC_CHIP_N163,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,115,51,8
+    LTEXT           "Channels: 1",IDC_CHANNELS_NR,72,119,48,8,WS_DISABLED
+    CONTROL         "Sam Coupé (Philips SAA1099)",IDC_CHIP_SAA1099,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,270,132,8
+    GROUPBOX        "General Instrument",IDC_STATIC,6,217,132,24,BS_BITMAP
+    CONTROL         "Multiplexing",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,12,127,48,8
+    CTEXT           "FDS Lowpass Filter Cutoff",IDC_STATIC,18,79,108,10,WS_DISABLED
+    CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_DISABLED | WS_TABSTOP,12,87,120,12,WS_EX_TRANSPARENT
+    CONTROL         "AY8930",IDC_CHIP_AY8930,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,72,229,48,8
+    CONTROL         "",IDC_CHANNELS,"msctls_trackbar32",TBS_AUTOTICKS | WS_DISABLED | WS_TABSTOP,66,127,51,13
+    CONTROL         "MOS 6581 SID",IDC_CHIP_6581,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,157,59,8
+    CONTROL         "MOS 8580 SID",IDC_CHIP_8580,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,72,157,60,8
+    CONTROL         "MOS 6560 VIC",IDC_CHIP_6560,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,169,59,8
+    CONTROL         "MOS 8360 TED",IDC_CHIP_8360,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,72,181,60,8
+    CONTROL         "MOS 7360 TED",IDC_CHIP_7360,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,181,59,8
+    CONTROL         "MOS 6561 VIC",IDC_CHIP_6561,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,72,169,60,8
+    GROUPBOX        "Misc.",IDC_STATIC,6,306,132,36,BS_BITMAP
+    CONTROL         "Eulous 5E01",IDC_CHIP_5E01,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,318,54,8
+    CONTROL         "Eulous E32",IDC_CHIP_E32,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,72,318,48,8
+    CONTROL         "Amiga AHX",IDC_CHIP_AHX,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,330,48,8
+    CTEXT           "SID Filter Strength",IDC_STATIC,18,193,108,10,WS_DISABLED
+    CONTROL         "",IDC_SLIDER2,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_DISABLED | WS_TABSTOP,12,201,120,12,WS_EX_TRANSPARENT
+    GROUPBOX        "Atari",IDC_STATIC,6,241,132,24,BS_BITMAP | WS_DISABLED
+    CONTROL         "Atari TIA",IDC_CHIP_TIA,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,253,45,8
+    CONTROL         "Atari POKEY",IDC_CHIP_POKEY,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,72,253,59,8
+    CONTROL         "Nintendo Game Boy (Sharp LR35902)",IDC_CHIP_LR35902,
+                    "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,6,282,132,8
+    CONTROL         "AY-3-8910",IDC_CHIP_AY38910,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,229,54,8
+    CONTROL         "Sega Master System (TI SN76489)",IDC_CHIP_SN76489,
+                    "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,6,294,132,8
+    CONTROL         "Beeper Speaker",IDC_CHIP_BEEPER,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,72,330,63,8
+    CONTROL         IDB_SYS_NES,IDC_STATIC,"Static",SS_BITMAP | SS_CENTERIMAGE | SS_RIGHTJUST | SS_REALSIZEIMAGE,0,30,11,10,WS_EX_TRANSPARENT
+    CONTROL         IDB_SYS_COMMODORE,IDC_STATIC,"Static",SS_BITMAP | SS_CENTERIMAGE | SS_RIGHTJUST | SS_REALSIZEIMAGE,0,144,12,11,WS_EX_TRANSPARENT
+    CONTROL         IDB_SYS_ATARI,IDC_STATIC,"Static",SS_BITMAP | SS_CENTERIMAGE | SS_RIGHTJUST | SS_REALSIZEIMAGE,0,240,12,10,WS_EX_TRANSPARENT
+    CONTROL         IDB_SYS_GI,IDC_STATIC,"Static",SS_BITMAP | SS_CENTERIMAGE | SS_RIGHTJUST | SS_REALSIZEIMAGE,0,217,11,9,WS_EX_TRANSPARENT
+    CONTROL         IDB_SYS_E,IDC_STATIC,"Static",SS_BITMAP | SS_CENTERIMAGE | SS_RIGHTJUST | SS_REALSIZEIMAGE,0,306,11,9,WS_EX_TRANSPARENT
+    CONTROL         "",IDC_CHIP_BUTTON_BG,"Static",SS_WHITEFRAME | SS_CENTERIMAGE,0,0,142,25,WS_EX_DLGMODALFRAME
+    PUSHBUTTON      "Cancel",IDCANCEL,75,6,50,14
+    DEFPUSHBUTTON   "OK",IDOK,15,6,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2481,6 +2560,56 @@ END
 IDD_SCALE_EDITOR AFX_DIALOG_LAYOUT
 BEGIN
     0
+END
+
+IDD_CHIP_SELECT AFX_DIALOG_LAYOUT
+BEGIN
+    0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 100, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
 END
 
 

@@ -492,3 +492,231 @@ int C5E01NoiseChan::TriggerNote(int Note)
 	RegisterKeyState(Note);
 	return Note | 0x100;		// // //
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DPCM
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+C5E01DPCMChan::C5E01DPCMChan() :		// // //
+	CChannelHandler(0xF, 0x3F),		// // // does not use these anyway
+	mEnabled(false),
+	mTriggerSample(false),
+	m_cDAC(255),
+	mRetriggerPeriod(0),
+	mRetriggerCtr(0)
+{
+}
+
+
+void C5E01DPCMChan::HandleNoteData(stChanNote* pNoteData, int EffColumns)
+{
+	m_iCustomPitch = -1;
+	mRetriggerPeriod = 0;
+
+	if (pNoteData->Note != NONE) {
+		m_iNoteCut = 0;
+		m_iNoteRelease = 0;			// // //
+	}
+
+	CChannelHandler::HandleNoteData(pNoteData, EffColumns);
+}
+
+
+
+// Called once per row.
+bool C5E01DPCMChan::HandleEffect(effect_t EffNum, unsigned char EffParam)
+{
+	switch (EffNum) {
+	case EF_DAC:
+		m_cDAC = EffParam & 0x7F;
+		break;
+	case EF_SAMPLE_OFFSET:
+		m_iOffset = EffParam & 0x3F;		// // //
+		break;
+	case EF_DPCM_PITCH:
+		m_iCustomPitch = EffParam & 0x0F;		// // //
+		break;
+	case EF_RETRIGGER:
+
+		mRetriggerPeriod = std::max((int)EffParam, 1);
+		if (mRetriggerCtr == 0) {	// Most recent row contains note without Xxx
+			queueSample();
+		}
+		break;
+	case EF_NOTE_CUT:
+	case EF_NOTE_RELEASE:
+		return CChannelHandler::HandleEffect(EffNum, EffParam);
+	default: return false; // unless WAVE_CHAN analog for CChannelHandler exists
+	}
+
+	return true;
+}
+
+void C5E01DPCMChan::HandleEmptyNote()
+{
+}
+
+void C5E01DPCMChan::HandleCut()
+{
+	//	KillChannel();
+	CutNote();
+}
+
+void C5E01DPCMChan::HandleRelease()
+{
+	m_bRelease = true;
+}
+
+void C5E01DPCMChan::HandleNote(int Note, int Octave)
+{
+	CChannelHandler::HandleNote(Note, Octave);		// // //
+	m_iNote = MIDI_NOTE(Octave, Note);		// // //
+	TriggerNote(m_iNote);
+	m_bGate = true;
+}
+
+bool C5E01DPCMChan::CreateInstHandler(inst_type_t Type)
+{
+	switch (Type) {
+	case INST_2A03:
+		switch (m_iInstTypeCurrent) {
+		case INST_2A03: break;
+		default:
+			m_pInstHandler.reset(new CInstHandlerDPCM(this));
+			return true;
+		}
+	}
+	return false;
+}
+
+
+// Called once per row.
+void C5E01DPCMChan::PlaySample(const CDSample* pSamp, int Pitch)		// // //
+{
+	int SampleSize = pSamp->GetSize();
+	m_pAPU->Write5E01Sample(pSamp->GetData(), SampleSize);		// // //
+	m_iPeriod = m_iCustomPitch != -1 ? m_iCustomPitch : Pitch;
+	m_iSampleLength = (SampleSize >> 4) - (m_iOffset << 2);
+	m_iLoopLength = SampleSize - m_iLoopOffset;
+	m_iLoop = (Pitch & 0x80) >> 1;
+	triggerSample();
+}
+
+
+void C5E01DPCMChan::triggerSample() {
+	// Trigger sample.
+	mEnabled = true;
+	mTriggerSample = true;
+
+	// If mRetriggerPeriod != 0, this initializes retriggering. Otherwise reset mRetriggerCtr.
+	queueSample();
+}
+
+void C5E01DPCMChan::queueSample() {
+	if (mRetriggerPeriod == 0) {
+		// Not retriggering, reset mRetriggerCtr.
+		mRetriggerCtr = 0;
+	}
+	else {
+		// mRetriggerCtr gets decremented this frame, and reaches 0 in mRetriggerPeriod frames.
+		mRetriggerCtr = mRetriggerPeriod + 1;
+	}
+}
+
+
+// Called once per frame. Renders note to registers. Initializes playback.
+void C5E01DPCMChan::RefreshChannel()
+{
+	if (m_cDAC != 255) {
+		WriteRegister(0x4111, m_cDAC);
+		m_cDAC = 255;
+	}
+
+	if (mRetriggerPeriod != 0) {
+		mRetriggerCtr--;
+		if (mRetriggerCtr == 0) {
+			mRetriggerCtr = mRetriggerPeriod;
+			mEnabled = true;
+			mTriggerSample = true;
+		}
+	}
+
+
+	if (m_bRelease) {
+		// Release command
+		WriteRegister(0x4115, 0x0F);
+		mEnabled = false;
+		m_bRelease = false;
+	}
+
+	if (!mEnabled)
+		return;
+
+	if (!m_bGate) {
+		// Cut sample
+		WriteRegister(0x4115, 0x0F);
+
+		if (!theApp.GetSettings()->General.bNoDPCMReset || theApp.IsPlaying()) {
+			WriteRegister(0x4111, 0);	// regain full volume for TN
+		}
+
+		mEnabled = false;		// don't write to this channel anymore
+	}
+	else if (mTriggerSample) {
+		// Start playing the sample
+		WriteRegister(0x4110, (m_iPeriod & 0x0F) | m_iLoop);
+		WriteRegister(0x4112, m_iOffset);							// load address, start at $C000
+		WriteRegister(0x4113, m_iSampleLength);						// length
+		WriteRegister(0x4115, 0x0F);
+		WriteRegister(0x4115, 0x1F);								// fire sample
+
+		// Loop offset
+		if (m_iLoopOffset > 0) {
+			WriteRegister(0x4112, m_iLoopOffset);
+			WriteRegister(0x4113, m_iLoopLength);
+		}
+
+		mTriggerSample = false;
+	}
+}
+
+
+int C5E01DPCMChan::GetChannelVolume() const
+{
+	return VOL_COLUMN_MAX;
+}
+
+void C5E01DPCMChan::WriteDCOffset(unsigned char Delta)		// // //
+{
+	// Initial delta counter value
+	if (Delta != 255 && m_cDAC == 255)
+		m_cDAC = Delta;
+}
+
+void C5E01DPCMChan::SetLoopOffset(unsigned char Loop)		// // //
+{
+	m_iLoopOffset = Loop;
+}
+
+void C5E01DPCMChan::ClearRegisters()
+{
+	WriteRegister(0x4115, 0x0F);
+
+	WriteRegister(0x4110, 0);
+	WriteRegister(0x4111, 0);
+	WriteRegister(0x4112, 0);
+	WriteRegister(0x4113, 0);
+
+	m_iOffset = 0;
+	m_cDAC = 255;
+}
+
+CString C5E01DPCMChan::GetCustomEffectString() const		// // //
+{
+	CString str = _T("");
+
+	if (m_iOffset)
+		str.AppendFormat(_T(" Y%02X"), m_iOffset);
+
+	return str;
+}

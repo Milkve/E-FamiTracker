@@ -248,8 +248,9 @@ void CSoundGen::CreateChannels()
 	// // // Eulous 5E01
 	AssignChannel(new CTrackerChannel(_T("5E01 Pulse 1"), _T("5E1"), SNDCHIP_5E01, CHANID_5E01_SQUARE1));
 	AssignChannel(new CTrackerChannel(_T("5E01 Pulse 2"), _T("5E2"), SNDCHIP_5E01, CHANID_5E01_SQUARE2));
-	AssignChannel(new CTrackerChannel(_T("5E01 Waveform"), _T("WAV"), SNDCHIP_5E01, CHANID_5E01_WAVEFORM));
+	AssignChannel(new CTrackerChannel(_T("5E01 Waveform"), _T("5EW"), SNDCHIP_5E01, CHANID_5E01_WAVEFORM));
 	AssignChannel(new CTrackerChannel(_T("5E01 Noise"), _T("5EN"), SNDCHIP_5E01, CHANID_5E01_NOISE));
+	AssignChannel(new CTrackerChannel(_T("5E01 DPCM"), _T("5ED"), SNDCHIP_5E01, CHANID_5E01_DPCM));
 }
 
 void CSoundGen::AssignChannel(CTrackerChannel *pTrackerChannel)		// // //
@@ -1241,7 +1242,7 @@ static CString GetStateString(const stChannelState &State)
 			if (p < 0) continue;
 			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
 		}
-	else if (State.ChannelIndex == CHANID_DPCM)
+	else if (State.ChannelIndex == CHANID_DPCM || State.ChannelIndex == CHANID_5E01_DPCM)
 		for (const auto &x : {EF_SAMPLE_OFFSET, /*EF_DPCM_PITCH*/}) {
 			int p = State.Effect[x];
 			if (p <= 0) continue;
@@ -1941,6 +1942,7 @@ bool CSoundGen::PreviewDone() const
 {
 	return (m_pAPU->DPCMPlaying() == false);
 }
+
 
 bool CSoundGen::WaitForStop() const
 {

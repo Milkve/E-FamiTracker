@@ -372,6 +372,32 @@ void CAPU::ClearSample()		// // //
 	m_p2A03->GetSampleMemory()->Clear();
 }
 
+
+uint8_t CAPU::Get5E01SamplePos() const
+{
+	return m_p5E01->GetSamplePos();
+}
+
+uint8_t CAPU::Get5E01DeltaCounter() const
+{
+	return m_p5E01->GetDeltaCounter();
+}
+
+bool CAPU::DPCM5E01Playing() const
+{
+	return m_p5E01->DPCMPlaying();
+}
+
+void CAPU::Write5E01Sample(const char* pBuf, int Size)		// // //
+{
+	m_p5E01->GetSampleMemory()->SetMem(pBuf, Size);
+}
+
+void CAPU::Clear5E01Sample()		// // //
+{
+	m_p5E01->GetSampleMemory()->Clear();
+}
+
 #ifdef LOGGING
 void CAPU::Log()
 {

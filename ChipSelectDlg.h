@@ -15,6 +15,7 @@ class CChipSelectDlg : public CDialog
 private:
 
 	CFamiTrackerDoc* m_pDocument;
+	CDialog m_pChipList;
 
 public:
 	CChipSelectDlg(CWnd* pParent = nullptr);   // standard constructor

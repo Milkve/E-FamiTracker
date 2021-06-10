@@ -250,6 +250,12 @@
     <Filter Include="Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\mesen">
       <UniqueIdentifier>{f2739585-ae45-42fa-bcd6-0366cbc323c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid">
+      <UniqueIdentifier>{50785da8-5910-498a-88a1-c021a7eab8ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sound Driver\Emulation\Sound Chips\External\resid">
+      <UniqueIdentifier>{3b33acff-5ede-4859-afb0-e0757e49a161}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Exception.cpp">
@@ -779,6 +785,63 @@
     </ClCompile>
     <ClCompile Include="ScaleEditorDlg.cpp">
       <Filter>Source Files\Dialog Boxes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave8580_PST.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\envelope.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\extfilt.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\filter.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\pot.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\sid.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\voice.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave6581__ST.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave6581_P_T.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave6581_PS_.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave6581_PST.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave8580__ST.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave8580_P_T.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\resid\wave8580_PS_.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\6581.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Channels6581.cpp">
+      <Filter>Source Files\Sound Driver\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="SeqInstHandlerSID.cpp">
+      <Filter>Source Files\Sound Driver\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\InstrumentSID.cpp">
+      <Filter>Source Files\Document Data Types\Instruments</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1562,6 +1625,45 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\APU\resid\voice.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\wave.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\envelope.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\extfilt.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\filter.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\pot.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\sid.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\siddefs.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\resid\spline.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\6581.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Channels6581.h">
+      <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SeqInstHandlerSID.h">
+      <Filter>Header Files\Sound Driver Headers\Instruments Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\InstrumentSID.h">
+      <Filter>Header Files\Document Data Type Headers\Instrument Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="E-FamiTracker.rc">
@@ -1709,6 +1811,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Sys_E.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Inst_6581.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -1819,7 +1819,8 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		m_pDocument->ExpansionEnabled(SNDCHIP_S5B) * 8 +
 		m_pDocument->ExpansionEnabled(SNDCHIP_AY8930) * 12 +
 		m_pDocument->ExpansionEnabled(SNDCHIP_SAA1099) * 12 +
-		m_pDocument->ExpansionEnabled(SNDCHIP_5E01) * 8);		// // //
+		m_pDocument->ExpansionEnabled(SNDCHIP_5E01) * 8 +
+		m_pDocument->ExpansionEnabled(SNDCHIP_6581) * 5);		// // //
 	int vis_line = 0;
 
 	const auto DrawHeaderFunc = [&] (CString Text) {
@@ -2286,6 +2287,15 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 			}
 			DrawTextFunc(180, text);
 			DrawVolFunc(freq, vol << 4);
+		}
+
+	}
+	if (m_pDocument->ExpansionEnabled(SNDCHIP_6581)) {		// // //
+		DrawHeaderFunc(_T("6581 (incomplete)"));		// // //
+		for (int i = 0; i < 4; ++i) {
+			GetRegsFunc(SNDCHIP_6581, [&](int x) { return 0xD400 + i * 7 + x; }, 8);
+			text.Format(_T("$%02X:"), i * 7);
+			DrawRegFunc(text, 8);
 		}
 
 	}

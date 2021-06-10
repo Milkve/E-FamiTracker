@@ -217,6 +217,9 @@ void CInstrumentEditDlg::SetCurrentInstrument(int Index)
 			case INST_S5B:
 				InsertPane(new CInstrumentEditorSeq(NULL, _T("Sunsoft 5B"), CInstrumentS5B::SEQUENCE_NAME, 31, 31, INST_S5B), true);
 				break;
+			case INST_SID:
+				InsertPane(new CInstrumentEditorSeq(NULL, _T("Sunsoft 5B"), CInstrumentS5B::SEQUENCE_NAME, 31, 31, INST_SID), true);
+				break;
 		}
 
 		m_iSelectedInstType = InstType;

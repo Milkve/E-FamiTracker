@@ -251,6 +251,11 @@ void CSoundGen::CreateChannels()
 	AssignChannel(new CTrackerChannel(_T("5E01 Waveform"), _T("5EW"), SNDCHIP_5E01, CHANID_5E01_WAVEFORM));
 	AssignChannel(new CTrackerChannel(_T("5E01 Noise"), _T("5EN"), SNDCHIP_5E01, CHANID_5E01_NOISE));
 	AssignChannel(new CTrackerChannel(_T("5E01 DPCM"), _T("5ED"), SNDCHIP_5E01, CHANID_5E01_DPCM));
+
+	// // // MOS Technology 6581
+	AssignChannel(new CTrackerChannel(_T("6581 Channel 1"), _T("SI1"), SNDCHIP_6581, CHANID_6581_CH1));
+	AssignChannel(new CTrackerChannel(_T("6581 Channel 2"), _T("SI2"), SNDCHIP_6581, CHANID_6581_CH2));
+	AssignChannel(new CTrackerChannel(_T("6581 Channel 3"), _T("SI3"), SNDCHIP_6581, CHANID_6581_CH3));
 }
 
 void CSoundGen::AssignChannel(CTrackerChannel *pTrackerChannel)		// // //

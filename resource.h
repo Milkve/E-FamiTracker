@@ -11,6 +11,7 @@
 #define IDC_MOVE_DOWN                   7
 #define IDD_ABOUTBOX                    100
 #define IDS_CLEARPATTERN                101
+#define IDD_CHIP_LIST                   101
 #define IDS_CLIPBOARD_COPY_ERROR        102
 #define IDD_CONFIG_EMULATION            102
 #define IDS_CLIPBOARD_PASTE_ERROR       103
@@ -227,6 +228,8 @@
 #define IDB_SYS_ATARI                   390
 #define IDB_SYS_GI                      391
 #define IDB_SYS_E                       392
+#define IDI_ICON1                       396
+#define IDI_INST_6581                   396
 #define IDC_INSTRUMENTS                 1001
 #define IDC_INSTSETTINGS                1002
 #define IDC_IMPORT_DETUNE               1002
@@ -881,7 +884,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        393
+#define _APS_NEXT_RESOURCE_VALUE        397
 #define _APS_NEXT_COMMAND_VALUE         33215
 #define _APS_NEXT_CONTROL_VALUE         1528
 #define _APS_NEXT_SYMED_VALUE           179

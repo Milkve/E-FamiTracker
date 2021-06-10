@@ -265,20 +265,39 @@
   <ItemGroup>
     <ClCompile Include="ChipSelectDlg.cpp" />
     <ClCompile Include="ScaleEditorDlg.cpp" />
+    <ClCompile Include="SeqInstHandlerSID.cpp" />
     <ClCompile Include="Source\APU\5E01.cpp" />
+    <ClCompile Include="Source\APU\6581.cpp" />
     <ClCompile Include="Source\APU\FDS.cpp" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\5e01_apu.cpp" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\5e01_dmc.cpp" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\legacy\emu2413.c" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\nes_apu.cpp" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\nes_dmc.cpp" />
+    <ClCompile Include="Source\APU\resid\envelope.cc" />
+    <ClCompile Include="Source\APU\resid\extfilt.cc" />
+    <ClCompile Include="Source\APU\resid\filter.cc" />
+    <ClCompile Include="Source\APU\resid\pot.cc" />
+    <ClCompile Include="Source\APU\resid\sid.cc" />
+    <ClCompile Include="Source\APU\resid\voice.cc" />
+    <ClCompile Include="Source\APU\resid\wave.cc" />
+    <ClCompile Include="Source\APU\resid\wave6581_PST.cc" />
+    <ClCompile Include="Source\APU\resid\wave6581_PS_.cc" />
+    <ClCompile Include="Source\APU\resid\wave6581_P_T.cc" />
+    <ClCompile Include="Source\APU\resid\wave6581__ST.cc" />
+    <ClCompile Include="Source\APU\resid\wave8580_PST.cc" />
+    <ClCompile Include="Source\APU\resid\wave8580_PS_.cc" />
+    <ClCompile Include="Source\APU\resid\wave8580_P_T.cc" />
+    <ClCompile Include="Source\APU\resid\wave8580__ST.cc" />
     <ClCompile Include="Source\APU\S5B.cpp" />
     <ClCompile Include="Source\APU\SAA1099.cpp" />
     <ClCompile Include="Source\APU\SoundChip2.cpp" />
     <ClCompile Include="Source\Channels5E01.cpp" />
+    <ClCompile Include="Source\Channels6581.cpp" />
     <ClCompile Include="Source\ChannelsS5B.cpp" />
     <ClCompile Include="Source\ChannelsSAA1099.cpp" />
     <ClCompile Include="Source\ConfigEmulation.cpp" />
+    <ClCompile Include="Source\InstrumentSID.cpp" />
     <ClCompile Include="Source\NoNotifyEdit.cpp" />
     <ClCompile Include="Source\HistoryFileDlg.cpp" />
     <ClCompile Include="Source\APU\2A03.cpp" />
@@ -444,7 +463,11 @@
     <ClInclude Include="ChipSelectDlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScaleEditorDlg.h" />
+    <ClInclude Include="SeqInstHandlerSID.h" />
     <ClInclude Include="Source\APU\5E01.h" />
+    <ClInclude Include="Source\APU\6581.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Source\APU\ChannelLevelState.h" />
     <ClInclude Include="Source\APU\FDS.h" />
     <ClInclude Include="Source\APU\mesen\BaseFdsChannel.h" />
@@ -466,14 +489,25 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Source\APU\resid\envelope.h" />
+    <ClInclude Include="Source\APU\resid\extfilt.h" />
+    <ClInclude Include="Source\APU\resid\filter.h" />
+    <ClInclude Include="Source\APU\resid\pot.h" />
+    <ClInclude Include="Source\APU\resid\sid.h" />
+    <ClInclude Include="Source\APU\resid\siddefs.h" />
+    <ClInclude Include="Source\APU\resid\spline.h" />
+    <ClInclude Include="Source\APU\resid\voice.h" />
+    <ClInclude Include="Source\APU\resid\wave.h" />
     <ClInclude Include="Source\APU\S5B.h" />
     <ClInclude Include="Source\APU\SAA1099.h" />
     <ClInclude Include="Source\APU\SoundChip2.h" />
     <ClInclude Include="Source\array_view.h" />
     <ClInclude Include="Source\Channels5E01.h" />
+    <ClInclude Include="Source\Channels6581.h" />
     <ClInclude Include="Source\ChannelsS5B.h" />
     <ClInclude Include="Source\ChannelsSAA1099.h" />
     <ClInclude Include="Source\ConfigEmulation.h" />
+    <ClInclude Include="Source\InstrumentSID.h" />
     <ClInclude Include="Source\NoNotifyEdit.h" />
     <ClInclude Include="Source\HistoryFileDlg.h" />
     <ClInclude Include="Source\APU\2A03.h" />
@@ -759,6 +793,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Application.ico" />
+    <Image Include="res\Inst_6581.ico" />
     <Image Include="res\System_Famicom.ico" />
     <Image Include="res\System_NES.ico" />
     <Image Include="res\Sys_Atari.bmp" />

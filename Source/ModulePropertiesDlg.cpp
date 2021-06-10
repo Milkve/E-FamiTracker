@@ -170,6 +170,7 @@ void CModulePropertiesDlg::OnBnClickedOk()
 			case 6: str += _T("AY8930 ");   break;
 			case 7: str += _T("SAA1099 ");   break;
 			case 8: str += _T("5E01 ");   break;
+			case 9: str += _T("6581 ");   break;
 			}
 			if (i == 4 && m_pDocument->ExpansionEnabled(SNDCHIP_N163)
 				&& (m_iExpansions & SNDCHIP_N163) && m_iN163Channels < m_pDocument->GetNamcoChannels()) {
@@ -567,9 +568,9 @@ void CModulePropertiesDlg::OnBnClickedExpansion5E01()
 	CButton* pCheckBox = (CButton*)GetDlgItem(IDC_EXPANSION_5E01);
 
 	if (pCheckBox->GetCheck() == BST_CHECKED)
-		m_iExpansions |= SNDCHIP_5E01;
+		m_iExpansions |= SNDCHIP_6581;
 	else
-		m_iExpansions &= ~SNDCHIP_5E01;		// // //
+		m_iExpansions &= ~SNDCHIP_6581;
 }
 
 void CModulePropertiesDlg::OnBnClickedExpansionN163()

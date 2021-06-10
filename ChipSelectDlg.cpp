@@ -49,25 +49,32 @@ BOOL CChipSelectDlg::OnInitDialog()
 	//CFrameWnd* pFrameWnd = static_cast<CFrameWnd*>(GetParent());
 	//m_pDocument = static_cast<CFamiTrackerDoc*>(pFrameWnd->GetActiveDocument());
 
-	RECT rcClient, rcWind;
+	RECT rcClient, rcWind, rcMenu;
 	POINT ptDiff;
 	GetClientRect(&rcClient);
 	GetWindowRect(&rcWind);
 	ptDiff.x = (rcWind.right - rcWind.left) - rcClient.right;
 	ptDiff.y = (rcWind.bottom - rcWind.top) - rcClient.bottom;
+	
+	m_pChipList.Create(IDD_CHIP_LIST, this);
+	m_pChipList.ShowWindow(SW_SHOW);
+	m_pChipList.GetWindowRect(&rcMenu);
+
+	((CButton*)m_pChipList.GetDlgItem(IDC_CHIP_2A03))->SetCheck(1);
 
 	SCROLLINFO info;
 	info.cbSize = sizeof(SCROLLINFO);
 	info.fMask = SIF_ALL;
 	info.nMin = 0;
-	info.nMax = 388+ptDiff.y;
-	info.nPage = 224;
+	info.nMax = rcMenu.bottom-rcMenu.top+ptDiff.y;
+	info.nPage = rcClient.bottom;
 	info.nPos = 0;
 	info.nTrackPos = 0;
 	InitializeFlatSB(m_hWnd);
 	FlatSB_EnableScrollBar(m_hWnd, SB_VERT, ESB_ENABLE_BOTH);
 	FlatSB_ShowScrollBar(m_hWnd, SB_VERT, true);
 	FlatSB_SetScrollInfo(m_hWnd, SB_VERT, &info, true);
+
 
 
 	return TRUE;
@@ -84,13 +91,6 @@ void CChipSelectDlg::OnBnClickedOk()
 void CChipSelectDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	
-	//SCROLLINFO info;
-	//FlatSB_GetScrollInfo(m_hWnd, SB_VERT, &info);
-	//if (nSBCode == SB_THUMBTRACK) {
-	//	ScrollWindow(0, GetScrollPos(SB_VERT)-nPos);
-	//	FlatSB_SetScrollPos(m_hWnd, SB_VERT, nPos, true);
-	//}
-
 	// TODO: Add your message handler code here and/or call default
 	int CurPos = FlatSB_GetScrollPos(m_hWnd, SB_VERT);
 	RECT rcClient, rcWind;
@@ -140,45 +140,11 @@ void CChipSelectDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		CurPos = nPos;     // position that the scroll box has been dragged to.
 		break;
 	}
-
-	// Set the new position of the thumb (scroll box).
-	auto scrollRect = CRect((int)rcClient.left, 41, (int)rcClient.right, (int)rcClient.bottom + 388 + (int)ptDiff.y);
-	auto clientRect = CRect((int)rcClient.left, 41, (int)rcClient.right, (int)rcClient.bottom);
-	auto fixedRect = CRect((int)rcClient.left, (int)rcClient.top, (int)rcClient.right, 41);
 	
-	// Move controls
-	HWND hwnd = ::GetTopWindow(this->GetSafeHwnd());
-	while (hwnd)
-	{
-		UINT nID = ::GetDlgCtrlID(hwnd);
-		CRect rect;
-		::GetWindowRect(hwnd, &rect);
-		ScreenToClient(&rect);
-		if (nID != IDC_CHIP_BUTTON_BG && nID != IDOK && nID != IDCANCEL)
-		{
-			::MoveWindow(hwnd, rect.left,
-				rect.top + FlatSB_GetScrollPos(m_hWnd, SB_VERT) - CurPos, rect.Width(),
-				rect.Height(), FALSE);
-			//HRGN clientRegion = CreateRectRgn(0,0,0,0);
-			//int regionType = GetDlgItem(nID)->GetWindowRgn(clientRegion);
-			//if (regionType != ERROR)
-			//{
-				/* hrgn contains window region */
-				//GetDlgItem(nID)->SetWindowRgn(clientRegion, false);
-			//}
-			//DeleteObject(clientRegion); /* finished with region */
-			CDC* pDC = CDC::FromHandle(::GetWindowDC(hwnd));
-		}
-		hwnd = ::GetNextWindow(hwnd, GW_HWNDNEXT);
-	}
 
 	// Scroll window
-	ScrollWindow(0, FlatSB_GetScrollPos(m_hWnd, SB_VERT) - CurPos, scrollRect, clientRect);
-
-	// move
+	m_pChipList.ScrollWindow(0, FlatSB_GetScrollPos(m_hWnd, SB_VERT) - CurPos);
 	FlatSB_SetScrollPos(m_hWnd, SB_VERT, CurPos, true);
-
-	RedrawWindow(fixedRect, NULL, RDW_NOERASE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 	
 
 	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);

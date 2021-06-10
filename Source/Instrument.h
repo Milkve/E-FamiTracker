@@ -33,7 +33,8 @@ enum inst_type_t {
 	INST_VRC7,
 	INST_FDS,
 	INST_N163,
-	INST_S5B
+	INST_S5B,
+	INST_SID
 };
 
 // External classes

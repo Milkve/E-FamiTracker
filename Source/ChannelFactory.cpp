@@ -35,6 +35,7 @@
 #include "ChannelsAY8930.h"
 #include "ChannelsSAA1099.h"
 #include "Channels5E01.h"
+#include "Channels6581.h"
 
 // // // Default implementation for channel factory
 
@@ -102,4 +103,9 @@ CChannelFactory::CChannelFactory() : CFactory()
 	AddProduct<C5E01WaveformChan>(CHANID_5E01_WAVEFORM);
 	AddProduct<C5E01NoiseChan>(CHANID_5E01_NOISE);
 	AddProduct<C5E01DPCMChan>(CHANID_5E01_DPCM);
+
+	Func = MakeCtor<CChannelHandler6581>();
+	m_pMakeFunc[CHANID_6581_CH1] = Func;
+	m_pMakeFunc[CHANID_6581_CH2] = Func;
+	m_pMakeFunc[CHANID_6581_CH3] = Func;
 }

@@ -34,6 +34,7 @@
 #include "InstrumentVRC7.h"
 #include "InstrumentN163.h"
 #include "InstrumentS5B.h"
+#include "InstrumentSID.h"
 
 CInstrumentFactory::CInstrumentFactory() : CFactory()
 {
@@ -43,6 +44,7 @@ CInstrumentFactory::CInstrumentFactory() : CFactory()
 	AddProduct<CInstrumentN163>(INST_N163);
 	AddProduct<CInstrumentFDS>(INST_FDS);
 	AddProduct<CSeqInstrument, inst_type_t>(INST_S5B, INST_S5B);
+	AddProduct<CInstrumentSID>(INST_SID);
 }
 
 CInstrument *CInstrumentFactory::CreateNew(inst_type_t Type)		// // // TODO: make this non-static

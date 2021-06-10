@@ -39,12 +39,14 @@ enum chip_level_t {
 	CHIP_LEVEL_AY8930,
 	CHIP_LEVEL_SAA1099,
 	CHIP_LEVEL_5E01,
+	CHIP_LEVEL_6581,
 	CHIP_LEVEL_COUNT
 };
 
 class C2A03;
 class CFDS;
 class C5E01;
+class C6581;
 class CAPU;
 
 struct MixerConfig {
@@ -159,6 +161,7 @@ private:
 	float		m_fLevelAY8930;		// // // 050B
 	float		m_fLevelSAA1099;		// // // 050B
 	float		m_fLevel5E01;		// // // 050B
+	float		m_fLevel6581;		// // // 050B
 
 	friend class CAPU;
 };

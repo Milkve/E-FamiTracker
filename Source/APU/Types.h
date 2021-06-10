@@ -34,6 +34,7 @@ const int SNDCHIP_S5B  = 32;		// Sunsoft 5B
 const int SNDCHIP_AY8930  = 64;		// Microchip AY8930
 const int SNDCHIP_SAA1099 = 128;		// Philips SAA1099
 const int SNDCHIP_5E01 = 256;		// Eulous 5E01
+const int SNDCHIP_6581 = 512;		// MOS Technology 6581
 
 enum chan_id_t {
 	CHANID_SQUARE1,
@@ -88,6 +89,10 @@ enum chan_id_t {
 	CHANID_5E01_WAVEFORM,
 	CHANID_5E01_NOISE,
 	CHANID_5E01_DPCM,
+
+	CHANID_6581_CH1,
+	CHANID_6581_CH2,
+	CHANID_6581_CH3,
 
 	CHANNELS		/* Total number of channels */
 };

@@ -3752,6 +3752,7 @@ void CFamiTrackerView::OnTrackerRecordToInst()		// // //
 		case SNDCHIP_VRC6: Type = INST_VRC6; break;
 		case SNDCHIP_N163: Type = INST_N163; break;
 		case SNDCHIP_S5B: case SNDCHIP_AY8930: Type = INST_S5B; break;
+		case SNDCHIP_6581: Type = INST_SID; break;
 		}
 		if (Type != INST_NONE) for (int i = 0; i < SEQ_COUNT; i++)
 			if (pDoc->GetFreeSequence(Type, i) == -1) {

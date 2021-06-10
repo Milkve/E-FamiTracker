@@ -37,6 +37,7 @@
 #include "AY8930.h"
 #include "SAA1099.h"
 #include "5E01.h"
+#include "6581.h"
 #include "SoundChip.h"
 #include "SoundChip2.h"
 #include "../RegisterState.h"		// // //
@@ -64,6 +65,7 @@ CAPU::CAPU(IAudioCallback *pCallback) :		// // //
 	m_p2A03(std::make_unique<C2A03>()),
 	m_pFDS(std::make_unique<CFDS>()),
 	m_p5E01(std::make_unique<C5E01>()),
+	m_p6581(std::make_unique<C6581>()),
 	m_iExternalSoundChips(0),
 	m_iCyclesToRun(0),
 	m_iSampleRate(44100)		// // //
@@ -226,6 +228,8 @@ void CAPU::SetExternalSound(int Chip)
 		m_SoundChips.push_back(m_pSAA1099);
 	if (Chip & SNDCHIP_5E01)
 		m_SoundChips2.push_back(m_p5E01.get());		// // //
+	if (Chip & SNDCHIP_6581)
+		m_SoundChips2.push_back(m_p6581.get());		// // //
 
 	// Set (unused) bitfield of external sound chips enabled.
 	m_iExternalSoundChips = Chip;
@@ -488,6 +492,7 @@ double CAPU::GetFreq(int Chip, int Chan) const
 	case SNDCHIP_AY8930:  return PtrGetFreq(*m_pAY8930);
 	case SNDCHIP_SAA1099:  return PtrGetFreq(*m_pSAA1099);
 	case SNDCHIP_5E01: return PtrGetFreq(*m_p5E01);
+	case SNDCHIP_6581: return PtrGetFreq(*m_p6581);
 	default: AfxDebugBreak(); return 0.;
 	}
 }
@@ -509,6 +514,7 @@ CRegisterState *CAPU::GetRegState(int Chip, int Reg) const		// // //
 	case SNDCHIP_AY8930:  return PtrGetRegState(*m_pAY8930);
 	case SNDCHIP_SAA1099:  return PtrGetRegState(*m_pSAA1099);
 	case SNDCHIP_5E01: return PtrGetRegState(*m_p5E01);
+	case SNDCHIP_6581: return PtrGetRegState(*m_p6581);
 	default: AfxDebugBreak(); return nullptr;
 	}
 }

@@ -47,6 +47,7 @@ class CN163;
 class CS5B;
 class CAY8930;
 class CSAA1099;
+class C6581;
 
 class CSoundChip;		// // //
 class CSoundChip2;
@@ -140,6 +141,7 @@ private:
 	CAY8930 *m_pAY8930;
 	CSAA1099* m_pSAA1099;
 	std::unique_ptr<C5E01> m_p5E01;
+	std::unique_ptr<C6581> m_p6581;
 
 	/// Bitfield of external sound chips enabled.
 	/// Never read, except for code hidden behind #ifdef LOGGING.

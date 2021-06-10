@@ -635,6 +635,7 @@ bool CMainFrame::CreateDialogPanels()
 	m_pImageList->Add(theApp.LoadIcon(IDI_INST_FDS));
 	m_pImageList->Add(theApp.LoadIcon(IDI_INST_N163));
 	m_pImageList->Add(theApp.LoadIcon(IDI_INST_S5B));		// // //
+	m_pImageList->Add(theApp.LoadIcon(IDI_INST_6581));
 
 	m_pInstrumentList->SetImageList(m_pImageList, LVSIL_NORMAL);
 	m_pInstrumentList->SetImageList(m_pImageList, LVSIL_SMALL);

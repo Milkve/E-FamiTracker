@@ -2219,8 +2219,8 @@ void CMainFrame::OnUpdateTrackerSwitchToInstrument(CCmdUI *pCmdUI)
 void CMainFrame::OnTrackerScaleEditor()
 {
 	// Display module properties dialog
-  //CScaleEditorDlg propertiesDlg;
-	CChipSelectDlg propertiesDlg;
+  CScaleEditorDlg propertiesDlg;
+	//CChipSelectDlg propertiesDlg;
 	propertiesDlg.DoModal();
 }
 

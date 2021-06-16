@@ -5041,6 +5041,7 @@ stFullState *CFamiTrackerDoc::RetrieveSoundState(unsigned int Track, unsigned in
 				case EF_N163_WAVE_BUFFER:
 				case EF_VRC7_PORT:
 				case EF_SAA_NOISE_MODE:
+				case EF_SID_FILTER_RESONANCE: case EF_SID_FILTER_CUTOFF_HI: case EF_SID_FILTER_CUTOFF_LO: case EF_SID_FILTER_MODE:
 					if (!ch->IsEffectCompatible(fx, xy)) continue;
 				case EF_DUTY_CYCLE:
 					if (ch->GetChip() == SNDCHIP_VRC7) continue;		// // // 050B

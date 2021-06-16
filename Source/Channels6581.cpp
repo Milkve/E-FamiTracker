@@ -38,6 +38,10 @@
 
 // Static member variables, for the shared stuff in 6581
 unsigned char			  CChannelHandler6581::s_iGlobalVolume = 15;
+unsigned char			  CChannelHandler6581::s_iFilterResonance = 0;
+unsigned int			  CChannelHandler6581::s_iFilterCutoff = 0;
+unsigned char			  CChannelHandler6581::s_iFilterMode = 0;
+unsigned char			  CChannelHandler6581::s_iFilterEnable = 0;
 
 // Class functions
 
@@ -82,6 +86,26 @@ bool CChannelHandler6581::HandleEffect(effect_t EffNum, unsigned char EffParam)
 		m_iPulseWidth = EffParam * 16;
 		break;
 	}
+	case EF_SID_FILTER_RESONANCE: {
+		s_iFilterResonance = EffParam & 0xF;
+		break;
+	}
+	case EF_SID_FILTER_CUTOFF_HI: {
+		s_iFilterCutoff = (s_iFilterCutoff & 0xFF) | ((EffParam & 0xF) << 8);
+		break;
+	}
+	case EF_SID_FILTER_CUTOFF_LO: {
+		s_iFilterCutoff = (s_iFilterCutoff & 0xF00) | (EffParam & 0xFF);
+		break;
+	}
+	case EF_SID_FILTER_MODE: {
+		s_iFilterMode = EffParam & 0xF;
+		if (EffParam == 0)
+			s_iFilterEnable &= ~(1U << (m_iChannelID - CHANID_6581_CH1));
+		else
+			s_iFilterEnable |= (1U << (m_iChannelID - CHANID_6581_CH1));
+		break;
+	}
 	default: return CChannelHandler::HandleEffect(EffNum, EffParam);
 	}
 
@@ -116,6 +140,7 @@ void CChannelHandler6581::HandleNoteData(stChanNote* pNoteData, int EffColumns)
 
 void CChannelHandler6581::HandleEmptyNote()
 {
+
 }
 
 void CChannelHandler6581::HandleCut()
@@ -166,6 +191,10 @@ void CChannelHandler6581::ResetChannel()
 	m_iTestBit = 0;
 	m_iGateCounter = 0;
 	s_iGlobalVolume = 15;
+	s_iFilterResonance = 0;
+	s_iFilterCutoff = 0;
+	s_iFilterMode = 0;
+	s_iFilterEnable = 0;
 	m_iEnvAD = 0;
 	m_iEnvSR = 0;
 	SetLinearPitch(true);
@@ -248,7 +277,10 @@ void CChannelHandler6581::RefreshChannel()
 	WriteReg(0x02 + Offset, LoPW);
 	WriteReg(0x03 + Offset, HiPW);
 	WriteReg(0x04 + Offset, Waveform);
-	WriteReg(0x18, s_iGlobalVolume);
+	WriteReg(0x15, (s_iFilterCutoff & 0xF00) >> 8);
+	WriteReg(0x16, s_iFilterCutoff & 0x0FF);
+	WriteReg(0x17, (s_iFilterResonance << 4) | s_iFilterEnable);
+	WriteReg(0x18, (s_iFilterMode << 4) | s_iGlobalVolume);
 
 }
 

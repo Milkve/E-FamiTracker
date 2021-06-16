@@ -178,6 +178,10 @@ enum effect_t : unsigned char {
 	EF_PWM,								// // // Pulse width modulation effect
 	EF_VOLUME_OFFSET,     // // // Relative volume change
 	EF_SAA_NOISE_MODE,    // // // SAA1099 noise mode
+	EF_SID_FILTER_RESONANCE, // // // SID filter resonance
+	EF_SID_FILTER_CUTOFF_HI, // // // SID filter cutoff hi
+	EF_SID_FILTER_CUTOFF_LO, // // // SID filter cutoff lo
+	EF_SID_FILTER_MODE, // // // SID filter mode
 
 	EF_COUNT
 };
@@ -194,7 +198,7 @@ const effect_t N163_EFFECTS[] = {EF_N163_WAVE_BUFFER};
 const effect_t S5B_EFFECTS[] = { EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE };
 const effect_t AY8930_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SUNSOFT_ENV_HI, EF_SUNSOFT_ENV_LO, EF_SUNSOFT_NOISE, EF_AY8930_PULSE_WIDTH, EF_AY8930_AND_MASK, EF_AY8930_OR_MASK, EF_AY8930_VOL};
 const effect_t SAA1099_EFFECTS[] = {EF_SUNSOFT_ENV_TYPE, EF_SAA_NOISE_MODE};
-const effect_t SID_EFFECTS[] = { EF_AY8930_PULSE_WIDTH };
+const effect_t SID_EFFECTS[] = { EF_AY8930_PULSE_WIDTH, EF_SID_FILTER_RESONANCE, EF_SID_FILTER_CUTOFF_HI, EF_SID_FILTER_CUTOFF_LO, EF_SID_FILTER_MODE };
 
 // Effect checking = bool CTrackerChannel::IsEffectCompatible
 
@@ -251,6 +255,10 @@ const char EFF_CHAR[] = {
 	'N',  // EF_PWM,
 	'9',  // EF_VOLUME_OFFSET
 	'W',  // EF_SAA_NOISE_MODE
+	'W',  // EF_SID_FILTER_RESONANCE
+	'I',  // EF_SID_FILTER_CUTOFF_HI
+	'J',  // EF_SID_FILTER_CUTOFF_LO
+	'H',  // EF_SID_FILTER_MODE
 };
 
 struct Effect {

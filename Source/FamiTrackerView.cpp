@@ -125,6 +125,10 @@ const CString EFFECT_TEXTS[] = {		// // //
 	_T("Nxx - PWM (incomplete)"),
 	_T("9xy - Volume shift, X = amount to increase, Y = amount to decrease"),
 	_T("Wxx - SAA1099 noise mode, 00-02 = pitch, 03 = frequency generator"),
+	_T("W0x - SID filter resonance"),
+	_T("I0x - SID filter cutoff, high byte"),
+	_T("Jxx - SID filter cutoff, low byte"),
+	_T("H0x - SID filter mode"),
 };
 
 // OLE copy and mix

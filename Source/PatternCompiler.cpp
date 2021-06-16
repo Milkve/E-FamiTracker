@@ -116,6 +116,11 @@ enum command_t {
 
 	CMD_EFF_SAA_NOISE_MODE,
 
+	CMD_EFF_SID_FILTER_RESONANCE,
+	CMD_EFF_SID_FILTER_CUTOFF_HI,
+	CMD_EFF_SID_FILTER_CUTOFF_LO,
+	CMD_EFF_SID_FILTER_MODE,
+
 	CMD_EFF_PWM,
 	CMD_EFF_VOLUME_OFFSET,
 };
@@ -670,6 +675,30 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					if (ChipID == SNDCHIP_SAA1099) {
 						WriteData(Command(CMD_EFF_SAA_NOISE_MODE));
 						WriteData(EffParam & 0x03);
+					}
+					break;
+				case EF_SID_FILTER_RESONANCE:		// // // 050B
+					if (ChipID == SNDCHIP_6581) {
+						WriteData(Command(CMD_EFF_SID_FILTER_RESONANCE));
+						WriteData(EffParam & 0x0F);
+					}
+					break;
+				case EF_SID_FILTER_CUTOFF_HI:		// // // 050B
+					if (ChipID == SNDCHIP_6581) {
+						WriteData(Command(CMD_EFF_SID_FILTER_CUTOFF_HI));
+						WriteData(EffParam & 0x0F);
+					}
+					break;
+				case EF_SID_FILTER_CUTOFF_LO:		// // // 050B
+					if (ChipID == SNDCHIP_6581) {
+						WriteData(Command(CMD_EFF_SID_FILTER_CUTOFF_LO));
+						WriteData(EffParam & 0xFF);
+					}
+					break;
+				case EF_SID_FILTER_MODE:		// // // 050B
+					if (ChipID == SNDCHIP_6581) {
+						WriteData(Command(CMD_EFF_SID_FILTER_MODE));
+						WriteData(EffParam & 0x0F);
 					}
 					break;
 				// // // N163

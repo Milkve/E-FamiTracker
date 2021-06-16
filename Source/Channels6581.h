@@ -60,6 +60,10 @@ protected:
 	// Static memebers
 protected:
 	static unsigned char s_iGlobalVolume;
+	static unsigned char s_iFilterResonance;
+	static unsigned int  s_iFilterCutoff;
+	static unsigned char s_iFilterMode;
+	static unsigned char s_iFilterEnable;
 
 	// Instance members
 protected:

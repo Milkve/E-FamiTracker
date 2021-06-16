@@ -84,6 +84,7 @@ public:
 	afx_msg void OnBnClickedExpansionSAA1099();
 	afx_msg void OnBnClickedExpansion5E01();
 	afx_msg void OnBnClickedExpansionN163();
+	afx_msg void OnBnClickedExpansion6581();
 	void setN163NChannels(int nchan);
 	void updateN163GUI(bool renderText=true);
 	void N163OffsetSlider(int pos);

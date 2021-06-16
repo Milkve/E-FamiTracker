@@ -40,7 +40,13 @@ inline int modulo(int i, int n) {
 
 LPCTSTR CInstrumentSID::SEQUENCE_NAME[] = {_T("Volume"), _T("Arpeggio"), _T("Pitch"), _T("Hi-pitch"), _T("Pulse Width"), _T("Waveform")};
 
-CInstrumentSID::CInstrumentSID() : CSeqInstrument(INST_SID)		// // //
+CInstrumentSID::CInstrumentSID() : CSeqInstrument(INST_SID), // // //
+m_pEnvelopeAD(0x0A),
+m_pEnvelopeSR(0x00),
+m_pPWMStart(0x800),
+m_pPWMEnd(0x800),
+m_pPWMSpeed(0x00),
+m_pPWMMode(PWM_DISABLED)
 {
 	m_pSequence.resize(SEQUENCE_COUNT);
 	for (int i = 0; i < SEQUENCE_COUNT; ++i)
@@ -60,6 +66,15 @@ void CInstrumentSID::CloneFrom(const CInstrument *pInst)
 	
 	if (auto pNew = dynamic_cast<const CInstrumentSID*>(pInst)) {
 	// Copy parameters
+		SetEnvParam(ENV_ATTACK, pNew->GetEnvParam(ENV_ATTACK));
+		SetEnvParam(ENV_DECAY, pNew->GetEnvParam(ENV_DECAY));
+		SetEnvParam(ENV_SUSTAIN, pNew->GetEnvParam(ENV_SUSTAIN));
+		SetEnvParam(ENV_RELEASE, pNew->GetEnvParam(ENV_RELEASE));
+
+		SetPWMStart(pNew->GetPWMStart());
+		SetPWMEnd(pNew->GetPWMEnd());
+		SetPWMSpeed(pNew->GetPWMSpeed());
+		SetPWMMode(pNew->GetPWMMode());
 
 		// Copy sequences
 		for (int i = 0; i < SEQUENCE_COUNT; ++i)		// // //
@@ -144,13 +159,20 @@ CSequence * CInstrumentSID::LoadSequence(CDocumentFile *pDocFile) const
 
 void CInstrumentSID::DoubleVolume() const
 {
-	CSequence *pVol = m_pSequence[SEQ_VOLUME].get();
-	for (unsigned int i = 0; i < pVol->GetItemCount(); ++i)
-		pVol->SetItem(i, pVol->GetItem(i) * 2);
+	//CSequence *pVol = m_pSequence[SEQ_VOLUME].get();
+	//for (unsigned int i = 0; i < pVol->GetItemCount(); ++i)
+		//pVol->SetItem(i, pVol->GetItem(i) * 2);
 }
 
 void CInstrumentSID::Store(CDocumentFile *pDocFile)
 {
+	pDocFile->WriteBlockInt(2);
+	pDocFile->WriteBlockChar(m_pEnvelopeAD);
+	pDocFile->WriteBlockChar(m_pEnvelopeSR);
+	pDocFile->WriteBlockInt(m_pPWMStart);
+	pDocFile->WriteBlockInt(m_pPWMEnd);
+	pDocFile->WriteBlockChar(m_pPWMSpeed);
+	pDocFile->WriteBlockChar(m_pPWMMode);
 	// Sequences
 	for (int i = 0; i < SEQUENCE_COUNT; ++i)		// // //
 		StoreSequence(pDocFile, GetSequence(i));
@@ -158,28 +180,41 @@ void CInstrumentSID::Store(CDocumentFile *pDocFile)
 
 bool CInstrumentSID::Load(CDocumentFile *pDocFile)
 {
-	unsigned int a = pDocFile->GetBlockInt();
-	unsigned int b = pDocFile->GetBlockInt();
-	pDocFile->RollbackPointer(8);
-
-	if (a < 256 && (b & 0xFF) != 0x00) {
-	}
-	else {
-		SetSequence(SEQ_VOLUME, LoadSequence(pDocFile));
-		SetSequence(SEQ_ARPEGGIO, LoadSequence(pDocFile));
-		//
-		// Note: Remove this line when files are unable to load 
-		// (if a file contains FDS instruments but FDS is disabled)
-		// this was a problem in an earlier version.
-		//
-		if (pDocFile->GetBlockVersion() > 2)
+	
+	unsigned int instversion = pDocFile->GetBlockInt();
+	if (instversion <= 255) {
+		m_pEnvelopeAD = pDocFile->GetBlockChar();
+		m_pEnvelopeSR = pDocFile->GetBlockChar();
+		if (instversion >= 2) {
+			m_pPWMStart = pDocFile->GetBlockInt();
+			m_pPWMEnd = pDocFile->GetBlockInt();
+			m_pPWMSpeed = pDocFile->GetBlockChar();
+			m_pPWMMode = pDocFile->GetBlockChar();
+		}
+		LoadSequence(pDocFile);
+		LoadSequence(pDocFile);
+		LoadSequence(pDocFile);
+		LoadSequence(pDocFile);
+		LoadSequence(pDocFile);
+		LoadSequence(pDocFile);
+	} else {
+		pDocFile->RollbackPointer(4);
+		unsigned int a = pDocFile->GetBlockInt();
+		unsigned int b = pDocFile->GetBlockInt();
+		pDocFile->RollbackPointer(8);
+		if (a < 256 && (b & 0xFF) != 0x00) {
+		}
+		else {
+			SetSequence(SEQ_VOLUME, LoadSequence(pDocFile));
+			SetSequence(SEQ_ARPEGGIO, LoadSequence(pDocFile));
 			SetSequence(SEQ_PITCH, LoadSequence(pDocFile));
+		}
 	}
 
 //	}
 
 	// Older files was 0-15, new is 0-31
-	if (pDocFile->GetBlockVersion() <= 3) DoubleVolume();
+	//if (pDocFile->GetBlockVersion() <= 3) DoubleVolume();
 
 	return true;
 }
@@ -216,7 +251,7 @@ bool CInstrumentSID::CanRelease() const
 
 int	CInstrumentSID::GetSeqEnable(int Index) const
 {
-	return Index < SEQUENCE_COUNT; // && m_iSeqEnable[Index];
+	return m_iSeqEnable[Index];
 }
 
 int	CInstrumentSID::GetSeqIndex(int Index) const
@@ -239,3 +274,41 @@ void CInstrumentSID::SetSequence(int SeqType, CSequence *pSeq)
 {
 	m_pSequence[SeqType].reset(pSeq);
 }
+
+
+
+
+int CInstrumentSID::GetEnvParam(int EnvParam) const
+{
+	switch (EnvParam) {
+	case ENV_ATTACK:
+		return (m_pEnvelopeAD & 0xF0) >> 4;
+	case ENV_DECAY:
+		return (m_pEnvelopeAD & 0x0F);
+	case ENV_SUSTAIN:
+		return (m_pEnvelopeSR & 0xF0) >> 4;
+	case ENV_RELEASE:
+		return (m_pEnvelopeSR & 0x0F);
+	}
+	return 0;
+}
+
+void CInstrumentSID::SetEnvParam(int EnvParam, int Value)
+{
+	switch (EnvParam) {
+	case ENV_ATTACK:
+		m_pEnvelopeAD = (m_pEnvelopeAD & 0x0F) | ((Value & 0x0F) << 4);
+		break;
+	case ENV_DECAY:
+		m_pEnvelopeAD = (m_pEnvelopeAD & 0xF0) | (Value & 0x0F);
+		break;
+	case ENV_SUSTAIN:
+		m_pEnvelopeSR = (m_pEnvelopeSR & 0x0F) | ((Value & 0x0F) << 4);
+		break;
+	case ENV_RELEASE:
+		m_pEnvelopeSR = (m_pEnvelopeSR & 0xF0) | (Value & 0x0F);
+		break;
+	}
+	InstrumentChanged();
+}
+

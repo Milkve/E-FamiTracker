@@ -913,7 +913,8 @@ int CChannelHandler::GetFinePitch() const
 
 int CChannelHandler::CalculatePeriod(bool MultiplyByHarmonic) const
 {
-	int Detune = GetVibrato() - GetFinePitch() - GetPitch();
+
+	int Detune = (GetVibrato() - GetFinePitch() - GetPitch());
 
 	// This was not thought through properly.
 	// - if !m_bLinearPitch, this calls LimitRawPeriod(LimitRawPeriod(...)), which is likely useless.
@@ -1087,6 +1088,7 @@ bool FrequencyChannelHandler::HandleEffect(effect_t EffNum, unsigned char EffPar
 
 int FrequencyChannelHandler::CalculatePeriod(bool MultiplyByHarmonic) const
 {
+
 	int Frequency = GetPeriod() + GetVibrato() - GetFinePitch() - GetPitch();		// // //
 	if (m_bLinearPitch && m_pNoteLookupTable != nullptr) {
 		Frequency = LimitPeriod(Frequency);

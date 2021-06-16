@@ -34,8 +34,6 @@
 C6581::C6581() {
 	m_pRegisterLogger->AddRegisterRange(0xD400, 0xD41C);		// // //
 
-	m_Sid.set_chip_model(MOS6581);
-
 	// Reset() is called by CAPU::SetExternalSound(), but let's call it ourself.
 	Reset();
 }
@@ -46,6 +44,10 @@ void C6581::Reset()
 {
 	m_Sid.reset();
 	Synth6581.clear();
+
+	m_Sid.set_chip_model(MOS6581);
+	m_Sid.enable_external_filter(true);
+	m_Sid.enable_filter(true);
 
 }
 
@@ -61,13 +63,13 @@ void C6581::Process(uint32_t Time, Blip_Buffer& Output)
 	auto get_output = [this](uint32_t dclocks, uint32_t now, Blip_Buffer& blip_buf) {
 		m_Sid.clock(dclocks);
 
-		int32_t out = m_Sid.output(8);
-		Synth6581.update(m_iTime + now, out, &blip_buf);
+		Synth6581.update(m_iTime + now, m_Sid.output() >> 2, &blip_buf);
+
 
 		// channel levels
-		m_ChannelLevels[0].update((uint8_t)(m_Sid.voice[0].output() * 0.000244140625 + 127.5));
-		m_ChannelLevels[1].update((uint8_t)(m_Sid.voice[1].output() * 0.000244140625 + 127.5));
-		m_ChannelLevels[2].update((uint8_t)(m_Sid.voice[2].output() * 0.000244140625 + 127.5));
+		m_ChannelLevels[0].update((uint8_t)((m_Sid.voice[0].output() + 2048 * 255) / 8192));
+		m_ChannelLevels[1].update((uint8_t)((m_Sid.voice[1].output() + 2048 * 255) / 8192));
+		m_ChannelLevels[2].update((uint8_t)((m_Sid.voice[2].output() + 2048 * 255) / 8192));
 	};
 
 	while (now < Time) {
@@ -75,7 +77,7 @@ void C6581::Process(uint32_t Time, Blip_Buffer& Output)
 		// the result of `Tick(clocks); Render()` should be sent to Blip_Synth
 		// at the instant in time *before* Tick() is called.
 		// See https://docs.google.com/document/d/1BnXwR3Avol7S5YNa3d4duGdbI6GNMwuYWLHuYiMZh5Y/edit#heading=h.lnh9d8j1x3uc
-		auto dclocks = 1;//Time - now, 1);
+		auto dclocks = 1;//Time - now;
 		get_output(dclocks, now, Output);
 		now += dclocks;
 	}
@@ -97,7 +99,7 @@ void C6581::Write(uint16_t Address, uint8_t Value)
 uint8_t C6581::Read(uint16_t Address, bool &Mapped)
 {
 	if (Address >= 0xD400 && Address <= 0xD41C)
-		return m_Sid.read(Address - 0xD400);
+		return m_Sid.read_state().sid_register[Address-0xD400];
 	return 0;
 }
 
@@ -123,7 +125,7 @@ int C6581::GetChannelLevelRange(int Channel) const
 {
 	switch (Channel) {
 	case 0: case 1: case 2:
-		return 255;
+		return 127;
 
 	default:
 		// unknown channel, return 1 to avoid division by 0

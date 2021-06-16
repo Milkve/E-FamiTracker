@@ -26,11 +26,15 @@
 // Derived channels, 6581
 //
 
-class CChannelHandler6581 : public CChannelHandler {
+class CChannelHandler6581 : public CChannelHandler, public CChannelHandlerInterfaceSID {
 public:
 	CChannelHandler6581();
 	void	ResetChannel() override;
 	void	RefreshChannel() override;
+
+	void  SetADSR(unsigned char EnvAD, unsigned char EnvSR) override final;
+	void  SetPulseWidth(unsigned int PulseWidth) override final;
+	unsigned int GetPulseWidth() const override final;
 
 	int getDutyMax() const override;
 protected:
@@ -38,6 +42,7 @@ protected:
 
 	bool	HandleEffect(effect_t EffNum, unsigned char EffParam) override;		// // //
 	void	HandleNote(int Note, int Octave) override;		// // //
+	void  HandleNoteData(stChanNote* pNoteData, int EffColumns) override;   // // //
 	void	HandleEmptyNote() override;
 	void	HandleCut() override;
 	void	HandleRelease() override;
@@ -46,6 +51,7 @@ protected:
 	int		CalculateVolume() const override;		// // //
 	int		ConvertDuty(int Duty) override;		// // //
 	void	ClearRegisters() override;
+	CString GetSlideEffectString() const override;
 	CString	GetCustomEffectString() const override;		// // //
 
 protected:
@@ -53,9 +59,21 @@ protected:
 
 	// Static memebers
 protected:
+	static unsigned char s_iGlobalVolume;
 
 	// Instance members
 protected:
-	unsigned char m_iPulseWidth;
+
+	unsigned int m_iPulseWidth;
+	unsigned char m_iTestBit;
+	unsigned char m_iGateBit;
+	unsigned char m_iRing;
+	unsigned char m_iSync;
+
+	unsigned char m_iGateCounter = 0;
+
+	unsigned char m_iEnvAD;
+	unsigned char m_iEnvSR;
+
 	bool m_bUpdate;
 };

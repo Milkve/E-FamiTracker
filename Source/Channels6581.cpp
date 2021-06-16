@@ -32,9 +32,12 @@
 #include "APU/APU.h"
 #include "InstHandler.h"		// // //
 #include "SeqInstHandler.h"		// // //
+#include "InstrumentSID.h"
+#include "SeqInstHandlerSID.h"
 #include <map>
 
 // Static member variables, for the shared stuff in 6581
+unsigned char			  CChannelHandler6581::s_iGlobalVolume = 15;
 
 // Class functions
 
@@ -51,17 +54,20 @@
 
 CChannelHandler6581::CChannelHandler6581() : 
 	CChannelHandler(0xFFFF, 0xF),
-	m_bUpdate(false)
+	m_bUpdate(false),
+	m_iEnvAD(0),
+	m_iEnvSR(0)
 {
-	m_iDefaultDuty = 0;		// // //
+	m_iDefaultDuty = 4;		// // //
+	SetLinearPitch(true);
 }
 
 
 
-//const  char CChannelHandler6581::MAX_DUTY = 0xFF;
+const char CChannelHandler6581::MAX_DUTY = 0xF;
 
 int CChannelHandler6581::getDutyMax() const {
-	return 0xFF;
+	return MAX_DUTY;
 }
 
 
@@ -69,23 +75,11 @@ bool CChannelHandler6581::HandleEffect(effect_t EffNum, unsigned char EffParam)
 {
 	switch (EffNum) {
 	case EF_DUTY_CYCLE: {
-		/*
-		Translate Vxx bitmask to `enum DutyType` bitmask, using VXX_TO_DUTY
-		as a conversion table.
-
-		CSeqInstHandlerS5B::ProcessSequence loads m_iDutyPeriod from the top
-		3 bits of an instrument's duty sequence. (The bottom 5 go to m_iNoiseFreq.)
-		This function moves Vxx to the top 3 bits of m_iDutyPeriod.
-		*/
-
-		//unsigned char duty = 0;
-		//for (auto const&[VXX, DUTY] : VXX_TO_DUTY) {
-		//	if (EffParam & VXX) {
-		//		duty |= DUTY;
-		//	}
-		//}
-
-		m_iDefaultDuty = m_iDutyPeriod = (EffParam);// | (EffParam & 0x0F);
+		m_iDefaultDuty = m_iDutyPeriod = EffParam;
+		break;
+	}
+	case EF_AY8930_PULSE_WIDTH: {
+		m_iPulseWidth = EffParam * 16;
 		break;
 	}
 	default: return CChannelHandler::HandleEffect(EffNum, EffParam);
@@ -104,8 +98,21 @@ void CChannelHandler6581::HandleNote(int Note, int Octave)		// // //
 	m_iDutyPeriod is Vxx plus instrument bit-flags. But it's not fully
 		initialized yet (instruments are handled after notes) which is bad.
 	https://docs.google.com/document/d/e/2PACX-1vQ8osh6mm4c4Ay_gVMIJCH8eRB5gBE180Xyeda1T5U6owG7BbKM-yNKVB8azg27HUD9QZ9Vf88crplE/pub
-	*/
+  */
 }
+
+
+void CChannelHandler6581::HandleNoteData(stChanNote* pNoteData, int EffColumns)
+{
+	CChannelHandler::HandleNoteData(pNoteData, EffColumns);
+	if (pNoteData->Note != 0 && pNoteData->Note != RELEASE && pNoteData->Note != HALT)
+		m_iGateCounter = (pNoteData->Instrument != HOLD_INSTRUMENT) ? 1 : 3;
+
+	if (pNoteData->Vol < MAX_VOLUME) {
+		s_iGlobalVolume = pNoteData->Vol & 15;
+	}
+}
+
 
 void CChannelHandler6581::HandleEmptyNote()
 {
@@ -114,14 +121,20 @@ void CChannelHandler6581::HandleEmptyNote()
 void CChannelHandler6581::HandleCut()
 {
 	CutNote();
-	//m_iDutyPeriod = S5B_MODE_SQUARE;
+	m_iDutyPeriod = 4;
 	m_iNote = 0;
+	m_iGateBit = 0;
+	m_iEnvAD = 0;
+	m_iEnvSR = 0;
 }
+
 
 void CChannelHandler6581::HandleRelease()
 {
-	if (!m_bRelease)
+	if (!m_bRelease) {
+		m_iGateBit = 0;
 		ReleaseNote();		// // //
+	}
 }
 
 bool CChannelHandler6581::CreateInstHandler(inst_type_t Type)
@@ -131,7 +144,7 @@ bool CChannelHandler6581::CreateInstHandler(inst_type_t Type)
 		switch (m_iInstTypeCurrent) {
 		case INST_2A03: case INST_VRC6: case INST_N163: case INST_S5B: case INST_FDS: case INST_SID: break;
 		default:
-			m_pInstHandler.reset(new CSeqInstHandler(this, 0x0F, 0x0F, Type == INST_SID ? 0x40 : 0));
+			m_pInstHandler.reset(new CSeqInstHandlerSID(this, 0x0F, 0x01));
 			return true;
 		}
 	}
@@ -147,8 +160,15 @@ void CChannelHandler6581::ResetChannel()
 {
 	CChannelHandler::ResetChannel();
 
-	m_iDefaultDuty = m_iDutyPeriod = 80;
+	m_iDefaultDuty = m_iDutyPeriod = 4;
 	m_iPulseWidth = 0;
+	m_iGateBit = 0;
+	m_iTestBit = 0;
+	m_iGateCounter = 0;
+	s_iGlobalVolume = 15;
+	m_iEnvAD = 0;
+	m_iEnvSR = 0;
+	SetLinearPitch(true);
 }
 
 int CChannelHandler6581::CalculateVolume() const		// // //
@@ -158,39 +178,92 @@ int CChannelHandler6581::CalculateVolume() const		// // //
 
 int CChannelHandler6581::ConvertDuty(int Duty)		// // //
 {
-	switch (m_iInstTypeCurrent) {
-	case INST_2A03: case INST_VRC6: case INST_N163:
-		return 80;
-	default:
-		return Duty;
-	}
+	return Duty;
 }
 
 void CChannelHandler6581::ClearRegisters()
 {
-	//WriteReg(0x18, 0);		// Clear volume
+//	WriteReg(0x18, 15);
+}
+
+CString CChannelHandler6581::GetSlideEffectString() const		// // //
+{
+	CString str = _T("");
+	switch (m_iEffect) {
+	case EF_ARPEGGIO:
+		if (m_iEffectParam) str.AppendFormat(_T(" %c%02X"), EFF_CHAR[m_iEffect], m_iEffectParam); break;
+	case EF_PORTA_UP:
+		if (m_iPortaSpeed) str.AppendFormat(_T(" %c%02X"), EFF_CHAR[EF_PORTA_DOWN], m_iPortaSpeed);  break;
+	case EF_PORTA_DOWN:
+		if (m_iPortaSpeed) str.AppendFormat(_T(" %c%02X"), EFF_CHAR[EF_PORTA_UP], m_iPortaSpeed); break;
+	case EF_PORTAMENTO:
+		if (m_iPortaSpeed) str.AppendFormat(_T(" %c%02X"), EFF_CHAR[m_iEffect], m_iPortaSpeed); break;
+	}
+
+	return str;
 }
 
 CString CChannelHandler6581::GetCustomEffectString() const		// // //
 {
 	CString str = _T("");
 
-	//if (s_iEnvelopeAType)
-		//str.AppendFormat(_T(" J%02X"), s_iEnvelopeAType);
-
 	return str;
 }
 
 void CChannelHandler6581::RefreshChannel()
 {
-	int Volume = CalculateVolume();
-	if (Volume >= 0)
-		WriteReg(0x18, Volume);
 
-	WriteReg(0x00, 0x80);
-	WriteReg(0x01, 0x80);
-	WriteReg(0x02, 0x80);
-	WriteReg(0x03, 0x80);
-	WriteReg(0x04, 0x80);
+	// Channel address offset
+	unsigned int Offset = 7 * (m_iChannelID - CHANID_6581_CH1);
 
+	// Calculate values
+	int Period = CalculatePeriod();
+	unsigned char LoFreq = (Period & 0xFF);
+	unsigned char HiFreq = (Period >> 8);
+
+	unsigned char LoPW = (m_iPulseWidth & 0xFF);
+	unsigned char HiPW = (m_iPulseWidth >> 8);
+
+	WriteReg(0x05 + Offset, m_iEnvAD);
+	WriteReg(0x06 + Offset, m_iEnvSR);
+
+	if (m_iGateCounter > 0) {
+		if (m_iGateCounter < 2) {
+			m_iGateCounter++;
+			m_iGateBit = 0;
+			WriteReg(0x05 + Offset, 0x00);
+			WriteReg(0x06 + Offset, 0x00);
+		} else {
+			m_iGateBit = 1;
+			m_iGateCounter = 0;
+		}
+	}
+
+
+	unsigned char Waveform = (m_iDutyPeriod & 15) << 4;
+	Waveform |= m_iGateBit | (m_iTestBit << 1);
+
+	WriteReg(0x00 + Offset, LoFreq);
+	WriteReg(0x01 + Offset, HiFreq);
+	WriteReg(0x02 + Offset, LoPW);
+	WriteReg(0x03 + Offset, HiPW);
+	WriteReg(0x04 + Offset, Waveform);
+	WriteReg(0x18, s_iGlobalVolume);
+
+}
+
+void CChannelHandler6581::SetADSR(unsigned char EnvAD, unsigned char EnvSR)
+{
+	m_iEnvAD = EnvAD;
+	m_iEnvSR = EnvSR;
+}
+
+void CChannelHandler6581::SetPulseWidth(unsigned int PulseWidth)
+{
+	m_iPulseWidth = PulseWidth;
+}
+
+unsigned int CChannelHandler6581::GetPulseWidth() const
+{
+	return m_iPulseWidth;
 }

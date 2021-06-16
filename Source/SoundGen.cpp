@@ -458,6 +458,10 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 			Pitch = Freq * 262144.0 / 49716.0 + 0.5;
 			m_iNoteLookupTableVRC7[i] = (unsigned int)(Pitch + pDocument->GetDetuneOffset(3, i));		// // //
 		}
+
+		// // // SID
+		Pitch = (Freq * 16777216 / CAPU::BASE_FREQ_NTSC) - 0.5;
+		m_iNoteLookupTableSID[i] = (unsigned int)(Pitch - pDocument->GetDetuneOffset(0, i));		// // //
 	}
 	
 	// // // Setup note tables
@@ -488,6 +492,8 @@ void CSoundGen::DocumentPropertiesChanged(CFamiTrackerDoc *pDocument)
 		case CHANID_SAA1099_CH1: case CHANID_SAA1099_CH2: case CHANID_SAA1099_CH3:
 		case CHANID_SAA1099_CH4: case CHANID_SAA1099_CH5: case CHANID_SAA1099_CH6:
 			Table = m_iNoteLookupTableSAA1099; break;
+		case CHANID_6581_CH1: case CHANID_6581_CH2: case CHANID_6581_CH3:
+			Table = m_iNoteLookupTableSID; break;
 		default: continue;
 		}
 		m_pChannels[i]->SetNoteTable(Table);
@@ -1282,6 +1288,12 @@ static CString GetStateString(const stChannelState &State)
 		}
 	else if (State.ChannelIndex >= CHANID_SAA1099_CH1 && State.ChannelIndex <= CHANID_SAA1099_CH6)
 		for (const auto &x : SAA1099_EFFECTS) {
+			int p = State.Effect[x];
+			if (p < 0) continue;
+			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);
+		}
+	else if (State.ChannelIndex >= CHANID_6581_CH1 && State.ChannelIndex <= CHANID_6581_CH3)
+		for (const auto& x : SID_EFFECTS) {
 			int p = State.Effect[x];
 			if (p < 0) continue;
 			effStr.AppendFormat(_T(" %c%02X"), EFF_CHAR[x], p);

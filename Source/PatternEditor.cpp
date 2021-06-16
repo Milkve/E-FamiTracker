@@ -2295,7 +2295,7 @@ void CPatternEditor::DrawRegisters(CDC *pDC)
 		for (int i = 0; i < 4; ++i) {
 			GetRegsFunc(SNDCHIP_6581, [&](int x) { return 0xD400 + i * 7 + x; }, 8);
 			text.Format(_T("$%02X:"), i * 7);
-			DrawRegFunc(text, 8);
+			DrawRegFunc(text, 7);
 		}
 
 	}

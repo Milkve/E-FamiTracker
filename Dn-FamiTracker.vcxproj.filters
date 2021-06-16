@@ -783,7 +783,7 @@
     <ClCompile Include="ChipSelectDlg.cpp">
       <Filter>Source Files\Dialog Boxes</Filter>
     </ClCompile>
-    <ClCompile Include="ScaleEditorDlg.cpp">
+    <ClCompile Include="Source\ScaleEditorDlg.cpp">
       <Filter>Source Files\Dialog Boxes</Filter>
     </ClCompile>
     <ClCompile Include="Source\APU\resid\wave8580_PST.cc">
@@ -837,11 +837,14 @@
     <ClCompile Include="Source\Channels6581.cpp">
       <Filter>Source Files\Sound Driver\Channels</Filter>
     </ClCompile>
-    <ClCompile Include="SeqInstHandlerSID.cpp">
+    <ClCompile Include="Source\SeqInstHandlerSID.cpp">
       <Filter>Source Files\Sound Driver\Instruments</Filter>
     </ClCompile>
     <ClCompile Include="Source\InstrumentSID.cpp">
       <Filter>Source Files\Document Data Types\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\InstrumentEditorSID.cpp">
+      <Filter>Source Files\Dialog Boxes\Instrument\Instrument panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1619,7 +1622,7 @@
     <ClInclude Include="ChipSelectDlg.h">
       <Filter>Header Files\Dialog Boxes Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ScaleEditorDlg.h">
+    <ClInclude Include="Source\ScaleEditorDlg.h">
       <Filter>Header Files\Dialog Boxes Headers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -1658,11 +1661,14 @@
     <ClInclude Include="Source\Channels6581.h">
       <Filter>Header Files\Sound Driver Headers\Channels Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SeqInstHandlerSID.h">
+    <ClInclude Include="Source\SeqInstHandlerSID.h">
       <Filter>Header Files\Sound Driver Headers\Instruments Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\InstrumentSID.h">
       <Filter>Header Files\Document Data Type Headers\Instrument Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\InstrumentEditorSID.h">
+      <Filter>Header Files\Dialog Boxes Headers\Instrument Headers\Instrument dialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

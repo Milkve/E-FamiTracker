@@ -364,6 +364,7 @@ private:
 	unsigned int		m_iNoteLookupTableN163[NOTE_COUNT];			// For N163
 	unsigned int		m_iNoteLookupTableS5B[NOTE_COUNT];			// // // For 5B, internal use only
 	unsigned int		m_iNoteLookupTableSAA1099[NOTE_COUNT];	// For SAA1099
+	unsigned int		m_iNoteLookupTableSID[NOTE_COUNT];	// For SID
 	int					m_iVibratoTable[VIBRATO_LENGTH];
 
 	machine_t			m_iMachineType;						// // // NTSC/PAL

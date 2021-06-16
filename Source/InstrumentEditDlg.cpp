@@ -32,6 +32,7 @@
 #include "InstrumentS5B.h"		// // //
 #include "InstrumentFDS.h"		// // //
 #include "InstrumentVRC7.h"		// // //
+#include "InstrumentSID.h"    // // //
 #include "FamiTrackerView.h"
 #include "SequenceEditor.h"
 #include "InstrumentEditPanel.h"
@@ -42,6 +43,7 @@
 #include "InstrumentEditorFDS.h"
 #include "InstrumentEditorFDSEnvelope.h"
 #include "InstrumentEditorN163Wave.h"
+#include "InstrumentEditorSID.h"
 #include "MainFrm.h"
 #include "SoundGen.h"
 #include "TrackerChannel.h"
@@ -218,7 +220,7 @@ void CInstrumentEditDlg::SetCurrentInstrument(int Index)
 				InsertPane(new CInstrumentEditorSeq(NULL, _T("Sunsoft 5B"), CInstrumentS5B::SEQUENCE_NAME, 31, 31, INST_S5B), true);
 				break;
 			case INST_SID:
-				InsertPane(new CInstrumentEditorSeq(NULL, _T("Sunsoft 5B"), CInstrumentS5B::SEQUENCE_NAME, 31, 31, INST_SID), true);
+				InsertPane(new CInstrumentEditorSID(), true);
 				break;
 		}
 

@@ -643,6 +643,9 @@ void CPatternCompiler::CompileData(int Track, int Pattern, int Channel)
 					if (ChipID == SNDCHIP_AY8930) {
 						WriteData(Command(CMD_EFF_AY8930_PULSE_WIDTH));
 						WriteData(EffParam & 0x0F);
+					} else if (ChipID == SNDCHIP_6581) {
+						WriteData(Command(CMD_EFF_AY8930_PULSE_WIDTH));
+						WriteData(EffParam & 0xFF);
 					}
 					break;
 				case EF_AY8930_AND_MASK:		// // // 050B

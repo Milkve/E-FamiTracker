@@ -371,6 +371,7 @@ public:
 	/*!	\brief The maximum channel volume that a channel handler can attain. */
 	static const int VOL_COLUMN_MAX = 0x7F;
 
+
 	// Shared variables
 protected:
 	// Channel variables

@@ -169,6 +169,8 @@ bool CTrackerChannel::IsInstrumentCompatible(int Instrument, inst_type_t Type) c
 			}
 		case SNDCHIP_VRC7:
 			return Type == INST_VRC7;
+		case SNDCHIP_6581:
+			return Type == INST_SID;
 	}
 
 	return false;
@@ -240,7 +242,7 @@ bool CTrackerChannel::IsEffectCompatible(effect_t EffNumber, int EffParam) const
 		case EF_AY8930_AND_MASK: case EF_AY8930_OR_MASK:
 			return m_iChip == SNDCHIP_AY8930;
 		case EF_AY8930_PULSE_WIDTH:
-			return m_iChip == SNDCHIP_AY8930 && EffParam <= 0x0F;
+			return (m_iChip == SNDCHIP_AY8930 && EffParam <= 0x0F) || (m_iChip == SNDCHIP_6581 && EffParam <= 0xFF);
 		case EF_AY8930_VOL:
 			return m_iChip == SNDCHIP_AY8930 && EffParam <= 0x01;
 		case EF_SAA_NOISE_MODE:

@@ -230,6 +230,7 @@
 #define IDB_SYS_E                       392
 #define IDI_ICON1                       396
 #define IDI_INST_6581                   396
+#define IDD_INSTRUMENT_SID              397
 #define IDC_INSTRUMENTS                 1001
 #define IDC_INSTSETTINGS                1002
 #define IDC_IMPORT_DETUNE               1002
@@ -398,8 +399,10 @@
 #define IDC_C_DM                        1197
 #define IDC_C_AR                        1198
 #define IDC_C_DR                        1199
+#define IDC_BOX_PWM_START               1199
 #define IDC_C_SL                        1200
 #define IDC_TILT                        1200
+#define IDC_PWM_START_SPIN              1200
 #define IDC_C_RR                        1201
 #define IDC_STATIC_PITCH                1201
 #define IDC_DELTASTART                  1202
@@ -668,6 +671,8 @@
 #define IDC_CHIP_8580                   1496
 #define IDC_CHECK16                     1497
 #define IDC_CHIP_6560                   1497
+#define IDC_EXPANSION_5E2               1497
+#define IDC_EXPANSION_6581              1497
 #define IDC_CHECK17                     1499
 #define IDC_CHIP_8360                   1499
 #define IDC_CHECK18                     1500
@@ -705,9 +710,25 @@
 #define IDC_SLIDER1                     1517
 #define IDC_BUTTON1                     1518
 #define IDC_SLIDER2                     1519
+#define IDC_PWM_START                   1520
 #define IDC_MFCVSLISTBOX1               1521
+#define IDC_PWM_END                     1521
 #define IDC_CHIP_BUTTON_BG              1526
 #define IDC_CUSTOM1                     1527
+#define IDC_SLIDER_ATTACK               1528
+#define IDC_ENVELOPE_CANVAS             1529
+#define IDC_SLIDER_DECAY                1530
+#define IDC_SLIDER_SUSTAIN              1531
+#define IDC_SLIDER_RELEASE              1532
+#define IDC_PWM_SPEED                   1535
+#define IDC_PWM_MODE1                   1537
+#define IDC_PWM_MODE2                   1538
+#define IDC_PWM_MODE3                   1539
+#define IDC_PWM_MODE4                   1540
+#define IDC_DISABLE_PWM                 1541
+#define IDC_BOX_PWM_END                 1542
+#define IDC_PWM_END_SPIN                1543
+#define IDC_TEXT_RATE                   1544
 #define IDC_SOUNDCHIPS                  4001
 #define IDD_CHIPS                       4002
 #define IDS_FIND_BEGIN                  9001
@@ -884,9 +905,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        397
+#define _APS_NEXT_RESOURCE_VALUE        399
 #define _APS_NEXT_COMMAND_VALUE         33215
-#define _APS_NEXT_CONTROL_VALUE         1528
+#define _APS_NEXT_CONTROL_VALUE         1544
 #define _APS_NEXT_SYMED_VALUE           179
 #endif
 #endif

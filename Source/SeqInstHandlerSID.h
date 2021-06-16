@@ -57,4 +57,11 @@ public:
 
 private:
 	void UpdateTables(const CInstrumentSID* pInst);
+
+	int m_pPWMValue;
+	int m_pPWMStart;
+	int m_pPWMEnd;
+	int m_pPWMSpeed;
+	int m_pPWMMode;
+	int m_pPWMDirection;
 };

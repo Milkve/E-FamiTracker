@@ -264,8 +264,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChipSelectDlg.cpp" />
-    <ClCompile Include="ScaleEditorDlg.cpp" />
-    <ClCompile Include="SeqInstHandlerSID.cpp" />
+    <ClCompile Include="Source\InstrumentEditorSID.cpp" />
+    <ClCompile Include="Source\ScaleEditorDlg.cpp" />
+    <ClCompile Include="Source\SeqInstHandlerSID.cpp" />
     <ClCompile Include="Source\APU\5E01.cpp" />
     <ClCompile Include="Source\APU\6581.cpp" />
     <ClCompile Include="Source\APU\FDS.cpp" />
@@ -462,8 +463,9 @@
   <ItemGroup>
     <ClInclude Include="ChipSelectDlg.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="ScaleEditorDlg.h" />
-    <ClInclude Include="SeqInstHandlerSID.h" />
+    <ClInclude Include="Source\InstrumentEditorSID.h" />
+    <ClInclude Include="Source\ScaleEditorDlg.h" />
+    <ClInclude Include="Source\SeqInstHandlerSID.h" />
     <ClInclude Include="Source\APU\5E01.h" />
     <ClInclude Include="Source\APU\6581.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

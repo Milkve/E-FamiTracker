@@ -2370,7 +2370,8 @@ void CSoundGen::ReadPatternRow()
 	stChanNote NoteData;
 
 	for (int i = 0; i < Channels; ++i) {
-		if (m_pTrackerView->PlayerGetNote(m_iPlayTrack, m_iPlayFrame, i, m_iPlayRow, NoteData))
+		if (m_pTrackerView->PlayerGetNote(m_iPlayTrack, m_iPlayFrame, i, m_iPlayRow, NoteData)
+			|| (i >= m_pDocument->GetChannelIndex(CHANID_6581_CH1) && i <= m_pDocument->GetChannelIndex(CHANID_6581_CH3)))
 			QueueNote(i, NoteData, NOTE_PRIO_1);
 	}
 	if (m_bDoHalt) {		// // //

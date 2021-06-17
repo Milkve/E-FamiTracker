@@ -99,11 +99,12 @@ bool CChannelHandler6581::HandleEffect(effect_t EffNum, unsigned char EffParam)
 		break;
 	}
 	case EF_SID_FILTER_MODE: {
-		s_iFilterMode = EffParam & 0xF;
 		if (EffParam == 0)
 			s_iFilterEnable &= ~(1U << (m_iChannelID - CHANID_6581_CH1));
-		else
+		else {
 			s_iFilterEnable |= (1U << (m_iChannelID - CHANID_6581_CH1));
+			s_iFilterMode = EffParam & 0xF;
+		}
 		break;
 	}
 	default: return CChannelHandler::HandleEffect(EffNum, EffParam);

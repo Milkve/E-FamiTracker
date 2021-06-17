@@ -256,6 +256,18 @@
     <Filter Include="Source Files\Sound Driver\Emulation\Sound Chips\External\resid">
       <UniqueIdentifier>{3b33acff-5ede-4859-afb0-e0757e49a161}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp">
+      <UniqueIdentifier>{9e32ca9a-f886-4b68-8c6f-abe5fe20bce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sound Driver\Emulation\Sound Chips\External\residfp">
+      <UniqueIdentifier>{d66ac579-06eb-4223-8f68-78eeb52d0601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp\resample">
+      <UniqueIdentifier>{7ba2267c-ff22-4287-84cf-42c565b7b345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sound Driver\Emulation\Sound Chips\External\residfp\resample">
+      <UniqueIdentifier>{30ba967b-931c-434e-9db7-40d93e0b00c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Exception.cpp">
@@ -786,51 +798,6 @@
     <ClCompile Include="Source\ScaleEditorDlg.cpp">
       <Filter>Source Files\Dialog Boxes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave8580_PST.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\envelope.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\extfilt.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\filter.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\pot.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\sid.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\voice.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave6581__ST.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave6581_P_T.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave6581_PS_.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave6581_PST.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave8580__ST.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave8580_P_T.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\APU\resid\wave8580_PS_.cc">
-      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\resid</Filter>
-    </ClCompile>
     <ClCompile Include="Source\APU\6581.cpp">
       <Filter>Source Files\Sound Driver\Emulation\Sound Chips</Filter>
     </ClCompile>
@@ -845,6 +812,60 @@
     </ClCompile>
     <ClCompile Include="Source\InstrumentEditorSID.cpp">
       <Filter>Source Files\Dialog Boxes\Instrument\Instrument panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Dac.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\EnvelopeGenerator.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\ExternalFilter.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Filter.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Filter6581.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Filter8580.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\FilterModelConfig.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\FilterModelConfig8580.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Integrator.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Integrator8580.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\OpAmp.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\SID.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Spline.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\version.cc">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\WaveformCalculator.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\WaveformGenerator.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\resample\SincResampler.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp\resample</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\APU\residfp\Voice.cpp">
+      <Filter>Source Files\Sound Driver\Emulation\Sound Chips\External\residfp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1628,33 +1649,6 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\APU\resid\voice.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\wave.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\envelope.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\extfilt.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\filter.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\pot.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\sid.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\siddefs.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\APU\resid\spline.h">
-      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\resid</Filter>
-    </ClInclude>
     <ClInclude Include="Source\APU\6581.h">
       <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers</Filter>
     </ClInclude>
@@ -1669,6 +1663,72 @@
     </ClInclude>
     <ClInclude Include="Source\InstrumentEditorSID.h">
       <Filter>Header Files\Dialog Boxes Headers\Instrument Headers\Instrument dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\resample\ZeroOrderResampler.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp\resample</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\resample\Resampler.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp\resample</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\resample\SincResampler.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp\resample</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\resample\TwoPassSincResampler.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp\resample</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\WaveformCalculator.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\WaveformGenerator.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\array.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Dac.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\EnvelopeGenerator.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\ExternalFilter.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Filter.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Filter6581.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Filter8580.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\FilterModelConfig.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\FilterModelConfig8580.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Integrator.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Integrator8580.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\OpAmp.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Potentiometer.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\SID.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Spline.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\APU\residfp\Voice.h">
+      <Filter>Header Files\Sound Driver Headers\Emulation Headers\Sound Chip Headers\External\residfp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

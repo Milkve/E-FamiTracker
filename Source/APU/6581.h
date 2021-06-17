@@ -26,7 +26,7 @@
 #include "SoundChip2.h"
 #include "ChannelLevelState.h"
 
-#include "resid/sid.h"
+#include "residfp/SID.h"
 
 
 class C6581 : public CSoundChip2
@@ -51,7 +51,7 @@ public:
 
 private:
 
-	RESID m_Sid;
+	reSIDfp::SID m_Sid;
 
 	ChannelLevelState<uint8_t> m_ChannelLevels[3];
 	

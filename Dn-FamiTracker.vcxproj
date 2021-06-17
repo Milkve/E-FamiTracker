@@ -264,6 +264,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChipSelectDlg.cpp" />
+    <ClCompile Include="Source\APU\residfp\Dac.cpp" />
+    <ClCompile Include="Source\APU\residfp\EnvelopeGenerator.cpp" />
+    <ClCompile Include="Source\APU\residfp\ExternalFilter.cpp" />
+    <ClCompile Include="Source\APU\residfp\Filter.cpp" />
+    <ClCompile Include="Source\APU\residfp\Filter6581.cpp" />
+    <ClCompile Include="Source\APU\residfp\Filter8580.cpp" />
+    <ClCompile Include="Source\APU\residfp\FilterModelConfig.cpp" />
+    <ClCompile Include="Source\APU\residfp\FilterModelConfig8580.cpp" />
+    <ClCompile Include="Source\APU\residfp\Integrator.cpp" />
+    <ClCompile Include="Source\APU\residfp\Integrator8580.cpp" />
+    <ClCompile Include="Source\APU\residfp\OpAmp.cpp" />
+    <ClCompile Include="Source\APU\residfp\resample\SincResampler.cpp" />
+    <ClCompile Include="Source\APU\residfp\SID.cpp" />
+    <ClCompile Include="Source\APU\residfp\Spline.cpp" />
+    <ClCompile Include="Source\APU\residfp\version.cc" />
+    <ClCompile Include="Source\APU\residfp\Voice.cpp" />
+    <ClCompile Include="Source\APU\residfp\WaveformCalculator.cpp" />
+    <ClCompile Include="Source\APU\residfp\WaveformGenerator.cpp" />
     <ClCompile Include="Source\InstrumentEditorSID.cpp" />
     <ClCompile Include="Source\ScaleEditorDlg.cpp" />
     <ClCompile Include="Source\SeqInstHandlerSID.cpp" />
@@ -275,21 +293,6 @@
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\legacy\emu2413.c" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\nes_apu.cpp" />
     <ClCompile Include="Source\APU\nsfplay\xgm\devices\Sound\nes_dmc.cpp" />
-    <ClCompile Include="Source\APU\resid\envelope.cc" />
-    <ClCompile Include="Source\APU\resid\extfilt.cc" />
-    <ClCompile Include="Source\APU\resid\filter.cc" />
-    <ClCompile Include="Source\APU\resid\pot.cc" />
-    <ClCompile Include="Source\APU\resid\sid.cc" />
-    <ClCompile Include="Source\APU\resid\voice.cc" />
-    <ClCompile Include="Source\APU\resid\wave.cc" />
-    <ClCompile Include="Source\APU\resid\wave6581_PST.cc" />
-    <ClCompile Include="Source\APU\resid\wave6581_PS_.cc" />
-    <ClCompile Include="Source\APU\resid\wave6581_P_T.cc" />
-    <ClCompile Include="Source\APU\resid\wave6581__ST.cc" />
-    <ClCompile Include="Source\APU\resid\wave8580_PST.cc" />
-    <ClCompile Include="Source\APU\resid\wave8580_PS_.cc" />
-    <ClCompile Include="Source\APU\resid\wave8580_P_T.cc" />
-    <ClCompile Include="Source\APU\resid\wave8580__ST.cc" />
     <ClCompile Include="Source\APU\S5B.cpp" />
     <ClCompile Include="Source\APU\SAA1099.cpp" />
     <ClCompile Include="Source\APU\SoundChip2.cpp" />
@@ -463,6 +466,28 @@
   <ItemGroup>
     <ClInclude Include="ChipSelectDlg.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Source\APU\residfp\array.h" />
+    <ClInclude Include="Source\APU\residfp\Dac.h" />
+    <ClInclude Include="Source\APU\residfp\EnvelopeGenerator.h" />
+    <ClInclude Include="Source\APU\residfp\ExternalFilter.h" />
+    <ClInclude Include="Source\APU\residfp\Filter.h" />
+    <ClInclude Include="Source\APU\residfp\Filter6581.h" />
+    <ClInclude Include="Source\APU\residfp\Filter8580.h" />
+    <ClInclude Include="Source\APU\residfp\FilterModelConfig.h" />
+    <ClInclude Include="Source\APU\residfp\FilterModelConfig8580.h" />
+    <ClInclude Include="Source\APU\residfp\Integrator.h" />
+    <ClInclude Include="Source\APU\residfp\Integrator8580.h" />
+    <ClInclude Include="Source\APU\residfp\OpAmp.h" />
+    <ClInclude Include="Source\APU\residfp\Potentiometer.h" />
+    <ClInclude Include="Source\APU\residfp\resample\Resampler.h" />
+    <ClInclude Include="Source\APU\residfp\resample\SincResampler.h" />
+    <ClInclude Include="Source\APU\residfp\resample\TwoPassSincResampler.h" />
+    <ClInclude Include="Source\APU\residfp\resample\ZeroOrderResampler.h" />
+    <ClInclude Include="Source\APU\residfp\SID.h" />
+    <ClInclude Include="Source\APU\residfp\Spline.h" />
+    <ClInclude Include="Source\APU\residfp\Voice.h" />
+    <ClInclude Include="Source\APU\residfp\WaveformCalculator.h" />
+    <ClInclude Include="Source\APU\residfp\WaveformGenerator.h" />
     <ClInclude Include="Source\InstrumentEditorSID.h" />
     <ClInclude Include="Source\ScaleEditorDlg.h" />
     <ClInclude Include="Source\SeqInstHandlerSID.h" />
@@ -491,15 +516,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Source\APU\resid\envelope.h" />
-    <ClInclude Include="Source\APU\resid\extfilt.h" />
-    <ClInclude Include="Source\APU\resid\filter.h" />
-    <ClInclude Include="Source\APU\resid\pot.h" />
-    <ClInclude Include="Source\APU\resid\sid.h" />
-    <ClInclude Include="Source\APU\resid\siddefs.h" />
-    <ClInclude Include="Source\APU\resid\spline.h" />
-    <ClInclude Include="Source\APU\resid\voice.h" />
-    <ClInclude Include="Source\APU\resid\wave.h" />
     <ClInclude Include="Source\APU\S5B.h" />
     <ClInclude Include="Source\APU\SAA1099.h" />
     <ClInclude Include="Source\APU\SoundChip2.h" />
